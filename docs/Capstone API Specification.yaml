@@ -1,0 +1,461 @@
+User :
+	Register User :
+		Endpoint :
+			- https://.../user/register
+	  	Request :
+			- POST
+	  	Body JSON : {
+			"username" : "test",
+			"email" : "testmail01@gmail.com",
+			"password" : "testpassword01"
+		}
+	  	Response : {
+			"message" : "succes register user"
+		}
+
+	Login User
+		Endpoint :
+			- https://.../user/login
+	  	Request :
+			- POST
+	  	Body JSON : {
+			"username" : "test",
+			"password" : "testpassword01"
+		}
+	  	Response : {
+			"message" : "succes login user",
+			"data" : {
+				"username" : "test",
+				"password" : "testpassword01",
+				"token" : "..."
+			}
+		}
+
+	Dashboard
+		Endpoint :
+			- https://.../user/dashboard
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes get dashboard",
+			"data" : {
+				"card_number" : "...", // mau tanya disini apakah perlu, karena username uda unique
+				"username" : "test",
+				"points" : 20000,
+				"products" : [ // recently reedem products
+					{
+						"ID" : 1,
+						"name" : "product1",
+						"price" : 10000,
+						"image" : "..."
+					},
+					{
+						"ID" : 2,
+						"name" : "product2",
+						"price" : 20000,
+						"image" : "..."
+					}
+				],
+				"qr_code" : "..."
+			}
+		}
+
+	Products Pulsa :
+		Endpoint :
+			- https://.../user/products/pulsa
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes get products pulsa",
+			"data" : [
+				{
+					"ID" : 1,
+					"name" : "product1",
+					"price" : 10000,
+					"image" : "..."
+				},
+				{
+					"ID" : 2,
+					"name" : "product2",
+					"price" : 20000,
+					"image" : "..."
+				}
+			]
+		}
+
+	Products Pulsa Detail :
+		Endpoint :
+			- https://.../user/products/pulsa/:id
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes get products pulsa detail",
+			"data" : {
+				"ID" : 1,
+				"name" : "product1",
+				"price" : 10000,
+				"image" : "...",
+				"description" : "...",
+				"terms" : [
+					"term1",
+					"term2"
+				]
+			}
+		}
+
+	Products Pulsa Confirm :
+		Endpoint :
+			- https://.../user/products/pulsa/:id/confirm
+		Request :
+			- POST
+		Body JSON : {
+			"phone_number" : "081234567890"
+		}
+		Response : {
+			"message" : "succes confirm products pulsa",
+			"data" : {
+				"ID" : 1,
+				"name" : "product1",
+				"price" : 10000,
+				"image" : "...",
+				"description" : "...",
+				"terms" : [
+					"term1",
+					"term2"
+				],
+				"phone_number" : "081234567890"
+			}
+		}
+
+	Products Paket Data : // at all sama seperti pulsa
+	Products E-Money : // at all sama seperti pulsa, namun pada confirm request body-nya berbeda
+
+	Update Profile :
+		Endpoint :
+			- https://.../user/profile
+		Request :
+			- PUT
+		Body JSON : {
+			"password" : "newpassword",
+		}
+		Response : {
+			"message" : "succes update profile",
+			"data" : {
+				"username" : "test",
+				"email" : "testmail01@gmail.com",
+				"password" : "newpassword"
+			}
+		}
+
+	Delete User :
+		Endpoint :
+			- https://.../user/profile/delete
+		Request :
+			- DELETE
+		Body JSON : None
+		Response : {
+			"message" : "succes delete user"
+		}
+	
+	// masih tebakan aku aja, ini diluar kerjaan anak ui/ux juga si, salah satu cara user dapetin pointnya juga
+	Redeem :
+		Endpoint :
+			- https://.../user/redeem
+		Request :
+			- POST
+		Body JSON : {
+			"redeem_code" : "..."
+		}
+		Response : {
+			"message" : "succes redeem",
+			"data" : {
+				"points" : 1000,
+				"store" : "store1"
+			}
+		}
+	
+	History :
+		Endpoint :
+			- https://.../user/history
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes get history",
+			"data" : [
+				{
+					"ID" : 1,
+					"category" : "pulsa",
+					"name" : "product1",
+					"price" : 10000,
+					"image" : "...",
+					"date" : "..."
+				},
+				{
+					"ID" : 2,
+					"category" : "pulsa",
+					"name" : "product2",
+					"price" : 20000,
+					"image" : "...",
+					"date" : "..."
+				}
+			]
+		}
+	
+	History Detail :
+		Endpoint :
+			- https://.../user/history/:id
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes get history detail",
+			"data" : {
+				"ID" : 1,
+				"category" : "pulsa",
+				"serial_number" : "1234567890", // mau tanya disini, initu apa kegunaaanya dan didapat dari mana
+				"name" : "product1",
+				"price" : 10000,
+				"image" : "...",
+				"date" : "...",
+				"phone_number" : "081234567890"
+			}
+		}
+
+
+Admin :
+	Login :
+		Endpoint :
+			- https://.../admin/login
+		Request :
+			- POST
+		Body JSON : {
+			"username" : "admin",
+			"password" : "admin"
+		}
+		Response : {
+			"message" : "succes login",
+			"data" : {
+				"username" : "admin",
+				"password" : "admin",
+				"token" : "..."
+			}
+		}
+
+	Dashboard :
+		Endpoint :
+			- https://.../admin/dashboard
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes get dashboard",
+			"data" : {
+				// masih belum ada kalo aku liat dr figma anak ui/ux
+			}
+		}
+	
+	Add Points : // ini aku buat sendiri diluar figma, karena kata anak ui/ux gapake ada cara user dapetin pointnya
+		Endpoint :
+			- https://.../admin/points
+		Request :
+			- POST
+		Body JSON : {
+			"total_cost" : 100000,
+			"qr_code_user" : "..."
+		}
+		Response : {
+			"message" : "succes add points",
+			"data" : {
+				"points" : 1000,
+				"username" : "test"
+			}
+		}
+	
+	Users :
+		Endpoint :
+			- https://.../admin/users
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes get users",
+			"data" : [
+				{
+					"ID" : 1,
+					"username" : "test",
+					"email" : "testmail01@gmail.com",
+					"password" : "testpassword01"
+				},
+				{
+					"ID" : 2,
+					"username" : "test2",
+					"email" : "testmail02@gmail.com",
+					"password" : "testpassword02"
+				}
+			]
+		}
+
+	Users Update :
+		Endpoint :
+			- https://.../admin/users/:id
+		Request :
+			- PUT
+		Body JSON : {
+			"status" : "suspend"
+		}
+		Response : {
+			"message" : "succes update user",
+			"data" : {
+				"ID" : 1,
+				"username" : "test",
+				"email" : "testmail01@gmail.com",
+				"password" : "testpassword01",
+				"status" : "suspend"
+			}
+		}
+
+	Users Delete :
+		Endpoint :
+			- https://.../admin/users/:id
+		Request :
+			- DELETE
+		Body JSON : None
+		Response : {
+			"message" : "succes delete user"
+		}
+
+	Transaction :
+		Endpoint :
+			- https://.../admin/transaction
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes get transaction",
+			"data" : [
+				{
+					"ID" : 1,
+					"CreatedAt" : "...",
+					"category" : "pulsa",
+					"SerialNumber" : "1234567890",
+					"name" : "product1",
+					"price" : 10000,
+					"image" : "...",
+					"date" : "...",
+					"phone_number" : "081234567890"
+				},
+				{
+					"ID" : 2,
+					"CreatedAt" : "...",
+					"category" : "pulsa",
+					"SerialNumber" : "1234567890",
+					"name" : "product2",
+					"price" : 20000,
+					"image" : "...",
+					"date" : "...",
+					"phone_number" : "081234567890"
+				}
+			]
+		}
+	
+	Stock :
+		Endpoint :
+			- https://.../admin/stock
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes get stock",
+			"data" : [
+				{
+					"ID" : 1,
+					"category" : "pulsa",
+					"name" : "product1",
+					"price" : 10000,
+					"image" : "...",
+					"stock" : 1
+				},
+				{
+					"ID" : 2,
+					"category" : "pulsa",
+					"name" : "product2",
+					"price" : 20000,
+					"image" : "...",
+					"stock" : 1
+				}
+			]
+		}
+
+	Stock Plus :
+		Endpoint :
+			- https://.../admin/stock/:id
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes update stock",
+			"data" : {
+				"ID" : 1,
+				"category" : "pulsa",
+				"name" : "product1",
+				"price" : 10000,
+				"image" : "...",
+				"stock" : 2
+			}
+		}
+	
+	Stock Minus :
+		Endpoint :
+			- https://.../admin/stock/:id
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes update stock",
+			"data" : {
+				"ID" : 1,
+				"category" : "pulsa",
+				"name" : "product1",
+				"price" : 10000,
+				"image" : "...",
+				"stock" : 0
+			}
+		}
+
+	Stock Update :
+		Endpoint :
+			- https://.../admin/stock/:id
+		Request :
+			- PUT
+		Body JSON : {
+			"category" : "pulsa",
+			"name" : "product1",
+			"price" : 10000,
+			"image" : "...",
+			"stock" : 1
+		}
+		Response : {
+			"message" : "succes update stock",
+			"data" : {
+				"ID" : 1,
+				"category" : "pulsa",
+				"name" : "product1",
+				"price" : 10000,
+				"image" : "...",
+				"stock" : 1
+			}
+		}
+	
+	Stock Delete :
+		Endpoint :
+			- https://.../admin/stock/:id
+		Request :
+			- DELETE
+		Body JSON : None
+		Response : {
+			"message" : "succes delete stock"
+		}
