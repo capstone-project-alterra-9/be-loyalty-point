@@ -99,7 +99,7 @@ User :
 				"price" : 10000,
 				"image" : "...",
 				"description" : "...",
-				"terms" : [
+				"terms" : [ // kayanya ini gausa si, terms nya dari anak FE aja nambahin sendiri
 					"term1",
 					"term2"
 				]
