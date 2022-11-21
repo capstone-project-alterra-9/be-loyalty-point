@@ -31,36 +31,6 @@ User :
 			}
 		}
 
-	Dashboard
-		Endpoint :
-			- https://.../user/dashboard
-		Request :
-			- GET
-		Body JSON : None
-		Response : {
-			"message" : "succes get dashboard",
-			"data" : {
-				"card_number" : "...", // mau tanya disini apakah perlu, karena username uda unique
-				"username" : "test",
-				"points" : 20000,
-				"products" : [ // recently reedem products
-					{
-						"ID" : 1,
-						"name" : "product1",
-						"price" : 10000,
-						"image" : "..."
-					},
-					{
-						"ID" : 2,
-						"name" : "product2",
-						"price" : 20000,
-						"image" : "..."
-					}
-				],
-				"qr_code" : "..."
-			}
-		}
-
 	Products Pulsa :
 		Endpoint :
 			- https://.../user/products/pulsa
