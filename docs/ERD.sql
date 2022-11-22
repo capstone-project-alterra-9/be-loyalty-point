@@ -4,23 +4,11 @@ CREATE TABLE Users (
     ID INTEGER PRIMARY KEY,
     CreatedAt TIMESTAMP NOT NULL,
     UpdatedAt TIMESTAMP NOT NULL,
-    Name VARCHAR(255) NOT NULL,
     Username VARCHAR(255) NOT NULL,
     Email VARCHAR(255) NOT NULL,
     Password VARCHAR(255) NOT NULL,
     Points INTEGER NOT NULL,
     Status VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE VoucherPoints (
-    ID INTEGER PRIMARY KEY,
-    CreatedAt TIMESTAMP NOT NULL,
-    UpdatedAt TIMESTAMP NOT NULL,
-    RedeemCode VARCHAR(255) NOT NULL,
-    Points INTEGER NOT NULL,
-    Status VARCHAR(255) NOT NULL,
-    RedeemedBy INTEGER NOT NULL,
-    FOREIGN KEY (RedeemedBy) REFERENCES Users(ID)
 );
 
 CREATE TABLE Products (
@@ -30,11 +18,9 @@ CREATE TABLE Products (
     Category VARCHAR(255) NOT NULL,
     Name VARCHAR(255) NOT NULL,
     Description VARCHAR(255) NOT NULL,
-    SerialNumber VARCHAR(255) NOT NULL,
     Price INTEGER NOT NULL,
     Stock INTEGER NOT NULL,
-    Image VARCHAR(255) NOT NULL,
-    Status VARCHAR(255) NOT NULL,
+    Image VARCHAR(255) NOT NULL
     CreatedBy VARCHAR(255) NOT NULL,
     UpdatedBy VARCHAR(255) NOT NULL,
     FOREIGN KEY (CreatedBy) REFERENCES Admins(Name),
@@ -60,11 +46,13 @@ CREATE TABLE Transactions (
     UserID INTEGER NOT NULL,
     ProductID INTEGER NOT NULL,
     SerialNumber VARCHAR(255) NOT NULL,
+    PhoneNumber VARCHAR(255) NOT NULL,
     TotalPrice INTEGER NOT NULL,
-    Status VARCHAR(255) NOT NULL,
+    LastUpdatedBy VARCHAR(255) NOT NULL,
     FOREIGN KEY (UserID) REFERENCES Users(ID),
     FOREIGN KEY (ProductID) REFERENCES Products(ID),
-    FOREIGN KEY (SerialNumber) REFERENCES Products(SerialNumber)
+    FOREIGN KEY (SerialNumber) REFERENCES Products(SerialNumber),
+    FOREIGN KEY (LastUpdatedBy) REFERENCES Admins(Name)
 );
 
 CREATE TABLE Admins (

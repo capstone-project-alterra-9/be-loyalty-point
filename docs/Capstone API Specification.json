@@ -130,23 +130,6 @@ User :
 			"message" : "succes delete user"
 		}
 	
-	// masih tebakan aku aja, ini diluar kerjaan anak ui/ux juga si, salah satu cara user dapetin pointnya juga
-	Redeem :
-		Endpoint :
-			- https://.../user/redeem
-		Request :
-			- POST
-		Body JSON : {
-			"redeem_code" : "..."
-		}
-		Response : {
-			"message" : "succes redeem",
-			"data" : {
-				"points" : 1000,
-				"store" : "store1"
-			}
-		}
-	
 	History :
 		Endpoint :
 			- https://.../user/history
@@ -214,19 +197,6 @@ Admin :
 				"token" : "..."
 			}
 		}
-
-	Dashboard :
-		Endpoint :
-			- https://.../admin/dashboard
-		Request :
-			- GET
-		Body JSON : None
-		Response : {
-			"message" : "succes get dashboard",
-			"data" : {
-				// masih belum ada kalo aku liat dr figma anak ui/ux
-			}
-		}
 	
 	Add Points : // ini aku buat sendiri diluar figma, karena kata anak ui/ux gapake ada cara user dapetin pointnya
 		Endpoint :
@@ -267,6 +237,25 @@ Admin :
 					"password" : "testpassword02"
 				}
 			]
+		}
+
+	Users Detail :
+		Endpoint :
+			- https://.../admin/users/:id
+		Request :
+			- GET
+		Body JSON : None
+		Response : {
+			"message" : "succes get users detail",
+			"data" : {
+				"ID" : 1,
+				"Created_at" : "...",
+				"Updated_at" : "...",
+				"Deteled_at" : null,
+				"username" : "test",
+				"email" : "testmail01@gmail.com",
+				"password" : "testpassword01"
+			}
 		}
 
 	Users Update :
