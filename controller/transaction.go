@@ -8,14 +8,14 @@ import (
 )
 
 func CreateTransaction(c echo.Context) error {
-	var transaction entity.Transactions
-	err := c.Bind(&transaction)
+	var transactionParam entity.TransactionBinding
+	err := c.Bind(&transactionParam)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Invalid request", err))
 	}
 
 	var result entity.Transactions
-	result, err = Service.CreateTransaction(c, transaction)
+	result, err = Service.CreateTransaction(c, transactionParam)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to create transaction", err))
 	}

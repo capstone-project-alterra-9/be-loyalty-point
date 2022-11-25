@@ -29,7 +29,7 @@ type authSvc interface{}
 type productSvc interface{}
 
 type trasanctionSvc interface {
-	CreateTransaction(c echo.Context, transaction entity.Transactions) (entity.Transactions, error)
+	CreateTransaction(c echo.Context, param entity.TransactionBinding) (entity.Transactions, error)
 }
 
 type userSvc interface{}
