@@ -1,7 +1,9 @@
 package service
 
 import (
+	"capstone-project/entity"
 	"capstone-project/repository"
+	"github.com/labstack/echo/v4"
 )
 
 type Service struct {
@@ -23,7 +25,9 @@ type Svc interface {
 
 type authSvc interface{}
 
-type productSvc interface{}
+type productSvc interface {
+	CreateProduct(c echo.Context, product *entity.Products) (*entity.Products, error)
+}
 
 type trasanctionSvc interface{}
 

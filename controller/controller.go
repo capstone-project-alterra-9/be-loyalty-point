@@ -2,6 +2,8 @@ package controller
 
 import (
 	"capstone-project/service"
+
+	"github.com/labstack/echo/v4"
 )
 
 type Controller interface {
@@ -13,7 +15,9 @@ type Controller interface {
 
 type authController interface{}
 
-type productController interface{}
+type productController interface {
+	CreateProduct(c echo.Context) error
+}
 
 type transactionController interface{}
 
