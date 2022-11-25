@@ -23,7 +23,8 @@ func New(Service service.Svc) *echo.Echo {
 	// e.POST("/login", controller.Login)
 	// e.POST("/register", controller.Register)
 
-	e.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
+	eAuth := e.Group("/auth")
+	eAuth.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
 	// Routing with JWT
 
 	return e
