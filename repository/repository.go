@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"capstone-project/entity"
+	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
 
@@ -21,7 +23,9 @@ type Repo interface {
 	userRepo
 }
 
-type authRepo interface{}
+type authRepo interface {
+	Register(c echo.Context, user entity.Users) (*entity.Users, error)
+}
 
 type productRepo interface{}
 
