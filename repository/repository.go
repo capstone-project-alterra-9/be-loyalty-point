@@ -24,11 +24,12 @@ type Repo interface {
 	userRepo
 }
 
-type authRepo interface{}
+type authRepo interface {
+	GetAdmins(c echo.Context) ([]entity.Admins, error)
+}
 
 type productRepo interface {
 	CreateProduct(c echo.Context, product *entity.Products) (*entity.Products, error)
-	GetAdmins(c echo.Context) ([]entity.Admins, error)
 }
 
 type transactionRepo interface{}
