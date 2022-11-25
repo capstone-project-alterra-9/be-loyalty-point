@@ -30,6 +30,8 @@ type authRepo interface {
 
 type productRepo interface {
 	CreateProduct(c echo.Context, product *entity.Products) (*entity.Products, error)
+	CreateSerialNumber(c echo.Context, serialNumber *entity.SerialNumbers) error
+	GetSerialNumbers(c echo.Context) ([]entity.SerialNumbers, error)
 }
 
 type transactionRepo interface{}

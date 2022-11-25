@@ -13,11 +13,19 @@ func (r *repository) CreateProduct(c echo.Context, product *entity.Products) (*e
 	return product, nil
 }
 
-func (r *repository) GetAdmins(c echo.Context) ([]entity.Admins, error) {
-	var admins []entity.Admins
-	err := r.connection.Find(&admins).Error
+func (r *repository) CreateSerialNumber(c echo.Context, serialNumber *entity.SerialNumbers) error {
+	err := r.connection.Create(&serialNumber).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *repository) GetSerialNumbers(c echo.Context) ([]entity.SerialNumbers, error) {
+	var serialNumbers []entity.SerialNumbers
+	err := r.connection.Find(&serialNumbers).Error
 	if err != nil {
 		return nil, err
 	}
-	return admins, nil
+	return serialNumbers, nil
 }
