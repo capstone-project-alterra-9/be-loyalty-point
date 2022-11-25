@@ -36,8 +36,9 @@ type Transactions struct {
 	UserID        uint   `gorm:"type:int;not null" json:"user_id"`
 	ProductID     uint   `gorm:"type:int;not null" json:"product_id"`
 	SerialNumber  string `gorm:"type:varchar(100);not null" json:"serial_number"`
-	PhoneNumber   string `gorm:"type:varchar(20);not null" json:"phone_number"`
+	IdentifierNum string `gorm:"type:varchar(100);not null" json:"identifier_num"`
 	TotalPrice    int    `gorm:"type:int;not null" json:"total_price"`
+	Status        string `gorm:"type:varchar(20);not null" json:"status"`
 	LastUpdatedBy string `gorm:"type:varchar(20);not null" json:"last_updated_by"`
 }
 
