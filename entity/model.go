@@ -41,7 +41,7 @@ type SerialNumbers struct {
 
 type Transactions struct {
 	ID            string `gorm:"type:varchar(100);not null;primary_key" json:"id"`
-	UserID        uint   `gorm:"type:int;not null" json:"user_id"`
+	UserID        string `gorm:"type:varchar(100);not null" json:"user_id"`
 	ProductID     uint   `gorm:"type:int;not null" json:"product_id"`
 	SerialNumber  string `gorm:"type:varchar(100);not null" json:"serial_number"`
 	IdentifierNum string `gorm:"type:varchar(100);not null" json:"identifier_num"`
