@@ -2,7 +2,7 @@ package repository
 
 import (
 	"capstone-project/entity"
-
+  
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
 )
@@ -25,6 +25,7 @@ type Repo interface {
 }
 
 type authRepo interface {
+	GetUserLogin(c echo.Context, user entity.LoginBinding) (*entity.Users, error)
 	GetUserAuth(c echo.Context, user string) (*entity.Users, error)
 	GetAdminAuth(c echo.Context, user string) (*entity.Admins, error)
 }
@@ -36,4 +37,6 @@ type transactionRepo interface {
 	GetTransactionsByUser(c echo.Context, ID string) ([]entity.Transactions, error)
 }
 
-type userRepo interface{}
+type userRepo interface {
+	CreateUser(c echo.Context, user entity.Users) (*entity.Users, error)
+}

@@ -20,8 +20,8 @@ func New(Service service.Svc) *echo.Echo {
 	m.LogMiddleware(e)
 
 	// Routing withouth JWT
-	// e.POST("/api/login", controller.Login)
-	// e.POST("/api/register", controller.Register)
+	e.POST("/api/login", controller.Login)
+	e.POST("/api/register", controller.Register)
 
 	eAuth := e.Group("/auth")
 	eAuth.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
