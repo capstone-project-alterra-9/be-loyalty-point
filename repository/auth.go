@@ -5,10 +5,12 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (r *repository) Register(c echo.Context, user entity.Users) (*entity.Users, error) {
-	err := r.connection.Create(&user).Error
-	if err != nil {
+func (r *repository) GetUserLogin(c echo.Context, user entity.LoginBinding) (*entity.Users, error) {
+	var userDomain *entity.Users
+	err := r.connection.First(&userDomain, "email = ?", user.Email).Error
+	if userDomain.ID == "" {
 		return nil, err
 	}
-	return &user, nil
+
+	return userDomain, nil
 }
