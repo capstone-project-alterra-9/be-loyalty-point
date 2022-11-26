@@ -21,7 +21,7 @@ func New(Service service.Svc) *echo.Echo {
 
 	// Routing withouth JWT
 	// e.POST("/login", controller.Login)
-	// e.POST("/register", controller.Register)
+	e.POST("/register", controller.Register)
 
 	eAuth := e.Group("/auth")
 	eAuth.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))

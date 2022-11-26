@@ -22,7 +22,6 @@ type Products struct {
 	Image       string `gorm:"type:varchar(200);not null" json:"image"`
 	CreatedBy   string `gorm:"type:varchar(20);not null" json:"created_by"`
 	UpdatedBy   string `gorm:"type:varchar(20);not null" json:"updated_by"`
-}
 
 type SerialNumbers struct {
 	gorm.Model
