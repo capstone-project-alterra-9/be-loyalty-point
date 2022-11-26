@@ -1,15 +1,22 @@
 package entity
 
-import "gorm.io/gorm"
+import (
+	"time"
+
+	"gorm.io/gorm"
+)
 
 var DB *gorm.DB
 
 type Users struct {
-	gorm.Model
-	Username string `gorm:"type:varchar(20);not null;unique" json:"username"`
-	Email    string `gorm:"type:varchar(100);not null;unique" json:"email"`
-	Password string `gorm:"type:varchar(100);not null" json:"password"`
-	Points   int    `gorm:"type:int;not null" json:"points"`
+	ID        string `gorm:"type:varchar(100);not null;primary_key" json:"id"`
+	Username  string `gorm:"type:varchar(20);not null;unique" json:"username"`
+	Email     string `gorm:"type:varchar(100);not null;unique" json:"email"`
+	Password  string `gorm:"type:varchar(100);not null" json:"password"`
+	Points    int    `gorm:"type:int;not null" json:"points"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }
 
 type Products struct {
@@ -33,7 +40,7 @@ type SerialNumbers struct {
 }
 
 type Transactions struct {
-	gorm.Model
+	ID            string `gorm:"type:varchar(100);not null;primary_key" json:"id"`
 	UserID        uint   `gorm:"type:int;not null" json:"user_id"`
 	ProductID     uint   `gorm:"type:int;not null" json:"product_id"`
 	SerialNumber  string `gorm:"type:varchar(100);not null" json:"serial_number"`
@@ -41,11 +48,17 @@ type Transactions struct {
 	TotalPrice    int    `gorm:"type:int;not null" json:"total_price"`
 	Status        string `gorm:"type:varchar(20);not null" json:"status"`
 	LastUpdatedBy string `gorm:"type:varchar(20);not null" json:"last_updated_by"`
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
+	DeletedAt     gorm.DeletedAt `gorm:"index"`
 }
 
 type Admins struct {
-	gorm.Model
-	Name     string `gorm:"type:varchar(100);not null" json:"name"`
-	Username string `gorm:"type:varchar(20);not null;unique" json:"username"`
-	Password string `gorm:"type:varchar(100);not null" json:"password"`
+	ID        string `gorm:"type:varchar(100);not null;primary_key" json:"id"`
+	Name      string `gorm:"type:varchar(100);not null" json:"name"`
+	Username  string `gorm:"type:varchar(20);not null;unique" json:"username"`
+	Password  string `gorm:"type:varchar(100);not null" json:"password"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt gorm.DeletedAt `gorm:"index"`
 }

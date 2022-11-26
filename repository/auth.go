@@ -2,25 +2,26 @@ package repository
 
 import (
 	"capstone-project/entity"
-	"errors"
 
 	"github.com/labstack/echo/v4"
 )
 
-func (r *repository) GetUserAuth(c echo.Context) ([]entity.Users, error) {
-	var users []entity.Users
-	err := r.connection.Find(&users).Error
-	if err != nil {
-		return users, errors.New("you are not authorized")
+func (r *repository) GetUserAuth(c echo.Context, user string) (*entity.Users, error) {
+	var userDomain *entity.Users
+	err := r.connection.First(&userDomain, "username = ?", user).Error
+	if userDomain.ID == "" {
+		return nil, err
 	}
-	return users, nil
+
+	return userDomain, nil
 }
 
-func (r *repository) GetAdminAuth(c echo.Context) ([]entity.Admins, error) {
-	var admins []entity.Admins
-	err := r.connection.Find(&admins).Error
-	if err != nil {
-		return nil, errors.New("you are not an admin")
+func (r *repository) GetAdminAuth(c echo.Context, user string) (*entity.Admins, error) {
+	var adminDomain *entity.Admins
+	err := r.connection.First(&adminDomain, "username = ?", user).Error
+	if adminDomain.ID == "" {
+		return nil, err
 	}
-	return admins, nil
+
+	return adminDomain, nil
 }

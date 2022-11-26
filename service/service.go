@@ -29,7 +29,7 @@ type authSvc interface{}
 type productSvc interface{}
 
 type trasanctionSvc interface {
-	GetTransactions(c echo.Context, user string) ([]entity.Transactions, error)
+	GetTransactions(c echo.Context) ([]entity.Transactions, error)
 }
 
 type userSvc interface{}
