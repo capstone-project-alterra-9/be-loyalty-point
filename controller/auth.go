@@ -6,8 +6,6 @@ import (
 	"capstone-project/dto"
 	"capstone-project/entity"
 	"github.com/labstack/echo/v4"
-	guuid "github.com/google/uuid"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func Register(c echo.Context) error {
@@ -15,10 +13,6 @@ func Register(c echo.Context) error {
 	if err := c.Bind(&user); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to process request", err))
 	}
-
-	user.ID = (guuid.New()).String();
-	password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	user.Password = string(password)
 
 	result, err := Service.Register(c, user)
 	if err != nil {
