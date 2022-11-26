@@ -16,6 +16,7 @@ type Products struct {
 	gorm.Model
 	Category  string `gorm:"type:varchar(20);not null" json:"category"`
 	Name      string `gorm:"type:varchar(100);not null" json:"name"`
+	Descrition string `gorm:"type:varchar(200);not null" json:"description"`
 	Price     int    `gorm:"type:int;not null" json:"price"`
 	Stock     int    `gorm:"type:int;not null" json:"stock"`
 	Image     string `gorm:"type:varchar(200);not null" json:"image"`
