@@ -9,40 +9,47 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (s *Service) Register(c echo.Context, user entity.Users) (*entity.RegisterView, error) {
-	user.Points = 20000
-	user.ID = (guuid.New()).String();
+func (s *Service) Register(c echo.Context, user entity.RegisterBinding) (*entity.RegisterView, error) {
+	var userDomain entity.Users
+	userDomain.ID = (guuid.New()).String()
+	userDomain.Username = user.Username
+	userDomain.Email = user.Email
 	password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	user.Password = string(password)
+	userDomain.Password = string(password)
+	userDomain.Points = 20000
 
-	result, err := s.repo.Register(c, user)
+	result, err := s.repo.CreateUser(c, userDomain)
 	if err != nil {
 		return nil, err
 	}
 
 	return &entity.RegisterView{
-		ID:			result.ID,
-		Username: 	result.Username,
-		Email:    	result.Email,
-		Password: 	result.Password,
+		ID:       result.ID,
+		Username: result.Username,
+		Email:    result.Email,
+		Password: result.Password,
 	}, nil
 }
 
-func (s *Service) Login(c echo.Context, user entity.Users) (*entity.LoginView, error) {
-
-	result, err := s.repo.Login(c, user)
+func (s *Service) Login(c echo.Context, user entity.LoginBinding) (*entity.LoginView, error) {
+	result, err := s.repo.GetUserLogin(c, user)
 	if err != nil {
 		return nil, err
 	}
 
-	token,_ := jwtAuth.CreateToken(result.Username, result.Email)
-	refreshToken,_ := jwtAuth.CreateRefreshToken(result.Username, result.Email)
+	err = bcrypt.CompareHashAndPassword([]byte(result.Password), []byte(user.Password))
+	if err != nil {
+		return nil, err
+	}
+
+	token, _ := jwtAuth.CreateToken(result.Username, result.Email)
+	refreshToken, _ := jwtAuth.CreateRefreshToken(result.Username, result.Email)
 
 	return &entity.LoginView{
-		Username: 		result.Username,
-		Email:    		result.Email,
-		Password: 		result.Password,
-		Token: 			token,
-		RefreshToken: 	refreshToken,
+		Username:     result.Username,
+		Email:        result.Email,
+		Password:     result.Password,
+		Token:        token,
+		RefreshToken: refreshToken,
 	}, nil
 }

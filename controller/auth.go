@@ -9,7 +9,7 @@ import (
 )
 
 func Register(c echo.Context) error {
-	var user entity.Users
+	var user entity.RegisterBinding
 	if err := c.Bind(&user); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to process request", err))
 	}
@@ -23,13 +23,12 @@ func Register(c echo.Context) error {
 }
 
 func Login(c echo.Context) error {
-
-	var user entity.Users
-	if err := c.Bind(&user); err != nil {
+	var userBinding entity.LoginBinding
+	if err := c.Bind(&userBinding); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to process request", err))
 	}
 
-	result, err := Service.Login(c, user)
+	result, err := Service.Login(c, userBinding)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to login user", err))
 	}

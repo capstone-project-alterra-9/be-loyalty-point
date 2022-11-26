@@ -24,12 +24,13 @@ type Repo interface {
 }
 
 type authRepo interface {
-	Register(c echo.Context, user entity.Users) (*entity.Users, error)
-	Login(c echo.Context, user entity.Users) (*entity.Users, error)
+	GetUserLogin(c echo.Context, user entity.LoginBinding) (*entity.Users, error)
 }
 
 type productRepo interface{}
 
 type transactionRepo interface{}
 
-type userRepo interface{}
+type userRepo interface {
+	CreateUser(c echo.Context, user entity.Users) (*entity.Users, error)
+}
