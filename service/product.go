@@ -24,11 +24,11 @@ func (s *Service) CreateProduct(c echo.Context, product *entity.Products) (*enti
 				return nil, err
 			}
 			for i := 0; i < product.Stock; i++ {
-				var RandomNum string
+				var randomNum string
 				for {
-					RandomNum = strconv.Itoa(rand.Intn(999999999999-99999999999) - 99999999999)
+					randomNum = strconv.Itoa(rand.Intn(999999999999-99999999999) - 99999999999)
 					for _, serial := range SerialList {
-						if RandomNum == serial.Serial {
+						if randomNum == serial.Serial {
 							break
 						}
 					}
@@ -37,7 +37,7 @@ func (s *Service) CreateProduct(c echo.Context, product *entity.Products) (*enti
 
 				serialNumber := &entity.SerialNumbers{
 					ProductID: product.ID,
-					Serial:    RandomNum,
+					Serial:    randomNum,
 					Status:    "Available",
 					CreatedBy: product.CreatedBy,
 				}
@@ -45,6 +45,7 @@ func (s *Service) CreateProduct(c echo.Context, product *entity.Products) (*enti
 				if err != nil {
 					return nil, err
 				}
+				SerialList = append(SerialList, *serialNumber)
 			}
 			return s.repo.CreateProduct(c, product)
 		}
