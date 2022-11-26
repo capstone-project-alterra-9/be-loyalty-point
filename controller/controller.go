@@ -14,6 +14,7 @@ type Controller interface {
 
 type authController interface {
 	Register(c echo.Context) error
+	Login(c echo.Context) error
 }
 
 type productController interface{}

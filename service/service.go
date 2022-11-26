@@ -25,6 +25,7 @@ type Svc interface {
 
 type authSvc interface {
 	Register(c echo.Context, user entity.Users) (*entity.RegisterView, error)
+	Login(c echo.Context, user entity.Users) (*entity.LoginView, error)
 }
 
 type productSvc interface{}

@@ -25,6 +25,7 @@ type Repo interface {
 
 type authRepo interface {
 	Register(c echo.Context, user entity.Users) (*entity.Users, error)
+	Login(c echo.Context, user entity.Users) (*entity.Users, error)
 }
 
 type productRepo interface{}

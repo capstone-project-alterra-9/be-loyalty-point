@@ -1,15 +1,21 @@
 package entity
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+	"time"
+)
 
 var DB *gorm.DB
 
 type Users struct {
-	gorm.Model
+	ID		 string 
 	Username string `gorm:"type:varchar(20);not null;unique" json:"username"`
 	Email    string `gorm:"type:varchar(100);not null;unique" json:"email"`
 	Password string `gorm:"type:varchar(100);not null" json:"password"`
 	Points   int    `gorm:"type:int;not null" json:"points"`
+	CreatedAt 		time.Time
+	UpdatedAt 		time.Time
+	DeletedAt 		gorm.DeletedAt
 }
 
 type Products struct {
@@ -22,6 +28,7 @@ type Products struct {
 	Image       string `gorm:"type:varchar(200);not null" json:"image"`
 	CreatedBy   string `gorm:"type:varchar(20);not null" json:"created_by"`
 	UpdatedBy   string `gorm:"type:varchar(20);not null" json:"updated_by"`
+}
 
 type SerialNumbers struct {
 	gorm.Model
