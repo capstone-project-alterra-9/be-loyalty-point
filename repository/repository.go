@@ -25,7 +25,7 @@ type Repo interface {
 }
 
 type authRepo interface {
-	GetAdmins(c echo.Context) ([]entity.Admins, error)
+	GetAdminAuth(c echo.Context) ([]entity.Admins, error)
 }
 
 type productRepo interface {

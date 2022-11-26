@@ -11,7 +11,7 @@ import (
 )
 
 func (s *Service) CreateProduct(c echo.Context, product *entity.Products) (*entity.Products, error) {
-	result, err := s.repo.GetAdmins(c)
+	result, err := s.repo.GetAdminAuth(c)
 	if err != nil {
 		return nil, err
 	}
