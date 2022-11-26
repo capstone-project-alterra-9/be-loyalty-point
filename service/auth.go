@@ -2,6 +2,7 @@ package service
 
 import (
 	"capstone-project/entity"
+	jwtAuth "capstone-project/middleware"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,13 +28,14 @@ func (s *Service) Login(c echo.Context, user entity.Users) (*entity.LoginView, e
 		return nil, err
 	}
 
-	// token := uu.jwtAuth.GenerateToken(int(user.ID))
-	token := "test"
+	token,_ := jwtAuth.CreateToken(result.Username, result.Email)
+	refreshToken,_ := jwtAuth.CreateRefreshToken(result.Username, result.Email)
 
 	return &entity.LoginView{
-		Username: 	result.Username,
-		Email:    	result.Email,
-		Password: 	result.Password,
-		Token: 		token,
+		Username: 		result.Username,
+		Email:    		result.Email,
+		Password: 		result.Password,
+		Token: 			token,
+		RefreshToken: 	refreshToken,
 	}, nil
 }
