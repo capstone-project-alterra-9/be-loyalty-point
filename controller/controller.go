@@ -13,6 +13,7 @@ type Controller interface {
 }
 
 type authController interface {
+	Connected(c echo.Context) error
 	Register(c echo.Context) error
 	Login(c echo.Context) error
 }

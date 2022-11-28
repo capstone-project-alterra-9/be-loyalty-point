@@ -8,6 +8,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func Connected(c echo.Context) error {
+	return c.String(http.StatusOK, "Hello From Backend")
+}
+
 func Register(c echo.Context) error {
 	var user entity.RegisterBinding
 	if err := c.Bind(&user); err != nil {

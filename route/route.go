@@ -20,6 +20,7 @@ func New(Service service.Svc) *echo.Echo {
 	m.LogMiddleware(e)
 
 	// Routing withouth JWT
+	e.GET("/", controller.Connected)
 	e.POST("/api/login", controller.Login)
 	e.POST("/api/register", controller.Register)
 
