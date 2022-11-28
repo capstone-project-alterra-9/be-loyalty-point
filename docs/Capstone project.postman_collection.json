@@ -77,7 +77,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"succes get user by id\",\n    \"data\" : {\n\t    \"ID\" : 1,\n\t\t\"CreatedAt\": \"2022-11-06T16:48:08.886542Z\",\n        \"UpdatedAt\": \"2022-11-06T16:48:08.886542Z\",\n        \"DeletedAt\": null,\n\t\t\"username\" : \"test\",\n\t\t\"email\" : \"testmail01@gmail.com\",\n\t\t\"password\" : \"testpassword01\",\n        \"point\" : 20000,\n        \"status\" : \"active\"\n\t}\n}"
+							"body": "{\n    \"message\": \"succes get user by id\",\n    \"data\" : {\n\t    \"ID\" : \"ini string panjang\",\n\t\t\"createdAt\": \"2022-11-06T16:48:08.886542Z\",\n        \"updatedAt\": \"2022-11-06T16:48:08.886542Z\",\n        \"deletedAt\": null,\n        \"role\" : \"user\",\n\t\t\"username\" : \"test\",\n\t\t\"email\" : \"testmail01@gmail.com\",\n\t\t\"password\" : \"testpassword01\",\n        \"point\" : 20000\n\t}\n}"
 						}
 					]
 				},
@@ -135,7 +135,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"succes get users\",\n    \"data\": [\n        {\n            \"ID\": 1,\n            \"username\": \"test\",\n            \"email\": \"testmail01@gmail.com\",\n            \"password\": \"testpassword01\"\n        },\n        {\n            \"ID\": 2,\n            \"username\": \"test2\",\n            \"email\": \"testmail02@gmail.com\",\n            \"password\": \"testpassword02\"\n        }\n    ]\n}"
+							"body": "{\n    \"message\": \"succes get users\",\n    \"data\": [\n        {\n            \"ID\": \"ini string panjang\",\n            \"role\" : \"user\",\n            \"username\": \"test\",\n            \"email\": \"testmail01@gmail.com\",\n            \"password\": \"testpassword01\"\n        },\n        {\n            \"ID\": \"ini string panjang\",\n            \"role\" : \"admin\",\n            \"username\": \"test2\",\n            \"email\": \"testmail02@gmail.com\",\n            \"password\": \"testpassword02\"\n        }\n    ]\n}"
 						}
 					]
 				},
@@ -297,7 +297,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"succes update user\",\n    \"data\": {\n        \"ID\" : 1,\n        \"CreatedAt\": \"2022-11-06T16:48:08.886542Z\",\n        \"UpdatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"DeletedAt\": null,\n        \"username\" : \"test-update\",\n        \"email\" : \"testmail0@gmail.com\",\n        \"password\" : \"testpassword01-update\",\n        \"points\" : 20000,\n        \"status\" : \"active\"\n    }\n}"
+							"body": "{\n    \"message\": \"succes update user\",\n    \"data\": {\n        \"ID\" : \"ini string panjang\",\n        \"CreatedAt\": \"2022-11-06T16:48:08.886542Z\",\n        \"UpdatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"DeletedAt\": null,\n        \"role\" : \"user\",\n        \"username\" : \"test-update\",\n        \"email\" : \"testmail0@gmail.com\",\n        \"password\" : \"testpassword01-update\",\n        \"points\" : 20000\n    }\n}"
 						}
 					]
 				},
@@ -318,7 +318,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\" : \"test\",\r\n    \"email\" : \"testmail01@gmail.com\",\r\n    \"password\" : \"testpassword01\",\r\n    \"points\" : 20000\r\n}",
+							"raw": "{\r\n    \"username\" : \"test\",\r\n    \"email\" : \"testmail01@gmail.com\",\r\n    \"password\" : \"testpassword01\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -344,7 +344,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"username\" : \"test\",\r\n    \"email\" : \"testmail01@gmail.com\",\r\n    \"password\" : \"testpassword01\",\r\n    \"points\" : 20000\r\n}",
+									"raw": "{\r\n    \"username\" : \"test\",\r\n    \"email\" : \"testmail01@gmail.com\",\r\n    \"password\" : \"testpassword01\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -373,7 +373,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\r\n    \"message\": \"succes add user\",\r\n    \"data\" : {\r\n\t    \"ID\" : 1,\r\n\t\t\"CreatedAt\": \"2022-11-06T16:48:08.886542Z\",\r\n        \"UpdatedAt\": \"2022-11-06T16:48:08.886542Z\",\r\n        \"DeletedAt\": null,\r\n\t\t\"username\" : \"test\",\r\n\t\t\"email\" : \"testmail01@gmail.com\",\r\n\t\t\"password\" : \"testpassword01\",\r\n        \"point\" : 20000,\r\n        \"status\" : \"active\"\r\n\t}\r\n}"
+							"body": "{\r\n    \"message\": \"succes add user\",\r\n    \"data\" : {\r\n\t    \"ID\" : \"ini string panjang\",\r\n\t\t\"CreatedAt\": \"2022-11-06T16:48:08.886542Z\",\r\n        \"UpdatedAt\": \"2022-11-06T16:48:08.886542Z\",\r\n        \"DeletedAt\": null,\r\n        \"role\" : \"admin\",\r\n\t\t\"username\" : \"test\",\r\n\t\t\"email\" : \"testmail@gmail.com\",\r\n\t\t\"password\" : \"testpassword\",\r\n        \"point\" : 20000\r\n\t}\r\n}"
 						}
 					]
 				}
@@ -436,7 +436,135 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"succes get transactions\",\n    \"data\": [\n        {\n            \"ID\": 1,\n            \"CreatedAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"UpdatedAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"DeletedAt\": null,\n            \"category\": \"pulsa\",\n            \"name\": \"product1\",\n            \"price\": 10000,\n            \"image\": \"...\",\n            \"serial_number\": \"1234567890\",\n            \"phone_number\": \"081234567890\",\n            \"last_updated_by\" : \"\"\n        },\n        {\n            \"ID\": 2,\n            \"CreatedAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"UpdatedAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"DeletedAt\": null,\n            \"category\": \"pulsa\",\n            \"name\": \"product2\",\n            \"price\": 20000,\n            \"image\": \"...\",\n            \"serial_number\": \"1234567890\",\n            \"phone_number\": \"081234567890\",\n            \"last_updated_by\" : \"\"\n        }\n    ]\n}"
+							"body": "{\n    \"message\": \"succes get transactions\",\n    \"data\": [\n        {\n            \"ID\": \"ini string panjang\",\n            \"createdAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"updatedAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"deletedAt\": null,\n            \"paymentMethod\": \"redeem\",\n            \"category\": \"pulsa\",\n            \"name\": \"product1\",\n            \"price\": 10000,\n            \"image\": \"...\",\n            \"serialNumber\": \"1234567890\",\n            \"identifierNum\": \"081234567890\"\n        },\n        {\n            \"ID\": \"ini string panjang\",\n            \"createdAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"updatedAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"deletedAt\": null,\n            \"paymentMethod\": \"buy\",\n            \"category\": \"pulsa\",\n            \"name\": \"product2\",\n            \"price\": 20000,\n            \"image\": \"...\",\n            \"serialNumber\": \"1234567890\",\n            \"identifierNum\": \"081234567890\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get transactions by method",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/transactions?method=methodName",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "method",
+									"value": "methodName"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get transactions by method",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/transactions?method=methodName",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"transactions"
+									],
+									"query": [
+										{
+											"key": "method",
+											"value": "methodName"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"succes get transactions by method\",\n    \"data\": [\n        {\n            \"ID\": \"ini string panjang\",\n            \"createdAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"updatedAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"deletedAt\": null,\n            \"paymentMethod\": \"methodName\",\n            \"category\": \"pulsa\",\n            \"name\": \"product1\",\n            \"price\": 10000,\n            \"image\": \"...\",\n            \"serialNumber\": \"1234567890\",\n            \"identifierNum\": \"081234567890\"\n        },\n        {\n            \"ID\": \"ini string panjang\",\n            \"createdAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"updatedAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"deletedAt\": null,\n            \"paymentMethod\": \"methodName\",\n            \"category\": \"pulsa\",\n            \"name\": \"product2\",\n            \"price\": 20000,\n            \"image\": \"...\",\n            \"serialNumber\": \"1234567890\",\n            \"identifierNum\": \"081234567890\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get transactions by user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/history",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"history"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get transactions by user",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/history",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"history"
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"succes get history\",\n    \"data\": [\n        {\n            \"ID\": \"ini string panjang\",\n            \"createdAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"updatedAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"deletedAt\": null,\n            \"paymentMethod\": \"redeem\",\n            \"category\": \"pulsa\",\n            \"name\": \"product1\",\n            \"price\": 10000,\n            \"image\": \"...\",\n            \"serialNumber\": \"1234567890\",\n            \"identifierNum\": \"081234567890\"\n        },\n        {\n            \"ID\": \"ini string panjang\",\n            \"createdAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"updatedAt\": \"2022-11-22T16:48:08.886542Z\",\n            \"deletedAt\": null,\n            \"paymentMethod\": \"buy\",\n            \"category\": \"pulsa\",\n            \"name\": \"product2\",\n            \"price\": 20000,\n            \"image\": \"...\",\n            \"serialNumber\": \"1234567890\",\n            \"identifierNum\": \"081234567890\"\n        }\n    ]\n}"
 						}
 					]
 				},
@@ -457,7 +585,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"product_id\" : 1,\r\n    \"phone_number\" : \"08123456789\"\r\n}",
+							"raw": "{\r\n    \"productID\" : 1,\r\n    \"identifierNum\" : \"08123456789\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -483,7 +611,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"product_id\" : 1,\r\n    \"phone_number\" : \"08123456789\"\r\n}",
+									"raw": "{\r\n    \"paymentMethod\" : \"redeem\",\r\n    \"productID\" : 1,\r\n    \"identifierNum\" : \"08123456789\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -512,7 +640,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"succes add transaction\",\n    \"data\": {\n        \"ID\": 1,\n        \"CreatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"UpdatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"DeletedAt\": null,\n        \"username\" : \"test-updated\",\n        \"category\": \"pulsa\",\n        \"name\": \"product1\",\n        \"price\": 10000,\n        \"image\": \"...\",\n        \"serial_number\": \"1234567890\",\n        \"phone_number\": \"081234567890\",\n        \"last_updated_by\" : \"\"\n    }\n}"
+							"body": "{\n    \"message\": \"succes add transaction\",\n    \"data\": {\n        \"ID\": \"ini string panjang\",\n        \"createdAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"updatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"deletedAt\": null,\n        \"paymentMethod\" : \"redeem\",\n        \"username\" : \"test-updated\",\n        \"category\": \"pulsa\",\n        \"name\": \"product1\",\n        \"price\": 10000,\n        \"image\": \"...\",\n        \"serialNumber\": \"1234567890\",\n        \"identifierNum\": \"081234567890\"\n    }\n}"
 						}
 					]
 				},
@@ -566,7 +694,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"buyyer_id\" : \"1\",\r\n    \"product_id\" : \"1\",\r\n    \"serial_number\" : \"...\",\r\n    \"price\" : 10000\r\n}",
+									"raw": "{\r\n    \"buyyerID\" : \"ini string id panjang\",\r\n    \"productID\" : \"ini string produk panjang\",\r\n    \"serialNumber\" : \"ini integer 12 digit\",\r\n    \"price\" : 10000\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -602,7 +730,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"succes update transaction\",\n    \"data\": {\n        \"ID\": 1,\n        \"CreatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"UpdatedAt\": \"2022-11-23T16:48:08.886542Z\",\n        \"DeletedAt\": null,\n        \"username\" : \"test-updated\",\n        \"category\": \"pulsa\",\n        \"name\": \"product1\",\n        \"price\": 10000,\n        \"image\": \"...\",\n        \"serial_number\": \"1234567890\",\n        \"phone_number\": \"081234567890\",\n        \"last_updated_by\" : \"admin01\"\n    }\n}"
+							"body": "{\n    \"message\": \"succes update transaction\",\n    \"data\": {\n        \"ID\": \"ini string panjang\",\n        \"createdAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"updatedAt\": \"2022-11-23T16:48:08.886542Z\",\n        \"deletedAt\": null,\n        \"username\" : \"test-updated\",\n        \"category\": \"pulsa\",\n        \"name\": \"product1\",\n        \"price\": 10000,\n        \"image\": \"...\",\n        \"serialNumber\": \"1234567890\",\n        \"identifierNum\": \"081234567890\"\n    }\n}"
 						}
 					]
 				},
@@ -690,7 +818,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"test\",\n    \"email\": \"testmail01@gmail.com\",\n    \"password\": \"testpassword01\"\n}",
+							"raw": "{\n    \"username\": \"amzar\",\n    \"email\": \"aji@gmail.com\",\n    \"password\": \"testpassword01\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -756,7 +884,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\": \"test\",\n    \"password\": \"testpassword01\"\n}",
+							"raw": "{\n    \"email\": \"asep@gmail.com\",\n    \"password\": \"testpassword01\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -782,7 +910,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"username\": \"test\",\n    \"password\": \"testpassword01\"\n}",
+									"raw": "{\n    \"email\": \"asep@gmail.com\",\n    \"password\": \"testpassword01\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -811,7 +939,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"succes login\",\n    \"data\": {\n        \"username\": \"test\",\n        \"password\": \"testpassword01\",\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZXhwIjoxNjY3ODA0ODU0fQ.a0L1WTP5nb7llwHOHbvCDZxDdjAAaKMudz-MofQ-fo0\",\n        \"account\": \"users\"\n    }\n}"
+							"body": "{\n    \"message\": \"succes login\",\n    \"data\": {\n        \"username\": \"asepusername\",\n        \"email\": \"asep@gmail.com\",\n        \"password\": \"testpassword01\",\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZXhwIjoxNjY3ODA0ODU0fQ.a0L1WTP5nb7llwHOHbvCDZxDdjAAaKMudz-MofQ-fo0\",\n        \"refreshToken\" : \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZXhwIjoxNjY3ODA0ODU0fQ.a0L1WTP5nb7llwHOHbvCDZxDdjAAaKMudz-MofQ-fo0\",\n        \"account\": \"users\"\n    }\n}"
 						}
 					]
 				}
@@ -874,7 +1002,77 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"succes get products\",\n    \"data\": [\n        {\n            \"ID\": 1,\n            \"category\": \"pulsa\",\n            \"name\": \"product1\",\n            \"price\": 10000,\n            \"image\": \"...\",\n            \"stock\": 1\n        },\n        {\n            \"ID\": 2,\n            \"category\": \"pulsa\",\n            \"name\": \"product2\",\n            \"price\": 20000,\n            \"image\": \"...\",\n            \"stock\": 1\n        }\n    ]\n}"
+							"body": "{\n    \"message\": \"succes get products\",\n    \"data\": [\n        {\n            \"ID\": \"ini string panjang\",\n            \"category\": \"pulsa\",\n            \"name\": \"product1\",\n            \"price\": 10000,\n            \"image\": \"...\",\n            \"stock\": 1\n        },\n        {\n            \"ID\": \"ini string panjang\",\n            \"category\": \"pulsa\",\n            \"name\": \"product2\",\n            \"price\": 20000,\n            \"image\": \"...\",\n            \"stock\": 1\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "Get products by categories",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}/api/products?categories=categoriesName",
+							"host": [
+								"{{BASE_URL}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "categories",
+									"value": "categoriesName"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Get products by categories",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{BASE_URL}}/api/products?categories=categoriesName",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"api",
+										"products"
+									],
+									"query": [
+										{
+											"key": "categories",
+											"value": "categoriesName"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json",
+									"name": "Content-Type",
+									"description": "",
+									"type": "text"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"succes get products by categories\",\n    \"data\": [\n        {\n            \"ID\": \"ini string panjang\",\n            \"category\": \"pulsa\",\n            \"name\": \"product1\",\n            \"price\": 10000,\n            \"image\": \"...\",\n            \"stock\": 1\n        },\n        {\n            \"ID\": \"ini string panjang\",\n            \"category\": \"pulsa\",\n            \"name\": \"product2\",\n            \"price\": 20000,\n            \"image\": \"...\",\n            \"stock\": 1\n        }\n    ]\n}"
 						}
 					]
 				},
@@ -946,7 +1144,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\r\n\t\"message\" : \"succes get products pulsa detail\",\r\n    \"data\" : {\r\n\t\t\"ID\": 1,\r\n        \"CreatedAt\": \"2022-11-22T16:48:08.886542Z\",\r\n        \"UpdatedAt\": \"2022-11-22T16:48:08.886542Z\",\r\n        \"DeletedAt\": null,\r\n        \"category\": \"pulsa\",\r\n        \"name\": \"product1\",\r\n\t\t\"description\" : \"...\",\r\n        \"price\": 10000,\r\n        \"image\": \"...\",\r\n        \"created_by\" : \"admin01\",\r\n        \"updated_by\" : \"admin01\"\r\n\t}\r\n}"
+							"body": "{\r\n\t\"message\" : \"succes get products by id\",\r\n    \"data\" : {\r\n\t\t\"ID\": \"ini string panjang\",\r\n        \"createdAt\": \"2022-11-22T16:48:08.886542Z\",\r\n        \"updatedAt\": \"2022-11-22T16:48:08.886542Z\",\r\n        \"deletedAt\": null,\r\n        \"category\": \"pulsa\",\r\n        \"name\": \"product1\",\r\n\t\t\"description\" : \"...\",\r\n        \"price\": 10000,\r\n        \"image\": \"...\"\r\n\t}\r\n}"
 						}
 					]
 				},
@@ -1022,7 +1220,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"succes add product\",\n    \"data\": {\n        \"ID\": 1,\n        \"CreatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"UpdatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"DeletedAt\": null,\n        \"category\": \"pulsa\",\n        \"name\": \"product1\",\n        \"description\": \"...\",\n        \"price\": 10000,\n        \"image\": \"...\",\n        \"created_by\": \"admin01\",\n        \"updated_by\": \"admin01\"\n    }\n}"
+							"body": "{\n    \"message\": \"succes add product\",\n    \"data\": {\n        \"ID\": \"ini string panjang\",\n        \"CreatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"UpdatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"DeletedAt\": null,\n        \"category\": \"pulsa\",\n        \"name\": \"product1\",\n        \"description\": \"...\",\n        \"price\": 10000,\n        \"image\": \"...\"\n    }\n}"
 						}
 					]
 				},
@@ -1112,12 +1310,12 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"message\": \"succes update product\",\n    \"data\": {\n        \"ID\": 1,\n        \"CreatedAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"UpdatedAt\": \"2022-11-23T16:48:08.886542Z\",\n        \"DeletedAt\": null,\n        \"category\": \"pulsa\",\n        \"name\": \"product1-updated\",\n        \"description\": \"...\",\n        \"price\": 10000,\n        \"image\": \"...\",\n        \"created_by\": \"admin01\",\n        \"updated_by\": \"admin02\"\n    }\n}"
+							"body": "{\n    \"message\": \"succes update product\",\n    \"data\": {\n        \"ID\": \"ini string panjang\",\n        \"createdAt\": \"2022-11-22T16:48:08.886542Z\",\n        \"updatedAt\": \"2022-11-23T16:48:08.886542Z\",\n        \"deletedAt\": null,\n        \"category\": \"pulsa\",\n        \"name\": \"product1-updated\",\n        \"description\": \"...\",\n        \"price\": 10000,\n        \"image\": \"...\"\n    }\n}"
 						}
 					]
 				},
 				{
-					"name": "New Request",
+					"name": "Delete product",
 					"request": {
 						"auth": {
 							"type": "bearer",
@@ -1151,7 +1349,7 @@
 					},
 					"response": [
 						{
-							"name": "New Request",
+							"name": "Delete product",
 							"originalRequest": {
 								"method": "DELETE",
 								"header": [],
@@ -1214,7 +1412,7 @@
 	"variable": [
 		{
 			"key": "BASE_URL",
-			"value": "localhost:80",
+			"value": "localhost:8000",
 			"type": "string"
 		}
 	]
