@@ -7,4 +7,3 @@ vendor
 *.out
 .vscode
 /.env
-go.sum
