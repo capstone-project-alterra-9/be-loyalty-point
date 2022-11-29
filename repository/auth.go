@@ -12,7 +12,6 @@ func (r *repository) GetUserLogin(c echo.Context, user entity.LoginBinding) (*en
 	if userDomain.ID == "" {
 		return nil, err
 	}
-
 	return userDomain, nil
 }
 
@@ -22,7 +21,6 @@ func (r *repository) GetUserAuth(c echo.Context, user string) (*entity.Users, er
 	if userDomain.ID == "" {
 		return nil, err
 	}
-
 	return userDomain, nil
 }
 
@@ -32,6 +30,14 @@ func (r *repository) GetAdminAuth(c echo.Context, user string) (*entity.Users, e
 	if adminDomain.ID == "" {
 		return nil, err
 	}
-
 	return adminDomain, nil
+}
+
+func (r *repository) GetAuth(c echo.Context, user string) (*entity.Users, error) {
+	var userDomain *entity.Users
+	err := r.connection.First(&userDomain, "username = ?", user).Error
+	if userDomain.ID == "" {
+		return nil, err
+	}
+	return userDomain, nil
 }

@@ -35,7 +35,12 @@ type trasanctionSvc interface {
 	GetTransactions(c echo.Context) ([]entity.Transactions, error)
 	GetTransactionsRedeem(c echo.Context) ([]entity.Transactions, error)
 	GetTransactionsBuy(c echo.Context) ([]entity.Transactions, error)
+	GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error)
 	GetTransactionsByUser(c echo.Context) ([]entity.Transactions, error)
+	CreateTransactionByUser(c echo.Context, transaction entity.TransactionsBinding) (*entity.Transactions, error)
+	CreateTransactionByAdmin(c echo.Context, transaction entity.Transactions) (*entity.Transactions, error)
+	UpdateTransactionByAdmin(c echo.Context, ID string, transaction entity.UpdateTransactionBinding) (*entity.Transactions, error)
+	DeleteTransactionByAdmin(c echo.Context, transactionID string) error
 }
 
 type userSvc interface{}

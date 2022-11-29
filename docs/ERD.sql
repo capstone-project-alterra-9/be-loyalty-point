@@ -63,17 +63,51 @@ CREATE TABLE Admins (
     Password VARCHAR(255) NOT NULL
 );
 
-INSERT INTO Users(id, created_at, updated_at, role, username, email, password)
+INSERT INTO users(id, created_at, updated_at, role, username, email, password)
 VALUES
-    ('ini string panjang', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'admin', 'admin01', 'admin01@gmail.com', 'adminpass'),
-    ('ini string panjang user01', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'user', 'user01', 'user01@gmail.com', 'userpass'),
-    ('ini string panjang user02', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'user', 'user02', 'user02@gmail.com', 'userpass');
+    ('ini-string-panjang', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'admin', 'admin01', 'admin01@gmail.com', 'adminpass'),
+    ('ini-string-panjang-user01', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'user', 'user01', 'user01@gmail.com', 'userpass'),
+    ('ini-string-panjang-user02', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'user', 'user02', 'user02@gmail.com', 'userpass');
 
-INSERT INTO Transactions(id, created_at, updated_at, payment_method, user_id, product_id, serial_number, identifier_num, price, status)
+INSERT INTO transactions(id, created_at, updated_at, payment_method, user_id, product_id, serial_number, identifier_num, price, status)
 VALUES
-    ('ini string panjang transaksi01', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'redeem', 'ini string panjang user01', 'ini string panjang produk', 234131423213, '081239684271', 10000, 'pending'),
-    ('ini string panjang transaksi02', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'redeem', 'ini string panjang user02', 'ini string panjang produk', 234131423213, '081239684271', 10000, 'pending'),
-    ('ini string panjang transaksi01', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'buy', 'ini string panjang user01', 'ini string panjang produk', 234131423213, '081239684271', 10000, 'pending');
+    ('ini-string-panjang-transaksi01', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'redeem', 'ini-string-panjang-user01', 'ini-string-panjang-produk', 234131423213, '081239684271', 10000, 'pending'),
+    ('ini-string-panjang-transaksi02', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'redeem', 'ini-string-panjang-user02', 'ini-string-panjang-produk', 234131423213, '081239684271', 10000, 'pending'),
+    ('ini-string-panjang-transaksi03', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'buy', 'ini-string-panjang-user01', 'ini-string-panjang-produk', 234131423213, '081239684271', 10000, 'pending');
+
+INSERT INTO products(id, created_at, updated_at, category, name, description, price, stock, image)
+VALUES
+    ('ini-string-panjang-produk', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'pulsa', 'pulsa10k', 'ini pulsa dapet 10 ribu seharga 10k', 10000, 1, 'ini link image pulsa10k');
+
+INSERT INTO serial_numbers(id, created_at, updated_at, product_id, serial, status)
+VALUES
+    ('ini-string-panjang-serial', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'ini-string-panjang-produk', 234131423213, 'available');
+
+INSERT INTO points(id, user_id, points)
+VALUES
+    ('ini-string-panjang-point', 'ini-string-panjang-user01', 10000);
+
 
 -- eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMDEiLCJleHAiOjE2Njk4ODUwNDMsImVtYWlsIjoiYWRtaW4ifQ.4ENFOaeG_yyZzWbiWBcN67RHOPfelifSkpyvlQ8G948
 -- eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIwMUBnbWFpbC5jb20iLCJleHAiOjE2Njk4ODUwNDMsInVzZXJuYW1lIjoidXNlcjAxIn0.w8r4Q5eB_qDNKSPj-JF0mH_y7nA9gPxXJyNIfDGxPlU
+
+-- By User
+-- {
+--     "paymentMethod" : "buy",
+--     "productID" : "ini-string-panjang-produk",
+--     "identifierNum" : "08765432100"
+-- }
+
+-- By Admin
+-- {
+--     "paymentMethod" : "buy",
+--     "userID" : "dummy-from-admin",
+--     "productID" : "ini-string-panjang-produk",
+--     "identifierNum" : "08765432100"
+-- }
+
+
+-- http://localhost:8080/api/auth/transactions/c267a4d5-09a4-4f17-a7c0-75a6e0616522
+-- {
+--     "status" : "succes"
+-- }

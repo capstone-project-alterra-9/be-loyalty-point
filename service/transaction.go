@@ -2,15 +2,18 @@ package service
 
 import (
 	"capstone-project/entity"
-	"capstone-project/middleware"
+	jwtAuth "capstone-project/middleware"
+	"errors"
+
+	guuid "github.com/google/uuid"
 
 	"github.com/labstack/echo/v4"
 )
 
 func (s *Service) GetTransactions(c echo.Context) ([]entity.Transactions, error) {
-	user := middleware.ExtractTokenUsername(c)
-	admins, err := s.repo.GetAdminAuth(c, user)
-	if admins != nil {
+	user := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, user)
+	if adminAuth != nil {
 		transactions, err := s.repo.GetTransactions(c)
 		if err != nil {
 			return nil, err
@@ -21,9 +24,9 @@ func (s *Service) GetTransactions(c echo.Context) ([]entity.Transactions, error)
 }
 
 func (s *Service) GetTransactionsRedeem(c echo.Context) ([]entity.Transactions, error) {
-	user := middleware.ExtractTokenUsername(c)
-	admins, err := s.repo.GetAdminAuth(c, user)
-	if admins != nil {
+	user := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, user)
+	if adminAuth != nil {
 		transactions, err := s.repo.GetTransactionsRedeem(c)
 		if err != nil {
 			return nil, err
@@ -34,9 +37,9 @@ func (s *Service) GetTransactionsRedeem(c echo.Context) ([]entity.Transactions, 
 }
 
 func (s *Service) GetTransactionsBuy(c echo.Context) ([]entity.Transactions, error) {
-	user := middleware.ExtractTokenUsername(c)
-	admins, err := s.repo.GetAdminAuth(c, user)
-	if admins != nil {
+	user := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, user)
+	if adminAuth != nil {
 		transactions, err := s.repo.GetTransactionsBuy(c)
 		if err != nil {
 			return nil, err
@@ -46,8 +49,21 @@ func (s *Service) GetTransactionsBuy(c echo.Context) ([]entity.Transactions, err
 	return nil, err
 }
 
+func (s *Service) GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error) {
+	user := jwtAuth.ExtractTokenUsername(c)
+	auth, err := s.repo.GetAuth(c, user)
+	if auth != nil {
+		transactions, err := s.repo.GetTransactionByID(c, ID)
+		if err != nil {
+			return nil, err
+		}
+		return transactions, nil
+	}
+	return nil, err
+}
+
 func (s *Service) GetTransactionsByUser(c echo.Context) ([]entity.Transactions, error) {
-	user := middleware.ExtractTokenUsername(c)
+	user := jwtAuth.ExtractTokenUsername(c)
 	userDomain, err := s.repo.GetUserAuth(c, user)
 	if userDomain != nil {
 		transactions, err := s.repo.GetTransactionsByUser(c, userDomain.ID)
@@ -57,4 +73,122 @@ func (s *Service) GetTransactionsByUser(c echo.Context) ([]entity.Transactions, 
 		return transactions, nil
 	}
 	return nil, err
+}
+
+func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.TransactionsBinding) (*entity.Transactions, error) {
+	user := jwtAuth.ExtractTokenUsername(c)
+	userDomain, err := s.repo.GetUserAuth(c, user)
+	if userDomain != nil {
+		product, err := s.repo.GetProduct(c, transaction.ProductID)
+		if err != nil {
+			return nil, err
+		}
+		userPoints, err := s.repo.GetUserPoints(c, userDomain.ID)
+		if err != nil {
+			return nil, err
+		}
+		if userPoints.Points >= product.Price {
+			serial, err := s.repo.GetSerialNumber(c, transaction.ProductID)
+			if err != nil {
+				return nil, err
+			}
+			transactionDomain := &entity.Transactions{
+				ID:            (guuid.New()).String(),
+				PaymentMethod: transaction.PaymentMethod,
+				UserID:        userDomain.ID,
+				ProductID:     transaction.ProductID,
+				SerialNumber:  serial.Serial,
+				IdentifierNum: transaction.IdentifierNum,
+				Price:         product.Price,
+				Status:        "pending",
+			}
+			result, err := s.repo.CreateTransaction(c, transactionDomain)
+			if err != nil {
+				return nil, err
+			}
+			return result, nil
+		} else {
+			return nil, errors.New("insufficient points")
+		}
+	}
+	return nil, err
+}
+
+func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Transactions) (*entity.Transactions, error) {
+	user := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, user)
+	if adminAuth != nil {
+		transaction.ID = (guuid.New()).String() + "-dummy"
+		product, err := s.repo.GetProduct(c, transaction.ProductID)
+		if err != nil {
+			return nil, err
+		}
+		transaction.Price = product.Price
+		serial, err := s.repo.GetSerialNumber(c, transaction.ProductID)
+		if err != nil {
+			return nil, err
+		}
+		transaction.SerialNumber = serial.Serial
+		transaction.Status = "pending"
+		result, err := s.repo.CreateTransaction(c, &transaction)
+		if err != nil {
+			return nil, err
+		}
+		return result, nil
+	}
+	return nil, err
+}
+
+func (s *Service) UpdateTransactionByAdmin(c echo.Context, ID string, transaction entity.UpdateTransactionBinding) (*entity.Transactions, error) {
+	user := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, user)
+	if adminAuth != nil {
+		transactionDomain, err := s.repo.GetTransactionByID(c, ID)
+		if err != nil {
+			return nil, err
+		}
+		if transaction.Status == "succes" || transaction.Status == "Succes" {
+			err = s.repo.UpdateSerialStatus(c, transactionDomain.SerialNumber, "unavailable")
+			if err != nil {
+				return nil, err
+			}
+			userPoint, err := s.repo.GetUserPoints(c, transactionDomain.UserID)
+			if err != nil {
+				return nil, err
+			}
+			err = s.repo.UpdateUserPoints(c, userPoint)
+			if err != nil {
+				return nil, err
+			}
+			transactionDomain.Status = transaction.Status
+			result, err := s.repo.UpdateTransaction(c, transactionDomain)
+			if err != nil {
+				return nil, err
+			}
+			return result, nil
+		} else if transaction.Status == "failed" || transaction.Status == "Failed" {
+			transactionDomain.Status = transaction.Status
+			result, err := s.repo.UpdateTransaction(c, transactionDomain)
+			if err != nil {
+				return nil, err
+			}
+			return result, nil
+		} else {
+			return nil, errors.New("invalid status")
+		}
+	}
+	return nil, err
+}
+
+func (s *Service) DeleteTransactionByAdmin(c echo.Context, transactionID string) error {
+	user := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, user)
+	if adminAuth != nil {
+		err := s.repo.DeleteTransaction(c, transactionID)
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+	return err
 }

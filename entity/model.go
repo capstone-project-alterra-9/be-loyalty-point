@@ -44,7 +44,7 @@ type SerialNumbers struct {
 	UpdatedAt time.Time      `gorm:"type:timestamp;not null" json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
 	ProductID string         `gorm:"type:varchar(100);not null" json:"productID"`
-	Serial    string         `gorm:"type:varchar(100);not null" json:"serial"`
+	Serial    uint64         `gorm:"type:bigint;not null" json:"serial"`
 	Status    string         `gorm:"type:varchar(20);not null" json:"status"`
 }
 
@@ -56,7 +56,7 @@ type Transactions struct {
 	PaymentMethod string         `gorm:"type:varchar(20);not null" json:"paymentMethod"`
 	UserID        string         `gorm:"type:varchar(100);not null" json:"userID"`
 	ProductID     string         `gorm:"type:varchar(100);not null" json:"productID"`
-	SerialNumber  string         `gorm:"type:varchar(100);not null" json:"serialNumber"`
+	SerialNumber  uint64         `gorm:"type:bigint;not null" json:"serialNumber"`
 	IdentifierNum string         `gorm:"type:varchar(100);not null" json:"identifierNum"`
 	Price         int            `gorm:"type:int;not null" json:"price"`
 	Status        string         `gorm:"type:varchar(20);not null" json:"status"`
