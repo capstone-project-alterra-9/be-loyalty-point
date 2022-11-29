@@ -57,7 +57,11 @@ func (s *Service) GetTransactionByID(c echo.Context, ID string) (*entity.Transac
 		if err != nil {
 			return nil, err
 		}
-		return transactions, nil
+		if (auth.Role == "user" && auth.ID == transactions.UserID) || auth.Role == "admin" {
+			return transactions, nil
+		} else {
+			return nil, errors.New("unauthorized")
+		}
 	}
 	return nil, err
 }
@@ -148,24 +152,29 @@ func (s *Service) UpdateTransactionByAdmin(c echo.Context, ID string, transactio
 			return nil, err
 		}
 		if transaction.Status == "succes" || transaction.Status == "Succes" {
-			err = s.repo.UpdateSerialStatus(c, transactionDomain.SerialNumber, "unavailable")
-			if err != nil {
-				return nil, err
+			if transactionDomain.PaymentMethod == "redeem" {
+				err = s.repo.UpdateSerialStatus(c, transactionDomain.SerialNumber, "unavailable")
+				if err != nil {
+					return nil, err
+				}
+				userPoint, err := s.repo.GetUserPoints(c, transactionDomain.UserID)
+				if err != nil {
+					return nil, err
+				}
+				err = s.repo.UpdateUserPoints(c, userPoint)
+				if err != nil {
+					return nil, err
+				}
+				transactionDomain.Status = transaction.Status
+				result, err := s.repo.UpdateTransaction(c, transactionDomain)
+				if err != nil {
+					return nil, err
+				}
+				return result, nil
+			} else if transactionDomain.PaymentMethod == "buy" {
+				// payment gateway logic
+				return nil, errors.New("payment gateway logic not implemented")
 			}
-			userPoint, err := s.repo.GetUserPoints(c, transactionDomain.UserID)
-			if err != nil {
-				return nil, err
-			}
-			err = s.repo.UpdateUserPoints(c, userPoint)
-			if err != nil {
-				return nil, err
-			}
-			transactionDomain.Status = transaction.Status
-			result, err := s.repo.UpdateTransaction(c, transactionDomain)
-			if err != nil {
-				return nil, err
-			}
-			return result, nil
 		} else if transaction.Status == "failed" || transaction.Status == "Failed" {
 			transactionDomain.Status = transaction.Status
 			result, err := s.repo.UpdateTransaction(c, transactionDomain)

@@ -93,7 +93,7 @@ VALUES
 
 -- By User
 -- {
---     "paymentMethod" : "buy",
+--     "paymentMethod" : "redeem",
 --     "productID" : "ini-string-panjang-produk",
 --     "identifierNum" : "08765432100"
 -- }
