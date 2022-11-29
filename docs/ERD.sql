@@ -72,6 +72,8 @@ VALUES
 INSERT INTO Transactions(id, created_at, updated_at, payment_method, user_id, product_id, serial_number, identifier_num, price, status)
 VALUES
     ('ini string panjang transaksi01', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'redeem', 'ini string panjang user01', 'ini string panjang produk', 234131423213, '081239684271', 10000, 'pending'),
-    ('ini string panjang transaksi02', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'redeem', 'ini string panjang user02', 'ini string panjang produk', 234131423213, '081239684271', 10000, 'pending');
+    ('ini string panjang transaksi02', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'redeem', 'ini string panjang user02', 'ini string panjang produk', 234131423213, '081239684271', 10000, 'pending'),
+    ('ini string panjang transaksi01', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'buy', 'ini string panjang user01', 'ini string panjang produk', 234131423213, '081239684271', 10000, 'pending');
 
--- eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbiJ9.nhtusWo0vQPmvmEZYd0mzrIELXDPZbL7yuQK5eaL-dA
+-- eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluMDEiLCJleHAiOjE2Njk4ODUwNDMsImVtYWlsIjoiYWRtaW4ifQ.4ENFOaeG_yyZzWbiWBcN67RHOPfelifSkpyvlQ8G948
+-- eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIwMUBnbWFpbC5jb20iLCJleHAiOjE2Njk4ODUwNDMsInVzZXJuYW1lIjoidXNlcjAxIn0.w8r4Q5eB_qDNKSPj-JF0mH_y7nA9gPxXJyNIfDGxPlU

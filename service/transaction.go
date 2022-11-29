@@ -20,11 +20,24 @@ func (s *Service) GetTransactions(c echo.Context) ([]entity.Transactions, error)
 	return nil, err
 }
 
-func (s *Service) GetTransactionsByCategories(c echo.Context, method string) ([]entity.Transactions, error) {
+func (s *Service) GetTransactionsRedeem(c echo.Context) ([]entity.Transactions, error) {
 	user := middleware.ExtractTokenUsername(c)
 	admins, err := s.repo.GetAdminAuth(c, user)
 	if admins != nil {
-		transactions, err := s.repo.GetTransactionsByCategories(method)
+		transactions, err := s.repo.GetTransactionsRedeem(c)
+		if err != nil {
+			return nil, err
+		}
+		return transactions, nil
+	}
+	return nil, err
+}
+
+func (s *Service) GetTransactionsBuy(c echo.Context) ([]entity.Transactions, error) {
+	user := middleware.ExtractTokenUsername(c)
+	admins, err := s.repo.GetAdminAuth(c, user)
+	if admins != nil {
+		transactions, err := s.repo.GetTransactionsBuy(c)
 		if err != nil {
 			return nil, err
 		}

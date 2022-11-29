@@ -3,7 +3,7 @@ package service
 import (
 	"capstone-project/entity"
 	"capstone-project/repository"
-  
+
 	"github.com/labstack/echo/v4"
 )
 
@@ -33,7 +33,8 @@ type productSvc interface{}
 
 type trasanctionSvc interface {
 	GetTransactions(c echo.Context) ([]entity.Transactions, error)
-	GetTransactionsByCategories(c echo.Context, method string) ([]entity.Transactions, error)
+	GetTransactionsRedeem(c echo.Context) ([]entity.Transactions, error)
+	GetTransactionsBuy(c echo.Context) ([]entity.Transactions, error)
 	GetTransactionsByUser(c echo.Context) ([]entity.Transactions, error)
 }
 

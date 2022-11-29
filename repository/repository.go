@@ -34,7 +34,8 @@ type productRepo interface{}
 
 type transactionRepo interface {
 	GetTransactions(c echo.Context) ([]entity.Transactions, error)
-	GetTransactionsByCategories(method string) ([]entity.Transactions, error)
+	GetTransactionsRedeem(c echo.Context) ([]entity.Transactions, error)
+	GetTransactionsBuy(c echo.Context) ([]entity.Transactions, error)
 	GetTransactionsByUser(c echo.Context, ID string) ([]entity.Transactions, error)
 }
 
