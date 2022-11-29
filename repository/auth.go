@@ -8,7 +8,7 @@ import (
 
 func (r *repository) GetUserAuth(c echo.Context, user string) (*entity.Users, error) {
 	var userDomain *entity.Users
-	err := r.connection.First(&userDomain, "username = ?", user).Error
+	err := r.connection.First(&userDomain, "username = ? AND role = ?", user, "user").Error
 	if userDomain.ID == "" {
 		return nil, err
 	}
@@ -16,9 +16,9 @@ func (r *repository) GetUserAuth(c echo.Context, user string) (*entity.Users, er
 	return userDomain, nil
 }
 
-func (r *repository) GetAdminAuth(c echo.Context, user string) (*entity.Admins, error) {
-	var adminDomain *entity.Admins
-	err := r.connection.First(&adminDomain, "username = ?", user).Error
+func (r *repository) GetAdminAuth(c echo.Context, user string) (*entity.Users, error) {
+	var adminDomain *entity.Users
+	err := r.connection.First(&adminDomain, "username = ? AND role = ?", user, "admin").Error
 	if adminDomain.ID == "" {
 		return nil, err
 	}

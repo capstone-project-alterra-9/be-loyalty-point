@@ -62,3 +62,16 @@ CREATE TABLE Admins (
     Username VARCHAR(255) NOT NULL,
     Password VARCHAR(255) NOT NULL
 );
+
+INSERT INTO Users(id, created_at, updated_at, role, username, email, password)
+VALUES
+    ('ini string panjang', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'admin', 'admin01', 'admin01@gmail.com', 'adminpass'),
+    ('ini string panjang user01', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'user', 'user01', 'user01@gmail.com', 'userpass'),
+    ('ini string panjang user02', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'user', 'user02', 'user02@gmail.com', 'userpass');
+
+INSERT INTO Transactions(id, created_at, updated_at, payment_method, user_id, product_id, serial_number, identifier_num, price, status)
+VALUES
+    ('ini string panjang transaksi01', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'redeem', 'ini string panjang user01', 'ini string panjang produk', 234131423213, '081239684271', 10000, 'pending'),
+    ('ini string panjang transaksi02', '2020-12-01 00:00:00', '2020-12-01 00:00:00', 'redeem', 'ini string panjang user02', 'ini string panjang produk', 234131423213, '081239684271', 10000, 'pending');
+
+-- eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwiZW1haWwiOiJhZG1pbiJ9.nhtusWo0vQPmvmEZYd0mzrIELXDPZbL7yuQK5eaL-dA

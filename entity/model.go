@@ -8,57 +8,56 @@ import (
 
 var DB *gorm.DB
 
+type Points struct {
+	ID     string `gorm:"primaryKey"`
+	UserID string `gorm:"type:varchar(100);not null" json:"userID"`
+	Points int    `gorm:"not null" json:"points"`
+}
+
 type Users struct {
-	ID        string `gorm:"type:varchar(100);not null;primary_key" json:"id"`
-	Username  string `gorm:"type:varchar(20);not null;unique" json:"username"`
-	Email     string `gorm:"type:varchar(100);not null;unique" json:"email"`
-	Password  string `gorm:"type:varchar(100);not null" json:"password"`
-	Points    int    `gorm:"type:int;not null" json:"points"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID        string         `gorm:"primaryKey"`
+	CreatedAt time.Time      `gorm:"type:timestamp;not null" json:"createdAt"`
+	UpdatedAt time.Time      `gorm:"type:timestamp;not null" json:"updatedAt"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
+	Role      string         `gorm:"type:varchar(10);not null" json:"role"`
+	Username  string         `gorm:"type:varchar(20);not null;unique" json:"username"`
+	Email     string         `gorm:"type:varchar(100);not null;unique" json:"email"`
+	Password  string         `gorm:"type:varchar(100);not null" json:"password"`
 }
 
 type Products struct {
-	gorm.Model
-	Category    string `gorm:"type:varchar(20);not null" json:"category"`
-	Name        string `gorm:"type:varchar(100);not null" json:"name"`
-	Description string `gorm:"type:varchar(200);not null" json:"description"`
-	Price       int    `gorm:"type:int;not null" json:"price"`
-	Stock       int    `gorm:"type:int;not null" json:"stock"`
-	Image       string `gorm:"type:varchar(200);not null" json:"image"`
-	CreatedBy   string `gorm:"type:varchar(20);not null" json:"created_by"`
-	UpdatedBy   string `gorm:"type:varchar(20);not null" json:"updated_by"`
+	ID          string         `gorm:"primaryKey"`
+	CreatedAt   time.Time      `gorm:"type:timestamp;not null" json:"createdAt"`
+	UpdatedAt   time.Time      `gorm:"type:timestamp;not null" json:"updatedAt"`
+	DeletedAt   gorm.DeletedAt `gorm:"index" json:"deletedAt"`
+	Category    string         `gorm:"type:varchar(20);not null" json:"category"`
+	Name        string         `gorm:"type:varchar(100);not null" json:"name"`
+	Description string         `gorm:"type:varchar(200);not null" json:"description"`
+	Price       int            `gorm:"type:int;not null" json:"price"`
+	Stock       int            `gorm:"type:int;not null" json:"stock"`
+	Image       string         `gorm:"type:varchar(200);not null" json:"image"`
 }
 
 type SerialNumbers struct {
-	gorm.Model
-	ProductID uint   `gorm:"type:int;not null" json:"product_id"`
-	Serial    string `gorm:"type:varchar(100);not null" json:"serial"`
-	Status    string `gorm:"type:varchar(20);not null" json:"status"`
-	CreatedBy string `gorm:"type:varchar(20);not null" json:"created_by"`
+	ID        string         `gorm:"primaryKey"`
+	CreatedAt time.Time      `gorm:"type:timestamp;not null" json:"createdAt"`
+	UpdatedAt time.Time      `gorm:"type:timestamp;not null" json:"updatedAt"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
+	ProductID string         `gorm:"type:varchar(100);not null" json:"productID"`
+	Serial    string         `gorm:"type:varchar(100);not null" json:"serial"`
+	Status    string         `gorm:"type:varchar(20);not null" json:"status"`
 }
 
 type Transactions struct {
-	ID            string `gorm:"type:varchar(100);not null;primary_key" json:"id"`
-	UserID        string `gorm:"type:varchar(100);not null" json:"user_id"`
-	ProductID     uint   `gorm:"type:int;not null" json:"product_id"`
-	SerialNumber  string `gorm:"type:varchar(100);not null" json:"serial_number"`
-	IdentifierNum string `gorm:"type:varchar(100);not null" json:"identifier_num"`
-	TotalPrice    int    `gorm:"type:int;not null" json:"total_price"`
-	Status        string `gorm:"type:varchar(20);not null" json:"status"`
-	LastUpdatedBy string `gorm:"type:varchar(20);not null" json:"last_updated_by"`
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-	DeletedAt     gorm.DeletedAt `gorm:"index"`
-}
-
-type Admins struct {
-	ID        string `gorm:"type:varchar(100);not null;primary_key" json:"id"`
-	Name      string `gorm:"type:varchar(100);not null" json:"name"`
-	Username  string `gorm:"type:varchar(20);not null;unique" json:"username"`
-	Password  string `gorm:"type:varchar(100);not null" json:"password"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt `gorm:"index"`
+	ID            string         `gorm:"primaryKey"`
+	CreatedAt     time.Time      `gorm:"type:timestamp;not null" json:"createdAt"`
+	UpdatedAt     time.Time      `gorm:"type:timestamp;not null" json:"updatedAt"`
+	DeletedAt     gorm.DeletedAt `gorm:"index" json:"deletedAt"`
+	PaymentMethod string         `gorm:"type:varchar(20);not null" json:"paymentMethod"`
+	UserID        string         `gorm:"type:varchar(100);not null" json:"userID"`
+	ProductID     string         `gorm:"type:vachar(100);not null" json:"productID"`
+	SerialNumber  string         `gorm:"type:varchar(100);not null" json:"serialNumber"`
+	IdentifierNum string         `gorm:"type:varchar(100);not null" json:"identifierNum"`
+	Price         int            `gorm:"type:int;not null" json:"price"`
+	Status        string         `gorm:"type:varchar(20);not null" json:"status"`
 }

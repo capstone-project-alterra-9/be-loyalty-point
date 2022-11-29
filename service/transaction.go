@@ -8,14 +8,8 @@ import (
 )
 
 func (s *Service) GetTransactions(c echo.Context) ([]entity.Transactions, error) {
-	var (
-		user   = middleware.ExtractTokenUsername(c)
-		admins *entity.Admins
-		users  *entity.Users
-		err    error
-	)
-	// if user an admin
-	admins, err = s.repo.GetAdminAuth(c, user)
+	user := middleware.ExtractTokenUsername(c)
+	admins, err := s.repo.GetAdminAuth(c, user)
 	if admins != nil {
 		transactions, err := s.repo.GetTransactions(c)
 		if err != nil {
@@ -23,16 +17,31 @@ func (s *Service) GetTransactions(c echo.Context) ([]entity.Transactions, error)
 		}
 		return transactions, nil
 	}
+	return nil, err
+}
 
-	// if user a customer
-	users, err = s.repo.GetUserAuth(c, user)
-	if users != nil {
-		transactions, err := s.repo.GetTransactionsByUser(c, users.ID)
+func (s *Service) GetTransactionsByCategories(c echo.Context, method string) ([]entity.Transactions, error) {
+	user := middleware.ExtractTokenUsername(c)
+	admins, err := s.repo.GetAdminAuth(c, user)
+	if admins != nil {
+		transactions, err := s.repo.GetTransactionsByCategories(method)
 		if err != nil {
 			return nil, err
 		}
 		return transactions, nil
 	}
+	return nil, err
+}
 
+func (s *Service) GetTransactionsByUser(c echo.Context) ([]entity.Transactions, error) {
+	user := middleware.ExtractTokenUsername(c)
+	userDomain, err := s.repo.GetUserAuth(c, user)
+	if userDomain != nil {
+		transactions, err := s.repo.GetTransactionsByUser(c, userDomain.ID)
+		if err != nil {
+			return nil, err
+		}
+		return transactions, nil
+	}
 	return nil, err
 }

@@ -19,6 +19,8 @@ type productController interface{}
 
 type transactionController interface {
 	GetTransactions(c echo.Context) error
+	GetTransactionsByCategories(c echo.Context) error
+	GetTransactionsByUser(c echo.Context) error
 }
 
 type userController interface{}

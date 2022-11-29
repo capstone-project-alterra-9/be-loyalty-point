@@ -26,13 +26,14 @@ type Repo interface {
 
 type authRepo interface {
 	GetUserAuth(c echo.Context, user string) (*entity.Users, error)
-	GetAdminAuth(c echo.Context, user string) (*entity.Admins, error)
+	GetAdminAuth(c echo.Context, user string) (*entity.Users, error)
 }
 
 type productRepo interface{}
 
 type transactionRepo interface {
 	GetTransactions(c echo.Context) ([]entity.Transactions, error)
+	GetTransactionsByCategories(method string) ([]entity.Transactions, error)
 	GetTransactionsByUser(c echo.Context, ID string) ([]entity.Transactions, error)
 }
 
