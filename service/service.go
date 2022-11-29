@@ -3,7 +3,7 @@ package service
 import (
 	"capstone-project/entity"
 	"capstone-project/repository"
-
+  
 	"github.com/labstack/echo/v4"
 )
 
@@ -24,7 +24,10 @@ type Svc interface {
 	userSvc
 }
 
-type authSvc interface{}
+type authSvc interface {
+	Register(c echo.Context, user entity.RegisterBinding) (*entity.RegisterView, error)
+	Login(c echo.Context, user entity.LoginBinding) (*entity.LoginView, error)
+}
 
 type productSvc interface{}
 

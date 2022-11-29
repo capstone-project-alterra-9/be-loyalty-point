@@ -1,9 +1,8 @@
 package entity
 
 import (
-	"time"
-
 	"gorm.io/gorm"
+	"time"
 )
 
 var DB *gorm.DB

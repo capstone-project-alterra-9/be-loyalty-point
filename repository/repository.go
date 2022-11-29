@@ -25,6 +25,7 @@ type Repo interface {
 }
 
 type authRepo interface {
+	GetUserLogin(c echo.Context, user entity.LoginBinding) (*entity.Users, error)
 	GetUserAuth(c echo.Context, user string) (*entity.Users, error)
 	GetAdminAuth(c echo.Context, user string) (*entity.Users, error)
 }
@@ -37,4 +38,7 @@ type transactionRepo interface {
 	GetTransactionsByUser(c echo.Context, ID string) ([]entity.Transactions, error)
 }
 
-type userRepo interface{}
+type userRepo interface {
+	CreateUser(c echo.Context, user entity.Users) (*entity.Users, error)
+	CreatePoints(c echo.Context, userPoints entity.Points) (*entity.Points, error)
+}
