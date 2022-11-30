@@ -25,7 +25,7 @@ func main() {
 		repository = repository.NewRepository(db)
 		service    = service.NewService(repository)
 	)
-	entity.DB.AutoMigrate()
+	entity.DB.AutoMigrate(&entity.Points{}, &entity.Users{}, &entity.Products{}, &entity.SerialNumbers{}, &entity.Transactions{})
 	app := route.New(service)
 
 	app.Start(":" + PORT)

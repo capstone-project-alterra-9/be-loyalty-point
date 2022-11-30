@@ -13,13 +13,28 @@ type Controller interface {
 	userController
 }
 
-type authController interface{}
+type authController interface {
+	Register(c echo.Context) error
+	Login(c echo.Context) error
+}
 
 type productController interface {
 	CreateProduct(c echo.Context) error
 }
 
-type transactionController interface{}
+type transactionController interface {
+	GetTransactions(c echo.Context) error
+	GetTransactionsRedeem(c echo.Context) error
+	GetTransactionsBuy(c echo.Context) error
+	GetHistory(c echo.Context) error
+	GetHistoryBuy(c echo.Context) error
+	GetHistoryRedeem(c echo.Context) error
+	GetTransactionByID(c echo.Context) error
+	CreateTransactionByUser(c echo.Context) error
+	CreateTransactionByAdmin(c echo.Context) error
+	UpdateTransactionByAdmin(c echo.Context) error
+	DeleteTransactionByAdmin(c echo.Context) error
+}
 
 type userController interface{}
 

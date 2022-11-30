@@ -10,7 +10,9 @@ import (
 
 func CreateProduct(c echo.Context) error {
 	var product entity.Products
-	c.Bind(&product)
+	if err := c.Bind(&product); err != nil {
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to bind request", err))
+	}
 
 	result, err := Service.CreateProduct(c, &product)
 	if err != nil {
