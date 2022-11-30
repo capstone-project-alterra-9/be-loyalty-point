@@ -110,6 +110,10 @@ func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.Tra
 			if err != nil {
 				return nil, err
 			}
+			if result.PaymentMethod == "buy" {
+				// midtrans payment gateway logic
+				return nil, errors.New("midtrans payment gateway not implemented yet")
+			}
 			return result, nil
 		} else {
 			return nil, errors.New("insufficient points")
@@ -172,8 +176,8 @@ func (s *Service) UpdateTransactionByAdmin(c echo.Context, ID string, transactio
 				}
 				return result, nil
 			} else if transactionDomain.PaymentMethod == "buy" {
-				// payment gateway logic
-				return nil, errors.New("payment gateway logic not implemented")
+				// midtrans payment gateway logic
+				return nil, errors.New("midtrans payment gateway not implemented yet")
 			}
 		} else if transaction.Status == "failed" || transaction.Status == "Failed" {
 			transactionDomain.Status = transaction.Status

@@ -61,5 +61,6 @@ func (s *Service) Login(c echo.Context, user entity.LoginBinding) (*entity.Login
 		Password:     result.Password,
 		Token:        token,
 		RefreshToken: refreshToken,
+		Account:      result.Role,
 	}, nil
 }
