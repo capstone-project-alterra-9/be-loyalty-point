@@ -26,11 +26,27 @@ type Repo interface {
 
 type authRepo interface {
 	GetUserLogin(c echo.Context, user entity.LoginBinding) (*entity.Users, error)
+	GetUserAuth(c echo.Context, user string) (*entity.Users, error)
+	GetAdminAuth(c echo.Context, user string) (*entity.Users, error)
+	GetAuth(c echo.Context, user string) (*entity.Users, error)
 }
 
-type productRepo interface{}
+type productRepo interface {
+	GetProduct(c echo.Context, productID string) (*entity.Products, error)
+	GetSerialNumber(c echo.Context, productID string) (*entity.SerialNumbers, error)
+	UpdateSerialStatus(c echo.Context, serial uint64, status string) error
+}
 
-type transactionRepo interface{}
+type transactionRepo interface {
+	GetTransactions(c echo.Context) ([]entity.Transactions, error)
+	GetTransactionsRedeem(c echo.Context) ([]entity.Transactions, error)
+	GetTransactionsBuy(c echo.Context) ([]entity.Transactions, error)
+	GetTransactionsByUser(c echo.Context, ID string) ([]entity.Transactions, error)
+	CreateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
+	GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error)
+	UpdateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
+	DeleteTransaction(c echo.Context, ID string) error
+}
 
 type userRepo interface {
 	CreateUser(c echo.Context, user entity.Users) (*entity.Users, error)

@@ -13,4 +13,5 @@ type LoginView struct {
 	Password     string `json:"password"`
 	Token        string `json:"token"`
 	RefreshToken string `json:"refreshToken"`
+	Account      string `json:"account"`
 }
