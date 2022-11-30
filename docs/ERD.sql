@@ -47,7 +47,7 @@ CREATE TABLE Transactions (
     ProductID INTEGER NOT NULL,
     SerialNumber VARCHAR(255) NOT NULL,
     IdentifierNum VARCHAR(255) NOT NULL,
-    TotalPrice INTEGER NOT NULL,
+    Price INTEGER NOT NULL,
     Status VARCHAR(255) NOT NULL,
     FOREIGN KEY (UserID) REFERENCES Users(ID),
     FOREIGN KEY (ProductID) REFERENCES Products(ID)

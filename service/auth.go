@@ -12,13 +12,23 @@ import (
 func (s *Service) Register(c echo.Context, user entity.RegisterBinding) (*entity.RegisterView, error) {
 	var userDomain entity.Users
 	userDomain.ID = (guuid.New()).String()
+	userDomain.Role = "user"
 	userDomain.Username = user.Username
 	userDomain.Email = user.Email
 	password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	userDomain.Password = string(password)
-	userDomain.Points = 20000
 
 	result, err := s.repo.CreateUser(c, userDomain)
+	if err != nil {
+		return nil, err
+	}
+
+	userPoints := entity.Points{
+		ID:     (guuid.New()).String(),
+		UserID: result.ID,
+		Points: 20000,
+	}
+	_, err = s.repo.CreatePoints(c, userPoints)
 	if err != nil {
 		return nil, err
 	}
@@ -51,5 +61,6 @@ func (s *Service) Login(c echo.Context, user entity.LoginBinding) (*entity.Login
 		Password:     result.Password,
 		Token:        token,
 		RefreshToken: refreshToken,
+		Account:      result.Role,
 	}, nil
 }
