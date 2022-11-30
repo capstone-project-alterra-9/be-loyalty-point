@@ -28,5 +28,8 @@ func New(Service service.Svc) *echo.Echo {
 	eAuth.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
 	// Routing with JWT
 
+	// User endpoint
+	eAuth.DELETE("/users", controller.DeleteTransactionByAdmin)
+
 	return e
 }

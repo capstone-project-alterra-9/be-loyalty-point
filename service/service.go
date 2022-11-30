@@ -32,4 +32,6 @@ type productSvc interface{}
 
 type trasanctionSvc interface{}
 
-type userSvc interface{}
+type userSvc interface {
+	GetUsersPagination(c echo.Context) ([]entity.Users, error)
+}

@@ -6,5 +6,5 @@ vendor
 *.iml
 *.out
 .vscode
-/.env
+.env
 go.sum
