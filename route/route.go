@@ -28,17 +28,22 @@ func New(Service service.Svc) *echo.Echo {
 	eAuth.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
 	// Routing with JWT
 	eAuth.GET("/transactions", controller.GetTransactions)
-	eAuth.GET("/transactions/redeem", controller.GetTransactionsRedeem)
-	eAuth.GET("/transactions/buy", controller.GetTransactionsBuy)
+	eAuth.GET("/transactions/:paymentMethod", controller.GetTransactionsByMethod)
 	eAuth.GET("/transactions/:id", controller.GetTransactionByID)
 	eAuth.GET("/history", controller.GetHistory)
-	eAuth.GET("/history/buy", controller.GetHistoryBuy)
-	eAuth.GET("/history/redeem", controller.GetHistoryRedeem)
+	eAuth.GET("/history/:paymentMethod", controller.GetHistoryByMethod)
 	eAuth.GET("/history/:id", controller.GetTransactionByID)
 	eAuth.POST("/transactions", controller.CreateTransactionByUser)
 	eAuth.POST("/transactions/dummy", controller.CreateTransactionByAdmin)
 	eAuth.PUT("/transactions/:id", controller.UpdateTransactionByAdmin)
 	eAuth.DELETE("/transactions/:id", controller.DeleteTransactionByAdmin)
+
+	eAuth.POST("/products", controller.CreateProduct)
+	eAuth.GET("/products", controller.GetProducts)
+	eAuth.GET("/products/:categoryName", controller.GetProductsByCategory)
+	eAuth.GET("/products/:id", controller.GetProductByID)
+	eAuth.PUT("/products/:id", controller.UpdateProduct)
+	eAuth.DELETE("/products/:id", controller.DeleteProduct)
 
 	return e
 }

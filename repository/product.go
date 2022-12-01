@@ -6,7 +6,7 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (r *repository) GetProduct(c echo.Context, productID string) (*entity.Products, error) {
+func (r *repository) GetProductByID(c echo.Context, productID string) (*entity.Products, error) {
 	var productsDomain *entity.Products
 	err := r.connection.First(&productsDomain, "id = ?", productID).Error
 	if productsDomain.ID == "" {
@@ -48,6 +48,40 @@ func (r *repository) CreateProduct(c echo.Context, product *entity.Products) (*e
 
 func (r *repository) CreateSerialNumber(c echo.Context, serialNumber *entity.SerialNumbers) error {
 	err := r.connection.Create(&serialNumber).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *repository) GetProducts(c echo.Context) ([]entity.Products, error) {
+	var products []entity.Products
+	err := r.connection.Find(&products).Error
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
+}
+
+func (r *repository) GetProductsByCategory(c echo.Context, category string) ([]entity.Products, error) {
+	var products []entity.Products
+	err := r.connection.Find(&products, "category = ?", category).Error
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
+}
+
+func (r *repository) UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error) {
+	err := r.connection.Model(&entity.Products{}).Where("id = ?", ID).Updates(product).Error
+	if err != nil {
+		return nil, err
+	}
+	return product, nil
+}
+
+func (r *repository) DeleteProduct(c echo.Context, ID string) error {
+	err := r.connection.Delete(&entity.Products{}, ID).Error
 	if err != nil {
 		return err
 	}

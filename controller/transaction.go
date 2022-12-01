@@ -9,27 +9,20 @@ import (
 )
 
 func GetTransactions(c echo.Context) error {
-	transactions, err := Service.GetTransactions(c)
+	result, err := Service.GetTransactions(c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get transactions", err))
 	}
-	return c.JSON(http.StatusOK, dto.BuildResponse("Success get transactions", transactions))
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success get transactions", result))
 }
 
-func GetTransactionsRedeem(c echo.Context) error {
-	transactions, err := Service.GetTransactionsRedeem(c)
+func GetTransactionsByMethod(c echo.Context) error {
+	method := c.Param("paymentMethod")
+	result, err := Service.GetTransactionsByMethod(c, method)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get transactions", err))
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get "+method+" transactions", err))
 	}
-	return c.JSON(http.StatusOK, dto.BuildResponse("Succes get transactions by method redeem", transactions))
-}
-
-func GetTransactionsBuy(c echo.Context) error {
-	transactions, err := Service.GetTransactionsBuy(c)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get transactions", err))
-	}
-	return c.JSON(http.StatusOK, dto.BuildResponse("Succes get transactions by method buy", transactions))
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success get "+method+" transactions", result))
 }
 
 func GetTransactionByID(c echo.Context) error {
@@ -42,27 +35,20 @@ func GetTransactionByID(c echo.Context) error {
 }
 
 func GetHistory(c echo.Context) error {
-	transactions, err := Service.GetHistory(c)
+	result, err := Service.GetHistory(c)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get history", err))
 	}
-	return c.JSON(http.StatusOK, dto.BuildResponse("Success get history", transactions))
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success get history", result))
 }
 
-func GetHistoryBuy(c echo.Context) error {
-	transactions, err := Service.GetHistoryBuy(c)
+func GetHistoryByMethod(c echo.Context) error {
+	method := c.Param("paymentMethod")
+	result, err := Service.GetHistoryByMethod(c, method)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get buy history", err))
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get "+method+" history", err))
 	}
-	return c.JSON(http.StatusOK, dto.BuildResponse("Success get buy history", transactions))
-}
-
-func GetHistoryRedeem(c echo.Context) error {
-	transactions, err := Service.GetHistoryRedeem(c)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get redeem history", err))
-	}
-	return c.JSON(http.StatusOK, dto.BuildResponse("Success get redeem history", transactions))
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success get "+method+" history", result))
 }
 
 func CreateTransactionByUser(c echo.Context) error {
