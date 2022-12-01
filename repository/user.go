@@ -38,3 +38,12 @@ func (r *repository) UpdateUserPoints(c echo.Context, userPoint *entity.Points) 
 	}
 	return nil
 }
+
+func (r *repository) GetUsersPagination(c echo.Context) ([]entity.Users, error) {
+	var users []entity.Users
+	err := r.connection.Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}
