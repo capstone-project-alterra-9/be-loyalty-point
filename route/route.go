@@ -28,10 +28,10 @@ func New(Service service.Svc) *echo.Echo {
 	eAuth.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
 	// Routing with JWT
 	eAuth.GET("/transactions", controller.GetTransactions)
-	eAuth.GET("/transactions/:paymentMethod", controller.GetTransactionsByMethod)
+	eAuth.GET("/transactions/method/:paymentMethod", controller.GetTransactionsByMethod)
 	eAuth.GET("/transactions/:id", controller.GetTransactionByID)
 	eAuth.GET("/history", controller.GetHistory)
-	eAuth.GET("/history/:paymentMethod", controller.GetHistoryByMethod)
+	eAuth.GET("/history/method/:paymentMethod", controller.GetHistoryByMethod)
 	eAuth.GET("/history/:id", controller.GetTransactionByID)
 	eAuth.POST("/transactions", controller.CreateTransactionByUser)
 	eAuth.POST("/transactions/dummy", controller.CreateTransactionByAdmin)
@@ -40,7 +40,7 @@ func New(Service service.Svc) *echo.Echo {
 
 	eAuth.POST("/products", controller.CreateProduct)
 	eAuth.GET("/products", controller.GetProducts)
-	eAuth.GET("/products/:categoryName", controller.GetProductsByCategory)
+	eAuth.GET("/products/category/:categoryName", controller.GetProductsByCategory)
 	eAuth.GET("/products/:id", controller.GetProductByID)
 	eAuth.PUT("/products/:id", controller.UpdateProduct)
 	eAuth.DELETE("/products/:id", controller.DeleteProduct)
