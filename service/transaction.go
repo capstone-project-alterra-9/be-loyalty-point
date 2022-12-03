@@ -6,7 +6,6 @@ import (
 	"errors"
 
 	guuid "github.com/google/uuid"
-
 	"github.com/labstack/echo/v4"
 )
 
@@ -23,28 +22,19 @@ func (s *Service) GetTransactions(c echo.Context) ([]entity.Transactions, error)
 	return nil, err
 }
 
-func (s *Service) GetTransactionsRedeem(c echo.Context) ([]entity.Transactions, error) {
+func (s *Service) GetTransactionsByMethod(c echo.Context, method string) ([]entity.Transactions, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
-		transactions, err := s.repo.GetTransactionsRedeem(c)
-		if err != nil {
-			return nil, err
+		if method == "buy" || method == "redeem" {
+			transactions, err := s.repo.GetTransactionsByMethod(c, method)
+			if err != nil {
+				return nil, err
+			}
+			return transactions, nil
+		} else {
+			return nil, errors.New("method not found")
 		}
-		return transactions, nil
-	}
-	return nil, err
-}
-
-func (s *Service) GetTransactionsBuy(c echo.Context) ([]entity.Transactions, error) {
-	user := jwtAuth.ExtractTokenUsername(c)
-	adminAuth, err := s.repo.GetAdminAuth(c, user)
-	if adminAuth != nil {
-		transactions, err := s.repo.GetTransactionsBuy(c)
-		if err != nil {
-			return nil, err
-		}
-		return transactions, nil
 	}
 	return nil, err
 }
@@ -66,11 +56,11 @@ func (s *Service) GetTransactionByID(c echo.Context, ID string) (*entity.Transac
 	return nil, err
 }
 
-func (s *Service) GetTransactionsByUser(c echo.Context) ([]entity.Transactions, error) {
+func (s *Service) GetHistory(c echo.Context) ([]entity.Transactions, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	userDomain, err := s.repo.GetUserAuth(c, user)
 	if userDomain != nil {
-		transactions, err := s.repo.GetTransactionsByUser(c, userDomain.ID)
+		transactions, err := s.repo.GetHistory(c, userDomain.ID)
 		if err != nil {
 			return nil, err
 		}
@@ -79,45 +69,71 @@ func (s *Service) GetTransactionsByUser(c echo.Context) ([]entity.Transactions, 
 	return nil, err
 }
 
+func (s *Service) GetHistoryByMethod(c echo.Context, method string) ([]entity.Transactions, error) {
+	user := jwtAuth.ExtractTokenUsername(c)
+	userDomain, err := s.repo.GetUserAuth(c, user)
+	if userDomain != nil {
+		if method == "buy" || method == "redeem" {
+			transactions, err := s.repo.GetHistoryByMethod(c, userDomain.ID, method)
+			if err != nil {
+				return nil, err
+			}
+			return transactions, nil
+		} else {
+			return nil, errors.New("method not found")
+		}
+	}
+	return nil, err
+}
+
 func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.TransactionsBinding) (*entity.Transactions, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	userDomain, err := s.repo.GetUserAuth(c, user)
 	if userDomain != nil {
-		product, err := s.repo.GetProduct(c, transaction.ProductID)
+		product, err := s.repo.GetProductByID(c, transaction.ProductID)
 		if err != nil {
 			return nil, err
 		}
-		userPoints, err := s.repo.GetUserPoints(c, userDomain.ID)
+		userPoint, err := s.repo.GetUserPoints(c, userDomain.ID)
 		if err != nil {
 			return nil, err
 		}
-		if userPoints.Points >= product.Price {
-			serial, err := s.repo.GetSerialNumber(c, transaction.ProductID)
-			if err != nil {
-				return nil, err
-			}
-			transactionDomain := &entity.Transactions{
-				ID:            (guuid.New()).String(),
-				PaymentMethod: transaction.PaymentMethod,
-				UserID:        userDomain.ID,
-				ProductID:     transaction.ProductID,
-				SerialNumber:  serial.Serial,
-				IdentifierNum: transaction.IdentifierNum,
-				Price:         product.Price,
-				Status:        "pending",
-			}
-			result, err := s.repo.CreateTransaction(c, transactionDomain)
-			if err != nil {
-				return nil, err
-			}
-			if result.PaymentMethod == "buy" {
-				// midtrans payment gateway logic
-				return nil, errors.New("midtrans payment gateway not implemented yet")
-			}
-			return result, nil
-		} else {
-			return nil, errors.New("insufficient points")
+		serial, err := s.repo.GetSerialNumber(c, transaction.ProductID)
+		if err != nil {
+			return nil, err
 		}
+		transactionDomain := &entity.Transactions{
+			ID:            (guuid.New()).String(),
+			PaymentMethod: transaction.PaymentMethod,
+			UserID:        userDomain.ID,
+			ProductID:     transaction.ProductID,
+			SerialNumber:  serial.Serial,
+			IdentifierNum: transaction.IdentifierNum,
+			Price:         product.Price,
+			Status:        "pending",
+		}
+
+		if transaction.PaymentMethod == "redeem" && userPoint.Points < product.Price {
+			transactionDomain.Status = "failed"
+			return nil, errors.New("not enough points")
+		} else if transaction.PaymentMethod == "redeem" && userPoint.Points >= product.Price {
+			userPoint.Points = userPoint.Points - transactionDomain.Price
+			userPoint.CostPoints = userPoint.CostPoints + transactionDomain.Price
+			err = s.repo.UpdateUserPoints(c, userPoint)
+			if err != nil {
+				return nil, err
+			}
+		} else if transaction.PaymentMethod == "buy" {
+			// midtrans payment gateway logic
+			// if midtrans payment gateway succes then update user points ( increase cost points )
+			return nil, errors.New("midtrans payment gateway not implemented yet")
+		}
+
+		result, err := s.repo.CreateTransaction(c, transactionDomain)
+		if err != nil {
+			return nil, err
+		}
+		return result, nil
 	}
 	return nil, err
 }
@@ -127,7 +143,7 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
 		transaction.ID = (guuid.New()).String() + "-dummy"
-		product, err := s.repo.GetProduct(c, transaction.ProductID)
+		product, err := s.repo.GetProductByID(c, transaction.ProductID)
 		if err != nil {
 			return nil, err
 		}
@@ -161,15 +177,7 @@ func (s *Service) UpdateTransactionByAdmin(c echo.Context, ID string, transactio
 				if err != nil {
 					return nil, err
 				}
-				userPoint, err := s.repo.GetUserPoints(c, transactionDomain.UserID)
-				if err != nil {
-					return nil, err
-				}
-				err = s.repo.UpdateUserPoints(c, userPoint)
-				if err != nil {
-					return nil, err
-				}
-				transactionDomain.Status = transaction.Status
+				transactionDomain.Status = "succes"
 				result, err := s.repo.UpdateTransaction(c, transactionDomain)
 				if err != nil {
 					return nil, err
@@ -180,6 +188,16 @@ func (s *Service) UpdateTransactionByAdmin(c echo.Context, ID string, transactio
 				return nil, errors.New("midtrans payment gateway not implemented yet")
 			}
 		} else if transaction.Status == "failed" || transaction.Status == "Failed" {
+			userPoint, err := s.repo.GetUserPoints(c, transactionDomain.UserID)
+			if err != nil {
+				return nil, err
+			}
+			userPoint.Points = userPoint.Points + transactionDomain.Price
+			userPoint.CostPoints = userPoint.CostPoints - transactionDomain.Price
+			err = s.repo.UpdateUserPoints(c, userPoint)
+			if err != nil {
+				return nil, err
+			}
 			transactionDomain.Status = transaction.Status
 			result, err := s.repo.UpdateTransaction(c, transactionDomain)
 			if err != nil {
@@ -197,11 +215,15 @@ func (s *Service) DeleteTransactionByAdmin(c echo.Context, transactionID string)
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
-		err := s.repo.DeleteTransaction(c, transactionID)
-		if err != nil {
-			return err
+		transactionDomain, err := s.repo.GetTransactionByID(c, transactionID)
+		if transactionDomain != nil {
+			err = s.repo.DeleteTransaction(c, transactionID)
+			if err != nil {
+				return err
+			}
+			return nil
 		}
-		return nil
+		return err
 	}
 	return err
 }

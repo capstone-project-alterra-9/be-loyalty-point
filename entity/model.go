@@ -9,9 +9,10 @@ import (
 var DB *gorm.DB
 
 type Points struct {
-	ID     string `gorm:"primaryKey"`
-	UserID string `gorm:"type:varchar(100);not null" json:"userID"`
-	Points int    `gorm:"not null" json:"points"`
+	ID         string `gorm:"primaryKey"`
+	UserID     string `gorm:"type:varchar(100);not null" json:"userID"`
+	Points     int    `gorm:"not null" json:"points"`
+	CostPoints int    `gorm:"not null" json:"costPoints"`
 }
 
 type Users struct {
@@ -31,6 +32,8 @@ type Products struct {
 	UpdatedAt   time.Time      `gorm:"type:timestamp;not null" json:"updatedAt"`
 	DeletedAt   gorm.DeletedAt `gorm:"index" json:"deletedAt"`
 	Category    string         `gorm:"type:varchar(20);not null" json:"category"`
+	Redeem      bool           `gorm:"type:boolean;not null" json:"redeem"`
+	Buy         bool           `gorm:"type:boolean;not null" json:"buy"`
 	Name        string         `gorm:"type:varchar(100);not null" json:"name"`
 	Description string         `gorm:"type:varchar(200);not null" json:"description"`
 	Price       int            `gorm:"type:int;not null" json:"price"`
@@ -44,7 +47,7 @@ type SerialNumbers struct {
 	UpdatedAt time.Time      `gorm:"type:timestamp;not null" json:"updatedAt"`
 	DeletedAt gorm.DeletedAt `gorm:"index" json:"deletedAt"`
 	ProductID string         `gorm:"type:varchar(100);not null" json:"productID"`
-	Serial    uint64         `gorm:"type:bigint;not null" json:"serial"`
+	Serial    int64          `gorm:"type:bigint;not null" json:"serial"`
 	Status    string         `gorm:"type:varchar(20);not null" json:"status"`
 }
 
@@ -56,7 +59,7 @@ type Transactions struct {
 	PaymentMethod string         `gorm:"type:varchar(20);not null" json:"paymentMethod"`
 	UserID        string         `gorm:"type:varchar(100);not null" json:"userID"`
 	ProductID     string         `gorm:"type:varchar(100);not null" json:"productID"`
-	SerialNumber  uint64         `gorm:"type:bigint;not null" json:"serialNumber"`
+	SerialNumber  int64          `gorm:"type:bigint;not null" json:"serialNumber"`
 	IdentifierNum string         `gorm:"type:varchar(100);not null" json:"identifierNum"`
 	Price         int            `gorm:"type:int;not null" json:"price"`
 	Status        string         `gorm:"type:varchar(20);not null" json:"status"`

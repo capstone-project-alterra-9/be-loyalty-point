@@ -18,13 +18,20 @@ type authController interface {
 	Login(c echo.Context) error
 }
 
-type productController interface{}
+type productController interface {
+	CreateProduct(c echo.Context) error
+	GetProducts(c echo.Context) error
+	GetProductsByCategory(c echo.Context) error
+	GetProductByID(c echo.Context) error
+	UpdateProduct(c echo.Context) error
+	DeleteProduct(c echo.Context) error
+}
 
 type transactionController interface {
 	GetTransactions(c echo.Context) error
-	GetTransactionsRedeem(c echo.Context) error
-	GetTransactionsBuy(c echo.Context) error
-	GetTransactionsByUser(c echo.Context) error
+	GetTransactionsByMethod(c echo.Context) error
+	GetHistory(c echo.Context) error
+	GetHistoryByMethod(c echo.Context) error
 	GetTransactionByID(c echo.Context) error
 	CreateTransactionByUser(c echo.Context) error
 	CreateTransactionByAdmin(c echo.Context) error
