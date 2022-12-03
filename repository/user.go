@@ -41,7 +41,9 @@ func (r *repository) UpdateUserPoints(c echo.Context, userPoint *entity.Points) 
 
 func (r *repository) GetUsersPagination(c echo.Context) ([]entity.Users, error) {
 	var users []entity.Users
-	err := r.connection.Scopes(Paginate(users, &pagination, r)).Find(&users).Error
+
+	err := r.connection.Find(&users).Error
+
 	if err != nil {
 		return nil, err
 	}
