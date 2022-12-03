@@ -32,16 +32,23 @@ type authRepo interface {
 }
 
 type productRepo interface {
-	GetProduct(c echo.Context, productID string) (*entity.Products, error)
+	GetProductByID(c echo.Context, productID string) (*entity.Products, error)
+	GetSerialNumbers(c echo.Context) ([]entity.SerialNumbers, error)
 	GetSerialNumber(c echo.Context, productID string) (*entity.SerialNumbers, error)
-	UpdateSerialStatus(c echo.Context, serial uint64, status string) error
+	UpdateSerialStatus(c echo.Context, serial int64, status string) error
+	CreateProduct(c echo.Context, product *entity.Products) (*entity.Products, error)
+	CreateSerialNumber(c echo.Context, serialNumber *entity.SerialNumbers) error
+	GetProducts(c echo.Context) ([]entity.Products, error)
+	GetProductsByCategory(c echo.Context, category string) ([]entity.Products, error)
+	UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error)
+	DeleteProduct(c echo.Context, ID string) error
 }
 
 type transactionRepo interface {
 	GetTransactions(c echo.Context) ([]entity.Transactions, error)
-	GetTransactionsRedeem(c echo.Context) ([]entity.Transactions, error)
-	GetTransactionsBuy(c echo.Context) ([]entity.Transactions, error)
-	GetTransactionsByUser(c echo.Context, ID string) ([]entity.Transactions, error)
+	GetTransactionsByMethod(c echo.Context, method string) ([]entity.Transactions, error)
+	GetHistory(c echo.Context, ID string) ([]entity.Transactions, error)
+	GetHistoryByMethod(c echo.Context, ID string, method string) ([]entity.Transactions, error)
 	CreateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
 	GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error)
 	UpdateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
