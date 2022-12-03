@@ -45,5 +45,8 @@ func New(Service service.Svc) *echo.Echo {
 	eAuth.PUT("/products/:id", controller.UpdateProduct)
 	eAuth.DELETE("/products/:id", controller.DeleteProduct)
 
+	// User endpoint
+	eAuth.GET("/users/:id", controller.GetOneByUserId)
+
 	return e
 }
