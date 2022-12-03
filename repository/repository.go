@@ -53,4 +53,9 @@ type userRepo interface {
 	CreatePoints(c echo.Context, userPoints entity.Points) (*entity.Points, error)
 	GetUserPoints(c echo.Context, ID string) (*entity.Points, error)
 	UpdateUserPoints(c echo.Context, userPoint *entity.Points) error
+	GetUsersPagination(c echo.Context) ([]entity.Users, error)
+}
+
+type paginationRepo interface {
+	CreatePagination()
 }

@@ -38,7 +38,7 @@ func New(Service service.Svc) *echo.Echo {
 	eAuth.DELETE("/transactions/:id", controller.DeleteTransactionByAdmin)
 
 	// User endpoint
-	eAuth.DELETE("/users", controller.DeleteTransactionByAdmin)
+	eApi.GET("/users", controller.GetUsersPagination)
 
 	return e
 }

@@ -33,7 +33,9 @@ type transactionController interface {
 	DeleteTransactionByAdmin(c echo.Context) error
 }
 
-type userController interface{}
+type userController interface{
+	GetUsersPagination(c echo.Context) error
+}
 
 var Service service.Svc
 
