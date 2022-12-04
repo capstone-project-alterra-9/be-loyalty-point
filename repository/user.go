@@ -58,3 +58,11 @@ func (r *repository) GetUserByID(c echo.Context, ID string) (*entity.Users, erro
 	}
 	return userData, nil
 }
+
+func (r *repository) UpdateOneByUserId(c echo.Context, user *entity.Users) (*entity.Users, error) {
+	err := r.connection.Save(user).Error
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
+}

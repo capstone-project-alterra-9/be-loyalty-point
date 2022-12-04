@@ -37,3 +37,25 @@ func (s *Service) GetUsersPagination(c echo.Context) ([]entity.Users, error) {
 	}
 	return nil, err
 }
+
+func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.Users) (*entity.Users, error) {
+	userAuth := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, userAuth)
+	if adminAuth != nil {
+		userData, err := s.repo.GetUserByID(c, ID)
+		if err != nil {
+			return nil, err
+		}
+
+		userData.Username = user.Username;
+		userData.Email = user.Email; 
+		userData.Password = user.Password;
+
+		result, err := s.repo.UpdateOneByUserId(c, userData)
+		if err != nil {
+			return nil, err
+		}
+		return result, nil
+	}
+	return nil, err
+}
