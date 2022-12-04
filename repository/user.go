@@ -49,3 +49,12 @@ func (r *repository) GetUsersPagination(c echo.Context) ([]entity.Users, error) 
 	}
 	return users, nil
 }
+
+func (r *repository) GetUserByID(c echo.Context, ID string) (*entity.Users, error) {
+	var userData *entity.Users
+	err := r.connection.First(&userData, "id = ?", ID).Error
+	if userData.ID == "" {
+		return nil, err
+	}
+	return userData, nil
+}

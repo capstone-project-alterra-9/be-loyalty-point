@@ -3,6 +3,7 @@ package service
 import (
 	"capstone-project/entity"
 	jwtAuth "capstone-project/middleware"
+
 	guuid "github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
 
@@ -24,9 +25,10 @@ func (s *Service) Register(c echo.Context, user entity.RegisterBinding) (*entity
 	}
 
 	userPoints := entity.Points{
-		ID:     (guuid.New()).String(),
-		UserID: result.ID,
-		Points: 20000,
+		ID:         (guuid.New()).String(),
+		UserID:     result.ID,
+		Points:     20000,
+		CostPoints: 0,
 	}
 	_, err = s.repo.CreatePoints(c, userPoints)
 	if err != nil {

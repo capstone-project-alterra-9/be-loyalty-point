@@ -15,27 +15,27 @@ func (r *repository) GetTransactions(c echo.Context) ([]entity.Transactions, err
 	return transactions, nil
 }
 
-func (r *repository) GetTransactionsRedeem(c echo.Context) ([]entity.Transactions, error) {
+func (r *repository) GetTransactionsByMethod(c echo.Context, method string) ([]entity.Transactions, error) {
 	var transactions []entity.Transactions
-	err := r.connection.Find(&transactions, "payment_method = ?", "redeem").Error
+	err := r.connection.Find(&transactions, "payment_method = ?", method).Error
 	if err != nil {
 		return nil, err
 	}
 	return transactions, nil
 }
 
-func (r *repository) GetTransactionsBuy(c echo.Context) ([]entity.Transactions, error) {
-	var transactions []entity.Transactions
-	err := r.connection.Find(&transactions, "payment_method = ?", "buy").Error
-	if err != nil {
-		return nil, err
-	}
-	return transactions, nil
-}
-
-func (r *repository) GetTransactionsByUser(c echo.Context, ID string) ([]entity.Transactions, error) {
+func (r *repository) GetHistory(c echo.Context, ID string) ([]entity.Transactions, error) {
 	var transactions []entity.Transactions
 	err := r.connection.Find(&transactions, "user_id = ?", ID).Error
+	if err != nil {
+		return nil, err
+	}
+	return transactions, nil
+}
+
+func (r *repository) GetHistoryByMethod(c echo.Context, ID string, method string) ([]entity.Transactions, error) {
+	var transactions []entity.Transactions
+	err := r.connection.Find(&transactions, "user_id = ? AND payment_method = ?", ID, method).Error
 	if err != nil {
 		return nil, err
 	}
@@ -68,12 +68,7 @@ func (r *repository) UpdateTransaction(c echo.Context, transaction *entity.Trans
 }
 
 func (r *repository) DeleteTransaction(c echo.Context, ID string) error {
-	var transactionDomain *entity.Transactions
-	err := r.connection.First(&transactionDomain, "id = ?", ID).Error
-	if transactionDomain.ID == "" {
-		return err
-	}
-	err = r.connection.Delete(transactionDomain).Error
+	err := r.connection.Delete(&entity.Transactions{}, ID).Error
 	if err != nil {
 		return err
 	}
