@@ -48,12 +48,9 @@ func New(Service service.Svc) *echo.Echo {
 	// User endpoint
 	eUser := eApi.Group("/users")
 	eUser.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
-<<<<<<< HEAD
 	eUser.DELETE("/:id", controller.DeleteOneById)
-=======
 	eUser.GET("/:id", controller.GetOneByUserId)
 	eUser.GET("/users", controller.GetUsersPagination)
->>>>>>> 344fb1ef0bd0d3eccd4bb333f6b6d2d64a329e93
 
 	return e
 }

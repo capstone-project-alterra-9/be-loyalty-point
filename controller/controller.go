@@ -41,12 +41,9 @@ type transactionController interface {
 }
 
 type userController interface{
-<<<<<<< HEAD
 	DeleteOneById(c echo.Context) error
-=======
 	GetOneByUserId(c echo.Context) error
 	GetUsersPagination(c echo.Context) error
->>>>>>> 344fb1ef0bd0d3eccd4bb333f6b6d2d64a329e93
 }
 
 var Service service.Svc

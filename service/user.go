@@ -8,14 +8,13 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-<<<<<<< HEAD
-func (s *Service) DeleteOneById(c echo.Context, transactionID string) error {
+func (s *Service) DeleteOneById(c echo.Context, userId string) error {
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
-		transactionDomain, err := s.repo.GetTransactionByID(c, transactionID)
-		if transactionDomain != nil {
-			err = s.repo.DeleteOneById(c, transactionID)
+		userData, err := s.repo.GetUserByID(c, userId)
+		if userData != nil {
+			err = s.repo.DeleteUserById(c, userId)
 			if err != nil {
 				return err
 			}
@@ -25,7 +24,7 @@ func (s *Service) DeleteOneById(c echo.Context, transactionID string) error {
 	}
 	return err
 }
-=======
+
 func (s *Service) GetUserById(c echo.Context, ID string) (*entity.Users, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	auth, err := s.repo.GetAuth(c, user)
@@ -55,4 +54,3 @@ func (s *Service) GetUsersPagination(c echo.Context) ([]entity.Users, error) {
 	}
 	return nil, err
 }
->>>>>>> 344fb1ef0bd0d3eccd4bb333f6b6d2d64a329e93
