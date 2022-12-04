@@ -46,7 +46,9 @@ func New(Service service.Svc) *echo.Echo {
 	eAuth.DELETE("/products/:id", controller.DeleteProduct)
 
 	// User endpoint
-	eAuth.GET("/users/:id", controller.GetOneByUserId)
+	eUser := eApi.Group("/users")
+	eUser.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
+	eUser.GET("/:id", controller.GetOneByUserId)
 
 	return e
 }
