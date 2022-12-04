@@ -11,6 +11,7 @@ import (
 func (s *Service) DeleteOneById(c echo.Context, userId string) error {
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
+
 	if adminAuth != nil {
 		userData, err := s.repo.GetUserByID(c, userId)
 		if userData != nil {

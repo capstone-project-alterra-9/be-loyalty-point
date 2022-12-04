@@ -9,7 +9,7 @@ import (
 
 func DeleteOneById(c echo.Context) error {
 	id := c.Param("id")
-	err := Service.DeleteTransactionByAdmin(c, id)
+	err := Service.DeleteOneById(c, id)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to delete user", err))
 	}

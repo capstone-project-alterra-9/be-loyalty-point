@@ -60,7 +60,7 @@ func (r *repository) GetUserByID(c echo.Context, ID string) (*entity.Users, erro
 }
 
 func (r *repository) DeleteUserById(c echo.Context, ID string) error {
-	err := r.connection.Delete(&entity.Users{}, ID).Error
+	err := r.connection.Delete(&entity.Users{},"id = ?", ID).Error
 	if err != nil {
 		return err
 	}
