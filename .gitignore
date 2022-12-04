@@ -8,3 +8,4 @@ vendor
 .vscode
 .env
 go.sum
+/tmp
