@@ -42,6 +42,7 @@ type transactionController interface {
 
 type userController interface{
 	GetOneByUserId(c echo.Context) error
+	GetUsersPagination(c echo.Context) error
 }
 
 var Service service.Svc

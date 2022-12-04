@@ -39,6 +39,17 @@ func (r *repository) UpdateUserPoints(c echo.Context, userPoint *entity.Points) 
 	return nil
 }
 
+func (r *repository) GetUsersPagination(c echo.Context) ([]entity.Users, error) {
+	var users []entity.Users
+
+	err := r.connection.Find(&users).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
 func (r *repository) GetUserByID(c echo.Context, ID string) (*entity.Users, error) {
 	var userData *entity.Users
 	err := r.connection.First(&userData, "id = ?", ID).Error

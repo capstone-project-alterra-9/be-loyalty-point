@@ -49,6 +49,7 @@ func New(Service service.Svc) *echo.Echo {
 	eUser := eApi.Group("/users")
 	eUser.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
 	eUser.GET("/:id", controller.GetOneByUserId)
+	eUser.GET("/users", controller.GetUsersPagination)
 
 	return e
 }
