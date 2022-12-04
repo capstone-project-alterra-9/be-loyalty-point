@@ -60,4 +60,5 @@ type userRepo interface {
 	CreatePoints(c echo.Context, userPoints entity.Points) (*entity.Points, error)
 	GetUserPoints(c echo.Context, ID string) (*entity.Points, error)
 	UpdateUserPoints(c echo.Context, userPoint *entity.Points) error
+	GetUserByID(c echo.Context, ID string) (*entity.Users, error)
 }
