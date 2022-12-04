@@ -50,4 +50,10 @@ type trasanctionSvc interface {
 	DeleteTransactionByAdmin(c echo.Context, transactionID string) error
 }
 
-type userSvc interface{}
+type userSvc interface{
+<<<<<<< HEAD
+	GetUsersPagination(c echo.Context) ([]entity.Users, error)
+=======
+	GetUserById(c echo.Context, ID string) (*entity.Users, error)
+>>>>>>> d1c1453a372f7fbfd69647ee36488e919f916ce1
+}
