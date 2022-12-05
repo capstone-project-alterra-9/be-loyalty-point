@@ -14,6 +14,7 @@ type Controller interface {
 }
 
 type authController interface {
+	Connected(c echo.Context) error
 	Register(c echo.Context) error
 	Login(c echo.Context) error
 }
@@ -39,7 +40,12 @@ type transactionController interface {
 	DeleteTransactionByAdmin(c echo.Context) error
 }
 
-type userController interface{}
+type userController interface{
+	DeleteOneById(c echo.Context) error
+	GetOneByUserId(c echo.Context) error
+	GetUsersPagination(c echo.Context) error
+	UpdateOneByUserId(c echo.Context) error
+}
 
 var Service service.Svc
 

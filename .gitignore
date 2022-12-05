@@ -6,3 +6,6 @@ vendor
 *.iml
 *.out
 .vscode
+.env
+go.sum
+/tmp

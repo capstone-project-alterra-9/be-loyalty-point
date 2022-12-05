@@ -45,5 +45,14 @@ func New(Service service.Svc) *echo.Echo {
 	eAuth.PUT("/products/:id", controller.UpdateProduct)
 	eAuth.DELETE("/products/:id", controller.DeleteProduct)
 
+	// User endpoint
+	eUser := eApi.Group("/users")
+	eUser.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
+	eUser.DELETE("/:id", controller.DeleteOneById)
+	eUser.GET("/:id", controller.GetOneByUserId)
+	eUser.GET("/users", controller.GetUsersPagination)
+	eUser.PUT("/:id", controller.UpdateOneByUserId)
+	eUser.GET("", controller.GetUsersPagination)
+
 	return e
 }
