@@ -41,6 +41,7 @@ type transactionController interface {
 }
 
 type userController interface{
+	DeleteOneById(c echo.Context) error
 	GetOneByUserId(c echo.Context) error
 	GetUsersPagination(c echo.Context) error
 	UpdateOneByUserId(c echo.Context) error

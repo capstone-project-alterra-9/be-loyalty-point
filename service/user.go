@@ -8,6 +8,24 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func (s *Service) DeleteOneById(c echo.Context, userId string) error {
+	user := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, user)
+
+	if adminAuth != nil {
+		userData, err := s.repo.GetUserByID(c, userId)
+		if userData != nil {
+			err = s.repo.DeleteUserById(c, userId)
+			if err != nil {
+				return err
+			}
+			return nil
+		}
+		return err
+	}
+	return err
+}
+
 func (s *Service) GetUserById(c echo.Context, ID string) (*entity.Users, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	auth, err := s.repo.GetAuth(c, user)
@@ -37,6 +55,7 @@ func (s *Service) GetUsersPagination(c echo.Context) ([]entity.Users, error) {
 	}
 	return nil, err
 }
+
 
 func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.Users) (*entity.Users, error) {
 	userAuth := jwtAuth.ExtractTokenUsername(c)
