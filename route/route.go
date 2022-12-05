@@ -50,6 +50,8 @@ func New(Service service.Svc) *echo.Echo {
 	eUser.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
 	eUser.DELETE("/:id", controller.DeleteOneById)
 	eUser.GET("/:id", controller.GetOneByUserId)
+	eUser.GET("/users", controller.GetUsersPagination)
+	eUser.PUT("/:id", controller.UpdateOneByUserId)
 	eUser.GET("", controller.GetUsersPagination)
 
 	return e
