@@ -23,3 +23,10 @@ type UpdateTransactionBinding struct {
 	ProductID     string `gorm:"type:varchar(100);not null" json:"productID"`
 	IdentifierNum string `gorm:"type:varchar(100);not null" json:"identifierNum"`
 }
+
+type CreateUserBinding struct {
+	Username 	string `json:"username"`
+	Email    	string `json:"email"`
+	Password 	string `json:"password"`
+	Role		string `json:"role"`
+}

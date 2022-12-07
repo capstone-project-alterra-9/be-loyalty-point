@@ -6,6 +6,8 @@ import (
 
 	"errors"
 	"github.com/labstack/echo/v4"
+	guuid "github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func (s *Service) DeleteOneById(c echo.Context, userId string) error {
@@ -78,3 +80,60 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.Users) (*
 	}
 	return nil, err
 }
+
+func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBinding) (*entity.CreateUserView, error) {
+	userAuth := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, userAuth)
+
+	if adminAuth == nil {
+		return nil, errors.New("Unauthorized")
+	}
+
+	var userDomain entity.Users
+	userDomain.ID = (guuid.New()).String()
+	userDomain.Role = user.Role
+	userDomain.Username = user.Username
+	userDomain.Email = user.Email
+	password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	userDomain.Password = string(password)
+
+	result, err := s.repo.CreateUser(c, userDomain)
+	if err != nil {
+		return nil, err
+	}
+
+	if user.Role == "user" {
+		userPoints := entity.Points{
+			ID:         (guuid.New()).String(),
+			UserID:     result.ID,
+			Points:     20000,
+			CostPoints: 0,
+		}
+
+		_, err = s.repo.CreatePoints(c, userPoints)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	return &entity.CreateUserView{
+		ID:       result.ID,
+		Username: result.Username,
+		Email:    result.Email,
+		Password: result.Password,
+		Role:		result.Role,
+	}, nil
+}
+
+// func (s *Service) GetCountUsers(c echo.Context) (int, error) {
+// 	user := jwtAuth.ExtractTokenUsername(c)
+// 	adminAuth, err := s.repo.GetCountUsers(c, user)
+// 	if adminAuth != nil {
+// 		users, err := s.repo.GetUsersPagination(c)
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		return 4, nil
+// 	}
+// 	return nil, err
+// }

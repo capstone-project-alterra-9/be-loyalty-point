@@ -15,3 +15,11 @@ type LoginView struct {
 	RefreshToken string `json:"refreshToken"`
 	Account      string `json:"account"`
 }
+
+type CreateUserView struct {
+	ID       string `json: "id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Role	 string `json:"role"`
+}
