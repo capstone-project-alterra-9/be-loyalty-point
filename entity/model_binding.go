@@ -20,3 +20,10 @@ type TransactionsBinding struct {
 type UpdateTransactionBinding struct {
 	Status string `json:"status"`
 }
+
+type CreateUserBinding struct {
+	Username 	string `json:"username"`
+	Email    	string `json:"email"`
+	Password 	string `json:"password"`
+	Role		string `json:"role"`
+}
