@@ -91,7 +91,7 @@ func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBindin
 
 	var userDomain entity.Users
 	userDomain.ID = (guuid.New()).String()
-	userDomain.Role = user.Role
+	userDomain.Role = "user"
 	userDomain.Username = user.Username
 	userDomain.Email = user.Email
 	password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
@@ -102,18 +102,17 @@ func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBindin
 		return nil, err
 	}
 
-	if user.Role == "user" {
-		userPoints := entity.Points{
-			ID:         (guuid.New()).String(),
-			UserID:     result.ID,
-			Points:     20000,
-			CostPoints: 0,
-		}
 
-		_, err = s.repo.CreatePoints(c, userPoints)
-		if err != nil {
-			return nil, err
-		}
+	userPoints := entity.Points{
+		ID:         (guuid.New()).String(),
+		UserID:     result.ID,
+		Points:     user.Point,
+		CostPoints: 0,
+	}
+
+	_, err = s.repo.CreatePoints(c, userPoints)
+	if err != nil {
+		return nil, err
 	}
 
 	return &entity.CreateUserView{
@@ -121,7 +120,7 @@ func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBindin
 		Username: result.Username,
 		Email:    result.Email,
 		Password: result.Password,
-		Role:		result.Role,
+		Point:		user.Point,
 	}, nil
 }
 
