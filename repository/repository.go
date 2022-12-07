@@ -53,6 +53,7 @@ type transactionRepo interface {
 	GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error)
 	UpdateTransaction(c echo.Context, ID string, transaction *entity.Transactions) (*entity.Transactions, error)
 	DeleteTransaction(c echo.Context, ID string) error
+	GetCountTransactions(c echo.Context) (*entity.GetTransactionsCountView, error)
 }
 
 type userRepo interface {

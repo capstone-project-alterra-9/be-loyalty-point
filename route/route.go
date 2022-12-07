@@ -42,6 +42,7 @@ func New(Service service.Svc) *echo.Echo {
 	eTransaction.POST("/dummy", controller.CreateTransactionByAdmin)
 	eTransaction.PUT("/:id", controller.UpdateTransactionByAdmin)
 	eTransaction.DELETE("/:id", controller.DeleteTransactionByAdmin)
+	eTransaction.GET("/count", controller.GetCountTransactions)
 
 	eProduct := eAuth.Group("/products")
 	eProduct.POST("", controller.CreateProduct)

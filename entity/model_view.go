@@ -27,3 +27,10 @@ type CreateUserView struct {
 type GetUserCountView struct {
 	TotalCount	int	`json:"totalCount"`
 }
+
+type GetTransactionsCountView struct {
+	TotalTransactions			int	`json:"totalTransactions"`
+	TotalFailedTransactions		int	`json:"totalFailedTransactions"`
+	TotalOnProgressTransactions	int	`json:"totalOnProgressTransactions"`
+	TotalSuccessTransactions	int	`json:"totalSuccessTransactions"`
+}

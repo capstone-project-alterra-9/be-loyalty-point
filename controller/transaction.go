@@ -97,3 +97,11 @@ func DeleteTransactionByAdmin(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, dto.BuildResponse("Success delete transaction", dto.EmptyObj{}))
 }
+
+func GetCountTransactions(c echo.Context) error {
+	result, err := Service.GetCountTransactions(c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get total transactions", err))
+	}
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success get total transactions", result))
+}
