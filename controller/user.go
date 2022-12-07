@@ -65,11 +65,10 @@ func CreateUserByAdmin(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.BuildResponse("succes register user", result))
 }
 
-
-// func GetCountUsers(c echo.Context) error {
-// 	result, err := Service.GetCountUsers(c)
-// 	if err != nil {
-// 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get transactions", err))
-// 	}
-// 	return c.JSON(http.StatusOK, dto.BuildResponse("Success get transactions", result))
-// }
+func GetCountUsers(c echo.Context) error {
+	result, err := Service.GetCountUsers(c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get total users", err))
+	}
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success get total users", result))
+}

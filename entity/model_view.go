@@ -23,3 +23,7 @@ type CreateUserView struct {
 	Password string `json:"password"`
 	Role	 string `json:"role"`
 }
+
+type GetUserCountView struct {
+	TotalCount	int	`json:"totalCount"`
+}

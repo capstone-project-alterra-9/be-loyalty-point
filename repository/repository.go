@@ -64,7 +64,7 @@ type userRepo interface {
 	GetUserByID(c echo.Context, ID string) (*entity.Users, error)
 	UpdateOneByUserId(c echo.Context, user *entity.Users) (*entity.Users, error)
 	DeleteUserById(c echo.Context, ID string) error
-	// GetCountUsers(c echo.Context) (int64, error)
+	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
 }
 
 type paginationRepo interface {

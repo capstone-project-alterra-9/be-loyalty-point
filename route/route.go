@@ -60,7 +60,7 @@ func New(Service service.Svc) *echo.Echo {
 	eUser.PUT("/:id", controller.UpdateOneByUserId)
 	eUser.GET("", controller.GetUsersPagination)
 	eUser.POST("/create", controller.CreateUserByAdmin)
-	// eUser.GET("/count", controller.GetCountUsers)
+	eUser.GET("/count", controller.GetCountUsers)
 
 	return e
 }

@@ -75,14 +75,15 @@ func (r *repository) UpdateOneByUserId(c echo.Context, user *entity.Users) (*ent
 	return user, nil
 }
 
-// func (r *repository) GetCountUsers(c echo.Context) (int64, error) {
-// 	var users []entity.Users
-// 	var count int64;
+func (r *repository) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error) {
+	var users []entity.Users
 
-// 	err := r.connection.Find(&users).Count(&count).Error
+	err := r.connection.Find(&users, "role = ?", "user" ).Error
 
-// 	if err != nil {
-// 		return 4, err
-// 	}
-// 	return 4, nil
-// }
+	if err != nil {
+		return nil, err
+	}
+	return &entity.GetUserCountView{
+		TotalCount: len(users),
+	}, nil
+}
