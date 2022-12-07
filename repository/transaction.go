@@ -59,8 +59,8 @@ func (r *repository) GetTransactionByID(c echo.Context, ID string) (*entity.Tran
 	return transactionDomain, nil
 }
 
-func (r *repository) UpdateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error) {
-	err := r.connection.Save(transaction).Error
+func (r *repository) UpdateTransaction(c echo.Context, ID string, transaction *entity.Transactions) (*entity.Transactions, error) {
+	err := r.connection.Where("id = ?", ID).Updates(transaction).Error
 	if err != nil {
 		return nil, err
 	}
