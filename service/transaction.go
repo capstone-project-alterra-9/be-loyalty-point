@@ -238,3 +238,18 @@ func (s *Service) DeleteTransactionByAdmin(c echo.Context, transactionID string)
 	}
 	return err
 }
+
+func (s *Service) GetCountTransactions(c echo.Context) (*entity.GetTransactionsCountView, error) {
+	user := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, user)
+	if adminAuth == nil {
+		return nil, errors.New("Unauthorized")
+	}
+	
+	userCount, err := s.repo.GetCountTransactions(c)
+
+	if err != nil {
+		return nil, err
+	}
+	return userCount, nil;
+}

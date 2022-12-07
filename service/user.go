@@ -125,15 +125,17 @@ func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBindin
 	}, nil
 }
 
-// func (s *Service) GetCountUsers(c echo.Context) (int, error) {
-// 	user := jwtAuth.ExtractTokenUsername(c)
-// 	adminAuth, err := s.repo.GetCountUsers(c, user)
-// 	if adminAuth != nil {
-// 		users, err := s.repo.GetUsersPagination(c)
-// 		if err != nil {
-// 			return nil, err
-// 		}
-// 		return 4, nil
-// 	}
-// 	return nil, err
-// }
+func (s *Service) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error) {
+	user := jwtAuth.ExtractTokenUsername(c)
+	adminAuth, err := s.repo.GetAdminAuth(c, user)
+	if adminAuth == nil {
+		return nil, errors.New("Unauthorized")
+	}
+	
+	userCount, err := s.repo.GetCountUsers(c)
+
+	if err != nil {
+		return nil, err
+	}
+	return userCount, nil;
+}
