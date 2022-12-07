@@ -18,5 +18,8 @@ type TransactionsBinding struct {
 }
 
 type UpdateTransactionBinding struct {
-	Status string `json:"status"`
+	PaymentMethod string `gorm:"type:varchar(20);not null" json:"paymentMethod"`
+	UserID        string `gorm:"type:varchar(100);not null" json:"userID"`
+	ProductID     string `gorm:"type:varchar(100);not null" json:"productID"`
+	IdentifierNum string `gorm:"type:varchar(100);not null" json:"identifierNum"`
 }

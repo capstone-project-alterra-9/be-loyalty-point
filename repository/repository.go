@@ -51,7 +51,7 @@ type transactionRepo interface {
 	GetHistoryByMethod(c echo.Context, ID string, method string) ([]entity.Transactions, error)
 	CreateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
 	GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error)
-	UpdateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
+	UpdateTransaction(c echo.Context, ID string, transaction *entity.Transactions) (*entity.Transactions, error)
 	DeleteTransaction(c echo.Context, ID string) error
 }
 

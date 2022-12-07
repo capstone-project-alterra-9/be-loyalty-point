@@ -117,6 +117,7 @@ func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.Tra
 			transactionDomain.Status = "failed"
 			return nil, errors.New("not enough points")
 		} else if transaction.PaymentMethod == "redeem" && userPoint.Points >= product.Price {
+			transactionDomain.Status = "success"
 			userPoint.Points = userPoint.Points - transactionDomain.Price
 			userPoint.CostPoints = userPoint.CostPoints + transactionDomain.Price
 			err = s.repo.UpdateUserPoints(c, userPoint)
@@ -129,10 +130,15 @@ func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.Tra
 			return nil, errors.New("midtrans payment gateway not implemented yet")
 		}
 
+		err = s.repo.UpdateSerialStatus(c, transactionDomain.SerialNumber, "unavailable")
+		if err != nil {
+			return nil, err
+		}
 		result, err := s.repo.CreateTransaction(c, transactionDomain)
 		if err != nil {
 			return nil, err
 		}
+
 		return result, nil
 	}
 	return nil, err
@@ -142,7 +148,7 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
-		transaction.ID = (guuid.New()).String() + "-dummy"
+		transaction.ID = (guuid.New()).String()
 		product, err := s.repo.GetProductByID(c, transaction.ProductID)
 		if err != nil {
 			return nil, err
@@ -153,8 +159,12 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 			return nil, err
 		}
 		transaction.SerialNumber = serial.Serial
-		transaction.Status = "pending"
+		transaction.Status = "success"
 		result, err := s.repo.CreateTransaction(c, &transaction)
+		if err != nil {
+			return nil, err
+		}
+		err = s.repo.UpdateSerialStatus(c, transaction.SerialNumber, "unavailable")
 		if err != nil {
 			return nil, err
 		}
@@ -171,42 +181,43 @@ func (s *Service) UpdateTransactionByAdmin(c echo.Context, ID string, transactio
 		if err != nil {
 			return nil, err
 		}
-		if transaction.Status == "succes" || transaction.Status == "Succes" {
-			if transactionDomain.PaymentMethod == "redeem" {
-				err = s.repo.UpdateSerialStatus(c, transactionDomain.SerialNumber, "unavailable")
-				if err != nil {
-					return nil, err
-				}
-				transactionDomain.Status = "succes"
-				result, err := s.repo.UpdateTransaction(c, transactionDomain)
-				if err != nil {
-					return nil, err
-				}
-				return result, nil
-			} else if transactionDomain.PaymentMethod == "buy" {
-				// midtrans payment gateway logic
-				return nil, errors.New("midtrans payment gateway not implemented yet")
-			}
-		} else if transaction.Status == "failed" || transaction.Status == "Failed" {
-			userPoint, err := s.repo.GetUserPoints(c, transactionDomain.UserID)
-			if err != nil {
-				return nil, err
-			}
-			userPoint.Points = userPoint.Points + transactionDomain.Price
-			userPoint.CostPoints = userPoint.CostPoints - transactionDomain.Price
-			err = s.repo.UpdateUserPoints(c, userPoint)
-			if err != nil {
-				return nil, err
-			}
-			transactionDomain.Status = transaction.Status
-			result, err := s.repo.UpdateTransaction(c, transactionDomain)
-			if err != nil {
-				return nil, err
-			}
-			return result, nil
-		} else {
-			return nil, errors.New("invalid status")
+		if transaction.PaymentMethod != "" && transactionDomain.PaymentMethod != transaction.PaymentMethod {
+			transactionDomain.PaymentMethod = transaction.PaymentMethod
 		}
+		if transaction.UserID != "" && transactionDomain.UserID != transaction.UserID {
+			transactionDomain.UserID = transaction.UserID
+		}
+		if transaction.ProductID != "" && transactionDomain.ProductID != transaction.ProductID {
+			productDomain, err := s.repo.GetProductByID(c, transaction.ProductID)
+			if err != nil {
+				return nil, err
+			}
+			transactionDomain.ProductID = productDomain.ID
+			err = s.repo.UpdateSerialStatus(c, transactionDomain.SerialNumber, "available")
+			if err != nil {
+				return nil, err
+			}
+			serial, err := s.repo.GetSerialNumber(c, productDomain.ID)
+			if err != nil {
+				return nil, err
+			}
+			transactionDomain.SerialNumber = serial.Serial
+			err = s.repo.UpdateSerialStatus(c, transactionDomain.SerialNumber, "unavailable")
+			if err != nil {
+				return nil, err
+			}
+			transactionDomain.Price = productDomain.Price
+		}
+
+		if transaction.IdentifierNum != "" && transactionDomain.IdentifierNum != transaction.IdentifierNum {
+			transactionDomain.IdentifierNum = transaction.IdentifierNum
+		}
+		transactionDomain.Status = "success"
+		result, err := s.repo.UpdateTransaction(c, ID, transactionDomain)
+		if err != nil {
+			return nil, err
+		}
+		return result, nil
 	}
 	return nil, err
 }
