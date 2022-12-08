@@ -22,4 +22,5 @@ type UpdateTransactionBinding struct {
 	UserID        string `gorm:"type:varchar(100);not null" json:"userID"`
 	ProductID     string `gorm:"type:varchar(100);not null" json:"productID"`
 	IdentifierNum string `gorm:"type:varchar(100);not null" json:"identifierNum"`
+	Status        string `gorm:"type:varchar(100);not null" json:"status"`
 }

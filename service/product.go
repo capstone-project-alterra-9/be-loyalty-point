@@ -17,9 +17,9 @@ func (s *Service) CreateProduct(c echo.Context, product *entity.Products) (*enti
 	if adminAuth != nil {
 		product.ID = guuid.New().String()
 		product.Redeem = true
-		if product.Category == "pulsa" || product.Category == "paket-data" {
+		if product.Category == "credits" || product.Category == "data-quota" {
 			product.Buy = true
-		} else if product.Category == "e-money" || product.Category == "cash-out" {
+		} else if product.Category == "e-money" || product.Category == "cashout" {
 			product.Buy = false
 		} else {
 			return nil, errors.New("invalid category")
@@ -60,7 +60,7 @@ func (s *Service) GetProductsByCategory(c echo.Context, category string) ([]enti
 	user := jwtAuth.ExtractTokenUsername(c)
 	auth, err := s.repo.GetAuth(c, user)
 	if auth != nil {
-		if category == "pulsa" || category == "paket-data" || category == "e-money" || category == "cash-out" {
+		if category == "credits" || category == "data-quota" || category == "e-money" || category == "cashout" {
 			return s.repo.GetProductsByCategory(c, category)
 		} else {
 			return nil, errors.New("invalid category")
@@ -88,9 +88,9 @@ func (s *Service) UpdateProduct(c echo.Context, ID string, product *entity.Produ
 	if adminAuth != nil {
 		updateProduct, err := s.repo.GetProductByID(c, ID)
 		if updateProduct != nil {
-			if product.Category == "pulsa" || product.Category == "paket-data" {
+			if product.Category == "credits" || product.Category == "data-quota" {
 				product.Buy = true
-			} else if product.Category == "e-money" || product.Category == "cash-out" {
+			} else if product.Category == "e-money" || product.Category == "cashout" {
 				product.Buy = false
 			} else {
 				return nil, errors.New("invalid category")

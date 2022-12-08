@@ -81,7 +81,7 @@ func (r *repository) UpdateProduct(c echo.Context, ID string, product *entity.Pr
 }
 
 func (r *repository) DeleteProduct(c echo.Context, ID string) error {
-	err := r.connection.Delete(&entity.Products{}, ID).Error
+	err := r.connection.Where("id = ?", ID).Delete(&entity.Products{}).Error
 	if err != nil {
 		return err
 	}

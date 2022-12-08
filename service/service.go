@@ -39,14 +39,14 @@ type productSvc interface {
 }
 
 type trasanctionSvc interface {
-	GetTransactions(c echo.Context) ([]entity.Transactions, error)
-	GetTransactionsByMethod(c echo.Context, method string) ([]entity.Transactions, error)
-	GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error)
-	GetHistory(c echo.Context) ([]entity.Transactions, error)
-	GetHistoryByMethod(c echo.Context, method string) ([]entity.Transactions, error)
-	CreateTransactionByUser(c echo.Context, transaction entity.TransactionsBinding) (*entity.Transactions, error)
-	CreateTransactionByAdmin(c echo.Context, transaction entity.Transactions) (*entity.Transactions, error)
-	UpdateTransactionByAdmin(c echo.Context, ID string, transaction entity.UpdateTransactionBinding) (*entity.Transactions, error)
+	GetTransactions(c echo.Context) ([]entity.TransactionsView, error)
+	GetTransactionsByMethod(c echo.Context, method string) ([]entity.TransactionsView, error)
+	GetTransactionByID(c echo.Context, ID string) (*entity.TransactionsView, error)
+	GetHistory(c echo.Context) ([]entity.TransactionsView, error)
+	GetHistoryByMethod(c echo.Context, method string) ([]entity.TransactionsView, error)
+	CreateTransactionByUser(c echo.Context, transaction entity.TransactionsBinding) (*entity.TransactionsView, error)
+	CreateTransactionByAdmin(c echo.Context, transaction entity.Transactions) (*entity.TransactionsView, error)
+	UpdateTransactionByAdmin(c echo.Context, ID string, transaction entity.UpdateTransactionBinding) (*entity.TransactionsView, error)
 	DeleteTransactionByAdmin(c echo.Context, transactionID string) error
 }
 
