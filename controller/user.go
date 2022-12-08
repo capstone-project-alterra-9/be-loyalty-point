@@ -49,3 +49,26 @@ func UpdateOneByUserId(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, dto.BuildResponse("Success update user", result))
 }
+
+
+func CreateUserByAdmin(c echo.Context) error {
+	var user entity.CreateUserBinding
+	if err := c.Bind(&user); err != nil {
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to process request", err))
+	}
+
+	result, err := Service.CreateUserByAdmin(c, user)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to create user", err))
+	}
+
+	return c.JSON(http.StatusOK, dto.BuildResponse("succes register user", result))
+}
+
+func GetCountUsers(c echo.Context) error {
+	result, err := Service.GetCountUsers(c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get total users", err))
+	}
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success get total users", result))
+}

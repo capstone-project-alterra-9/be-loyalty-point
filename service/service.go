@@ -48,6 +48,7 @@ type trasanctionSvc interface {
 	CreateTransactionByAdmin(c echo.Context, transaction entity.Transactions) (*entity.TransactionsView, error)
 	UpdateTransactionByAdmin(c echo.Context, ID string, transaction entity.UpdateTransactionBinding) (*entity.TransactionsView, error)
 	DeleteTransactionByAdmin(c echo.Context, transactionID string) error
+	GetCountTransactions(c echo.Context) (*entity.GetTransactionsCountView, error)
 }
 
 type userSvc interface {
@@ -55,4 +56,6 @@ type userSvc interface {
 	GetUserById(c echo.Context, ID string) (*entity.Users, error)
 	UpdateOneById(c echo.Context, ID string, user entity.Users) (*entity.Users, error)
 	DeleteOneById(c echo.Context, userId string) error
+	CreateUserByAdmin(c echo.Context, user entity.CreateUserBinding) (*entity.CreateUserView, error)
+	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
 }

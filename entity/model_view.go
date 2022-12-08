@@ -18,6 +18,25 @@ type LoginView struct {
 	Account      string `json:"account"`
 }
 
+type CreateUserView struct {
+	ID       string `json: "id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Point	 int `json:"point"`
+}
+
+type GetUserCountView struct {
+	TotalCount	int	`json:"totalCount"`
+}
+
+type GetTransactionsCountView struct {
+	TotalTransactions			int	`json:"totalTransactions"`
+	TotalFailedTransactions		int	`json:"totalFailedTransactions"`
+	TotalOnProgressTransactions	int	`json:"totalOnProgressTransactions"`
+	TotalSuccessTransactions	int	`json:"totalSuccessTransactions"`
+}
+
 type TransactionsView struct {
 	ID            string    ``
 	CreatedAt     time.Time `json:"createdAt"`

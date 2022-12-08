@@ -53,6 +53,7 @@ type transactionRepo interface {
 	GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error)
 	UpdateTransaction(c echo.Context, ID string, transaction *entity.Transactions) (*entity.Transactions, error)
 	DeleteTransaction(c echo.Context, ID string) error
+	GetCountTransactions(c echo.Context) (*entity.GetTransactionsCountView, error)
 }
 
 type userRepo interface {
@@ -64,6 +65,7 @@ type userRepo interface {
 	GetUserByID(c echo.Context, ID string) (*entity.Users, error)
 	UpdateOneByUserId(c echo.Context, user *entity.Users) (*entity.Users, error)
 	DeleteUserById(c echo.Context, ID string) error
+	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
 }
 
 type paginationRepo interface {
