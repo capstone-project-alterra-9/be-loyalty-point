@@ -17,7 +17,7 @@ func (r *repository) GetTransactions(c echo.Context) ([]entity.Transactions, err
 
 func (r *repository) GetTransactionsByMethod(c echo.Context, method string) ([]entity.Transactions, error) {
 	var transactions []entity.Transactions
-	err := r.connection.Find(&transactions, "paymentMethod = ?", method).Error
+	err := r.connection.Find(&transactions, "payment_method = ?", method).Error
 	if err != nil {
 		return nil, err
 	}
@@ -26,7 +26,7 @@ func (r *repository) GetTransactionsByMethod(c echo.Context, method string) ([]e
 
 func (r *repository) GetHistory(c echo.Context, ID string) ([]entity.Transactions, error) {
 	var transactions []entity.Transactions
-	err := r.connection.Find(&transactions, "userID = ?", ID).Error
+	err := r.connection.Find(&transactions, "user_id = ?", ID).Error
 	if err != nil {
 		return nil, err
 	}
@@ -35,7 +35,7 @@ func (r *repository) GetHistory(c echo.Context, ID string) ([]entity.Transaction
 
 func (r *repository) GetHistoryByMethod(c echo.Context, ID string, method string) ([]entity.Transactions, error) {
 	var transactions []entity.Transactions
-	err := r.connection.Find(&transactions, "userID = ? AND paymentMethod = ?", ID, method).Error
+	err := r.connection.Find(&transactions, "user_id = ? AND payment_method = ?", ID, method).Error
 	if err != nil {
 		return nil, err
 	}
