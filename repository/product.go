@@ -23,7 +23,7 @@ func (r *repository) GetSerialNumbers(c echo.Context) ([]entity.SerialNumbers, e
 
 func (r *repository) GetSerialNumber(c echo.Context, productID string) (*entity.SerialNumbers, error) {
 	var serialNumber *entity.SerialNumbers
-	err := r.connection.First(&serialNumber, "product_id = ? AND status = ?", productID, "available").Error
+	err := r.connection.First(&serialNumber, "productID = ? AND status = ?", productID, "available").Error
 	if serialNumber.ID == "" {
 		return nil, err
 	}
