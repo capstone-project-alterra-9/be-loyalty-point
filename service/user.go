@@ -5,8 +5,8 @@ import (
 	jwtAuth "capstone-project/middleware"
 
 	"errors"
-	"github.com/labstack/echo/v4"
 	guuid "github.com/google/uuid"
+	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -58,7 +58,6 @@ func (s *Service) GetUsersPagination(c echo.Context) ([]entity.Users, error) {
 	return nil, err
 }
 
-
 func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.Users) (*entity.Users, error) {
 	userAuth := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, userAuth)
@@ -68,9 +67,9 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.Users) (*
 			return nil, err
 		}
 
-		userData.Username = user.Username;
-		userData.Email = user.Email; 
-		userData.Password = user.Password;
+		userData.Username = user.Username
+		userData.Email = user.Email
+		userData.Password = user.Password
 
 		result, err := s.repo.UpdateOneByUserId(c, userData)
 		if err != nil {
@@ -83,7 +82,7 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.Users) (*
 
 func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBinding) (*entity.CreateUserView, error) {
 	userAuth := jwtAuth.ExtractTokenUsername(c)
-	adminAuth, err := s.repo.GetAdminAuth(c, userAuth)
+	adminAuth, _ := s.repo.GetAdminAuth(c, userAuth)
 
 	if adminAuth == nil {
 		return nil, errors.New("Unauthorized")
@@ -102,7 +101,6 @@ func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBindin
 		return nil, err
 	}
 
-
 	userPoints := entity.Points{
 		ID:         (guuid.New()).String(),
 		UserID:     result.ID,
@@ -120,21 +118,21 @@ func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBindin
 		Username: result.Username,
 		Email:    result.Email,
 		Password: result.Password,
-		Point:		user.Point,
+		Point:    user.Point,
 	}, nil
 }
 
 func (s *Service) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
-	adminAuth, err := s.repo.GetAdminAuth(c, user)
+	adminAuth, _ := s.repo.GetAdminAuth(c, user)
 	if adminAuth == nil {
 		return nil, errors.New("Unauthorized")
 	}
-	
+
 	userCount, err := s.repo.GetCountUsers(c)
 
 	if err != nil {
 		return nil, err
 	}
-	return userCount, nil;
+	return userCount, nil
 }
