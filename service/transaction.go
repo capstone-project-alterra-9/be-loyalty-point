@@ -217,17 +217,17 @@ func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.Tra
 	if userDomain != nil {
 		product, err := s.repo.GetProductByID(c, transaction.ProductID)
 		if err != nil {
-			return nil, err
+			return nil, errors.New("product not found")
 		}
 
 		if transaction.PaymentMethod == "buy" && product.Buy || transaction.PaymentMethod == "redeem" && product.Redeem {
 			userPoint, err := s.repo.GetUserPoints(c, userDomain.ID)
 			if err != nil {
-				return nil, err
+				return nil, errors.New("user point not found")
 			}
 			serial, err := s.repo.GetSerialNumber(c, transaction.ProductID)
 			if err != nil {
-				return nil, err
+				return nil, errors.New("serial number not found")
 			}
 			transactionDomain := &entity.Transactions{
 				ID:            (guuid.New()).String(),
@@ -249,7 +249,7 @@ func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.Tra
 				userPoint.CostPoints = userPoint.CostPoints + transactionDomain.Price
 				err = s.repo.UpdateUserPoints(c, userPoint)
 				if err != nil {
-					return nil, err
+					return nil, errors.New("failed to update user points")
 				}
 			} else if transaction.PaymentMethod == "buy" {
 				// midtrans payment gateway logic
@@ -259,11 +259,11 @@ func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.Tra
 
 			err = s.repo.UpdateSerialStatus(c, transactionDomain.SerialNumber, "unavailable")
 			if err != nil {
-				return nil, err
+				return nil, errors.New("failed to update serial number status")
 			}
 			result, err := s.repo.CreateTransaction(c, transactionDomain)
 			if err != nil {
-				return nil, err
+				return nil, errors.New("failed to create transaction")
 			}
 
 			return &entity.TransactionsView{
