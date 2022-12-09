@@ -27,6 +27,9 @@ func (s *Service) CreateProduct(c echo.Context, product *entity.Products) (*enti
 		rand.Seed(time.Now().UnixNano())
 		for i := 0; i < product.Stock; i++ {
 			randomNum := rand.Int63n(999999999999-99999999999) - 99999999999
+			if randomNum < 0 {
+				randomNum = randomNum * -1
+			}
 			serialNumber := &entity.SerialNumbers{
 				ID:        guuid.New().String(),
 				ProductID: product.ID,
