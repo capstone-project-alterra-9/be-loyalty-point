@@ -304,12 +304,11 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 		if err != nil {
 			return nil, err
 		}
+		if product.Stock == 0 {
+			return nil, errors.New("product out of stock")
+		}
 
 		if transaction.PaymentMethod == "buy" && product.Buy || transaction.PaymentMethod == "redeem" && product.Redeem {
-			if product.Stock == 0 {
-				return nil, errors.New("product out of stock")
-			}
-
 			var userAuth *entity.Users
 			if transaction.UserID != "" {
 				userAuth, err = s.repo.GetAuth(c, transaction.UserID)
@@ -331,12 +330,12 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 			var result *entity.Transactions
 			if transaction.PaymentMethod == "redeem" && userPoint.Points < transaction.Price {
 				transaction.Status = "failed"
-				return nil, errors.New("not enough points")
+				return nil, errors.New("user not enough points")
 			} else if transaction.PaymentMethod == "redeem" && userPoint.Points >= transaction.Price {
 				transaction.Price = product.Price
 				serial, err := s.repo.GetSerialNumber(c, transaction.ProductID)
 				if err != nil {
-					return nil, err
+					return nil, errors.New("serial number not found")
 				}
 				transaction.SerialNumber = serial.Serial
 				transaction.Status = "success"
