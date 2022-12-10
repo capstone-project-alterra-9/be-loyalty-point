@@ -26,8 +26,17 @@ type UpdateTransactionBinding struct {
 }
 
 type CreateUserBinding struct {
-	Username 	string `json:"username"`
-	Email    	string `json:"email"`
-	Password 	string `json:"password"`
-	Point		int 	`json:"point"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+	Point    int    `json:"point"`
+}
+
+type UpdateUserBinding struct {
+	Role       string `json:"role"`
+	Username   string `json:"username"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Point      int    `json:"point"`
+	CostPoints int    `json:"costPoints"`
 }

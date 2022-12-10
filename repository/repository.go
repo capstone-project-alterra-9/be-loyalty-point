@@ -42,6 +42,8 @@ type productRepo interface {
 	GetProductsByCategory(c echo.Context, category string) ([]entity.Products, error)
 	UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error)
 	DeleteProduct(c echo.Context, ID string) error
+	DeleteAllSerialNumberByProductID(c echo.Context, ID string) error
+	DeleteNSerialNumberByProductID(c echo.Context, ID string, N int) error
 }
 
 type transactionRepo interface {
@@ -66,6 +68,7 @@ type userRepo interface {
 	UpdateOneByUserId(c echo.Context, user *entity.Users) (*entity.Users, error)
 	DeleteUserById(c echo.Context, ID string) error
 	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
+	DeleteUserPointsByUserId(c echo.Context, ID string) error
 }
 
 type paginationRepo interface {
