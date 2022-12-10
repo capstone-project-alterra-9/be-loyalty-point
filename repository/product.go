@@ -87,3 +87,19 @@ func (r *repository) DeleteProduct(c echo.Context, ID string) error {
 	}
 	return nil
 }
+
+func (r *repository) DeleteAllSerialNumberByProductID(c echo.Context, ID string) error {
+	err := r.connection.Where("product_id = ?", ID).Delete(&entity.SerialNumbers{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *repository) DeleteNSerialNumberByProductID(c echo.Context, ID string, N int) error {
+	err := r.connection.Where("product_id = ?", ID).Limit(N).Delete(&entity.SerialNumbers{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

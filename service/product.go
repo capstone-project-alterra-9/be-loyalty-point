@@ -91,14 +91,43 @@ func (s *Service) UpdateProduct(c echo.Context, ID string, product *entity.Produ
 	if adminAuth != nil {
 		updateProduct, err := s.repo.GetProductByID(c, ID)
 		if updateProduct != nil {
-			if product.Category == "credits" || product.Category == "data-quota" {
-				product.Buy = true
-			} else if product.Category == "e-money" || product.Category == "cashout" {
-				product.Buy = false
-			} else {
-				return nil, errors.New("invalid category")
+			if product.Category != updateProduct.Category {
+				product.Redeem = true
+				if product.Category == "credits" || product.Category == "data-quota" {
+					product.Buy = true
+				} else if product.Category == "e-money" || product.Category == "cashout" {
+					product.Buy = false
+				} else {
+					return nil, errors.New("invalid category")
+				}
 			}
-			product.ID = ID
+			if product.Stock != updateProduct.Stock {
+				if product.Stock > updateProduct.Stock {
+					rand.Seed(time.Now().UnixNano())
+					for i := 0; i < product.Stock-updateProduct.Stock; i++ {
+						randomNum := rand.Int63n(999999999999-99999999999) - 99999999999
+						if randomNum < 0 {
+							randomNum = randomNum * -1
+						}
+						serialNumber := &entity.SerialNumbers{
+							ID:        guuid.New().String(),
+							ProductID: product.ID,
+							Serial:    randomNum,
+							Status:    "available",
+						}
+						err := s.repo.CreateSerialNumber(c, serialNumber)
+						if err != nil {
+							return nil, err
+						}
+					}
+				} else if product.Stock < updateProduct.Stock {
+					diff := updateProduct.Stock - product.Stock
+					err := s.repo.DeleteNSerialNumberByProductID(c, ID, diff)
+					if err != nil {
+						return nil, err
+					}
+				}
+			}
 			return s.repo.UpdateProduct(c, ID, product)
 		}
 		return nil, err
@@ -112,7 +141,11 @@ func (s *Service) DeleteProduct(c echo.Context, ID string) error {
 	if adminAuth != nil {
 		product, err := s.repo.GetProductByID(c, ID)
 		if product != nil {
-			err := s.repo.DeleteProduct(c, ID)
+			err := s.repo.DeleteAllSerialNumberByProductID(c, ID)
+			if err != nil {
+				return err
+			}
+			err = s.repo.DeleteProduct(c, ID)
 			if err != nil {
 				return err
 			}
