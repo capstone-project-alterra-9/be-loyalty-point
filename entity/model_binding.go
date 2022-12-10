@@ -37,6 +37,6 @@ type UpdateUserBinding struct {
 	Username   string `json:"username"`
 	Email      string `json:"email"`
 	Password   string `json:"password"`
-	Point      int    `json:"point"`
+	Points     int    `json:"points"`
 	CostPoints int    `json:"costPoints"`
 }
