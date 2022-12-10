@@ -11,8 +11,8 @@ var DB *gorm.DB
 type Points struct {
 	ID         string `gorm:"primaryKey"`
 	UserID     string `gorm:"type:varchar(100);not null" json:"userID"`
-	Points     int    `gorm:"not null" json:"points"`
-	CostPoints int    `gorm:"not null" json:"costPoints"`
+	Points     int    `gorm:"type:int" json:"points"`
+	CostPoints int    `gorm:"type:int" json:"costPoints"`
 }
 
 type Users struct {
@@ -37,7 +37,7 @@ type Products struct {
 	Name        string         `gorm:"type:varchar(100);not null" json:"name"`
 	Description string         `gorm:"type:varchar(200);not null" json:"description"`
 	Price       int            `gorm:"type:int;not null" json:"price"`
-	Stock       int            `gorm:"type:int;not null" json:"stock"`
+	Stock       int            `gorm:"type:int" json:"stock"`
 	Image       string         `gorm:"type:varchar(200);not null" json:"image"`
 }
 
