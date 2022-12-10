@@ -324,6 +324,11 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 			if err != nil {
 				return nil, err
 			}
+			product.Stock = product.Stock - 1
+			product, err = s.repo.UpdateProduct(c, product.ID, product)
+			if err != nil {
+				return nil, err
+			}
 
 			var userAuth *entity.Users
 			if transaction.UserID != "" {
