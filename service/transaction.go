@@ -309,26 +309,6 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 			if product.Stock == 0 {
 				return nil, errors.New("product out of stock")
 			}
-			transaction.Price = product.Price
-			serial, err := s.repo.GetSerialNumber(c, transaction.ProductID)
-			if err != nil {
-				return nil, err
-			}
-			transaction.SerialNumber = serial.Serial
-			transaction.Status = "success"
-			result, err := s.repo.CreateTransaction(c, &transaction)
-			if err != nil {
-				return nil, err
-			}
-			err = s.repo.UpdateSerialStatus(c, transaction.SerialNumber, "unavailable")
-			if err != nil {
-				return nil, err
-			}
-			product.Stock = product.Stock - 1
-			product, err = s.repo.UpdateProduct(c, product.ID, product)
-			if err != nil {
-				return nil, err
-			}
 
 			var userAuth *entity.Users
 			if transaction.UserID != "" {
@@ -339,22 +319,53 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 			} else {
 				return nil, errors.New("user not found")
 			}
+			if userAuth.Role != "user" {
+				return nil, errors.New("user not found")
+			}
 
-			if userAuth.Role == "user" && transaction.PaymentMethod == "buy" {
-				// payment method buy integration with midtrans
-				// if midtrans payment gateway succes then update user points ( increase points )
-				return nil, errors.New("midtrans payment gateway not implemented yet")
-			} else if userAuth.Role == "user" && transaction.PaymentMethod == "redeem" {
-				userPoint, err := s.repo.GetUserPoints(c, userAuth.ID)
+			userPoint, err := s.repo.GetUserPoints(c, userAuth.ID)
+			if err != nil {
+				return nil, err
+			}
+
+			var result *entity.Transactions
+			if transaction.PaymentMethod == "redeem" && userPoint.Points < transaction.Price {
+				transaction.Status = "failed"
+				return nil, errors.New("not enough points")
+			} else if transaction.PaymentMethod == "redeem" && userPoint.Points >= transaction.Price {
+				transaction.Price = product.Price
+				serial, err := s.repo.GetSerialNumber(c, transaction.ProductID)
 				if err != nil {
 					return nil, err
 				}
+				transaction.SerialNumber = serial.Serial
+				transaction.Status = "success"
+				result, err = s.repo.CreateTransaction(c, &transaction)
+				if err != nil {
+					return nil, err
+				}
+				err = s.repo.UpdateSerialStatus(c, transaction.SerialNumber, "unavailable")
+				if err != nil {
+					return nil, err
+				}
+				product.Stock = product.Stock - 1
+				product, err = s.repo.UpdateProduct(c, product.ID, product)
+				if err != nil {
+					return nil, err
+				}
+
 				userPoint.Points = userPoint.Points - transaction.Price
 				userPoint.CostPoints = userPoint.CostPoints + transaction.Price
 				err = s.repo.UpdateUserPoints(c, userPoint)
 				if err != nil {
 					return nil, err
 				}
+			} else if transaction.PaymentMethod == "buy" {
+				// payment method buy integration with midtrans
+				// if midtrans payment gateway succes then update user points ( increase points ), update stock ( decrease stock ), update serial status ( unavailable )
+				return nil, errors.New("midtrans payment gateway not implemented yet")
+			} else {
+				return nil, errors.New("payment method not found")
 			}
 
 			return &entity.TransactionsView{
