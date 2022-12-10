@@ -347,11 +347,7 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 				if err != nil {
 					return nil, err
 				}
-				if product.Stock == 1 {
-					product.Stock = 0
-				} else {
-					product.Stock = product.Stock - 1
-				}
+				product.Stock = product.Stock - 1
 				product, err = s.repo.UpdateProduct(c, product.ID, product)
 				if err != nil {
 					return nil, err

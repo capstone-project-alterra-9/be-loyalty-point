@@ -90,7 +90,7 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 			if user.Role == "admin" || user.Role == "user" {
 				userData.Role = user.Role
 			} else {
-				return nil, errors.New("Role must be admin or user")
+				return nil, errors.New("role must be admin or user")
 			}
 		}
 

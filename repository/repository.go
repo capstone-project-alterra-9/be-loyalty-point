@@ -71,6 +71,6 @@ type userRepo interface {
 	DeleteUserPointsByUserId(c echo.Context, ID string) error
 }
 
-type paginationRepo interface {
-	CreatePagination()
-}
+// type paginationRepo interface {
+// 	CreatePagination()
+// }
