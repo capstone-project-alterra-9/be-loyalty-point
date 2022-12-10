@@ -2,6 +2,7 @@ package service
 
 import (
 	"capstone-project/entity"
+	"capstone-project/helper"
 	jwtAuth "capstone-project/middleware"
 	"errors"
 	"math/rand"
@@ -11,10 +12,23 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+// same data product gaboleh -- uda
+// empty name gaboleh -- uda
+// descripsi bole kosong kata era -- uda
+// stock 0 boleh kata era -- uda
+// stock negatif gaboleh -- uda
+// harga negatif gaboleh -- uda
+// update pake data sama gaboleh -- uda
+// update product tanpa nama gaboleh -- uda
+
 func (s *Service) CreateProduct(c echo.Context, product *entity.Products) (*entity.Products, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
+		if product.Name == "" || product.Category == "" || product.Price == 0 {
+			return nil, helper.ErrEmptyData
+		}
+
 		product.ID = guuid.New().String()
 		product.Redeem = true
 		if product.Category == "credits" || product.Category == "data-quota" {
@@ -24,6 +38,14 @@ func (s *Service) CreateProduct(c echo.Context, product *entity.Products) (*enti
 		} else {
 			return nil, errors.New("invalid category")
 		}
+
+		if product.Price < 0 {
+			return nil, errors.New("invalid price")
+		}
+		if product.Stock < 0 {
+			return nil, errors.New("invalid stock")
+		}
+
 		rand.Seed(time.Now().UnixNano())
 		for i := 0; i < product.Stock; i++ {
 			randomNum := rand.Int63n(999999999999-99999999999) - 99999999999
@@ -91,6 +113,12 @@ func (s *Service) UpdateProduct(c echo.Context, ID string, product *entity.Produ
 	if adminAuth != nil {
 		updateProduct, err := s.repo.GetProductByID(c, ID)
 		if updateProduct != nil {
+			if product.Name == updateProduct.Name && product.Description == updateProduct.Description && product.Price == updateProduct.Price && product.Category == updateProduct.Category && product.Stock == updateProduct.Stock && product.Image == updateProduct.Image {
+				return nil, helper.ErrSameDataRequest
+			}
+			if product.Name == "" {
+				return nil, helper.ErrEmptyData
+			}
 			if product.Category != updateProduct.Category {
 				product.Redeem = true
 				if product.Category == "credits" || product.Category == "data-quota" {

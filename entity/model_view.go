@@ -19,12 +19,12 @@ type LoginView struct {
 }
 
 type CreateUserView struct {
-	ID       string `json: "id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Point    int    `json:"point"`
-	CostPoints int `json:"costPoints"`
+	ID         string `json: "id"`
+	Username   string `json:"username"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Point      int    `json:"point"`
+	CostPoints int    `json:"costPoints"`
 }
 
 type GetUserCountView struct {
@@ -61,6 +61,6 @@ type UsersView struct {
 	Username   string    `json:"username"`
 	Email      string    `json:"email"`
 	Password   string    `json:"password"`
-	Point      int       `json:"point"`
+	Points     int       `json:"points"`
 	CostPoints int       `json:"costPoints"`
 }

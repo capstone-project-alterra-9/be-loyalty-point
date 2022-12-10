@@ -34,7 +34,7 @@ type Products struct {
 	Category    string         `gorm:"type:varchar(20);not null" json:"category"`
 	Redeem      bool           `gorm:"type:boolean;not null" json:"redeem"`
 	Buy         bool           `gorm:"type:boolean;not null" json:"buy"`
-	Name        string         `gorm:"type:varchar(100);not null" json:"name"`
+	Name        string         `gorm:"type:varchar(100);not null;unique" json:"name"`
 	Description string         `gorm:"type:varchar(200);not null" json:"description"`
 	Price       int            `gorm:"type:int;not null" json:"price"`
 	Stock       int            `gorm:"type:int" json:"stock"`
@@ -65,11 +65,11 @@ type Transactions struct {
 	Status        string         `gorm:"type:varchar(20);not null" json:"status"`
 }
 
-type Pagination struct {
-	Limit      int         `json:"limit,omitempty;query:limit"`
-	Page       int         `json:"page,omitempty;query:page"`
-	Sort       string      `json:"sort,omitempty;query:sort"`
-	TotalRows  int64       `json:"total_rows"`
-	TotalPages int         `json:"total_pages"`
-	Rows       interface{} `json:"rows"`
-}
+// type Pagination struct {
+// 	Limit      int         `json:"limit,omitempty;query:limit"`
+// 	Page       int         `json:"page,omitempty;query:page"`
+// 	Sort       string      `json:"sort,omitempty;query:sort"`
+// 	TotalRows  int64       `json:"total_rows"`
+// 	TotalPages int         `json:"total_pages"`
+// 	Rows       interface{} `json:"rows"`
+// }
