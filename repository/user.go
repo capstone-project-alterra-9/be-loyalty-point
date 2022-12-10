@@ -32,7 +32,7 @@ func (r *repository) GetUserPoints(c echo.Context, ID string) (*entity.Points, e
 }
 
 func (r *repository) UpdateUserPoints(c echo.Context, userPoint *entity.Points) error {
-	err := r.connection.Model(&entity.Points{}).Where("user_id = ?", userPoint.UserID).Updates(map[string]interface{}{
+	err := r.connection.Find(&userPoint, "user_id = ?", userPoint.UserID).Updates(map[string]interface{}{
 		"user_id":     userPoint.UserID,
 		"points":      userPoint.Points,
 		"cost_points": userPoint.CostPoints,
