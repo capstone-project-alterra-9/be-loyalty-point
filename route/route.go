@@ -39,7 +39,7 @@ func New(Service service.Svc) *echo.Echo {
 	eTransaction.GET("/method/:paymentMethod", controller.GetTransactionsByMethod)
 	eTransaction.GET("/:id", controller.GetTransactionByID)
 	eTransaction.POST("", controller.CreateTransactionByUser)
-	eTransaction.POST("/dummy", controller.CreateTransactionByAdmin)
+	eTransaction.POST("/admin/create", controller.CreateTransactionByAdmin)
 	eTransaction.PUT("/:id", controller.UpdateTransactionByAdmin)
 	eTransaction.DELETE("/:id", controller.DeleteTransactionByAdmin)
 	eTransaction.GET("/count", controller.GetCountTransactions)
