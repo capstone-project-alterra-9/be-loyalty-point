@@ -311,7 +311,7 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 		if transaction.PaymentMethod == "buy" && product.Buy || transaction.PaymentMethod == "redeem" && product.Redeem {
 			var userAuth *entity.Users
 			if transaction.UserID != "" {
-				userAuth, err = s.repo.GetAuth(c, transaction.UserID)
+				userAuth, err = s.repo.GetUserByID(c, transaction.UserID)
 				if err != nil {
 					return nil, err
 				}
