@@ -73,7 +73,7 @@ func (r *repository) GetProductsByCategory(c echo.Context, category string) ([]e
 }
 
 func (r *repository) UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error) {
-	err := r.connection.Model(&entity.Products{}).Where("id = ?", ID).Updates(product).Error
+	err := r.connection.Where("id = ?", ID).Updates(product).Error
 	if err != nil {
 		return nil, err
 	}
