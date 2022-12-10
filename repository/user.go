@@ -87,3 +87,11 @@ func (r *repository) GetCountUsers(c echo.Context) (*entity.GetUserCountView, er
 		TotalCount: len(users),
 	}, nil
 }
+
+func (r *repository) DeleteUserPointsByUserId(c echo.Context, ID string) error {
+	err := r.connection.Where("user_id = ?", ID).Delete(&entity.Points{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}

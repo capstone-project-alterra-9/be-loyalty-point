@@ -2,8 +2,8 @@ package controller
 
 import (
 	"capstone-project/dto"
-	"net/http"
 	"capstone-project/entity"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -15,16 +15,15 @@ func DeleteOneById(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to delete user", err))
 	}
 	return c.JSON(http.StatusOK, dto.BuildResponse("Success delete user", dto.EmptyObj{}))
-} 
+}
 
 func GetUsersPagination(c echo.Context) error {
 	users, err := Service.GetUsersPagination(c)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get transactions", err))
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get all user", err))
 	}
-	return c.JSON(http.StatusOK, dto.BuildResponse("Success get transactions", users))
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success get all user", users))
 }
-
 
 func GetOneByUserId(c echo.Context) error {
 	id := c.Param("id")
@@ -33,12 +32,11 @@ func GetOneByUserId(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get user", err))
 	}
 	return c.JSON(http.StatusOK, dto.BuildResponse("Success to get user", user))
-} 
-
+}
 
 func UpdateOneByUserId(c echo.Context) error {
 	id := c.Param("id")
-	var user entity.Users
+	var user entity.UpdateUserBinding
 	err := c.Bind(&user)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to bind request", err))
@@ -49,7 +47,6 @@ func UpdateOneByUserId(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, dto.BuildResponse("Success update user", result))
 }
-
 
 func CreateUserByAdmin(c echo.Context) error {
 	var user entity.CreateUserBinding
