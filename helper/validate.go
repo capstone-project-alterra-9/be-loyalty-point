@@ -17,3 +17,26 @@ func ValidateAlphanumeric(value string) bool {
 	}
 	return true
 }
+
+func ValidateEmail(value string) (string, error) {
+	var (
+		subEmail string
+		valid    bool = false
+	)
+	for _, v := range value {
+		if v != '@' {
+			subEmail += string(v)
+		} else {
+			valid = true
+			break
+		}
+	}
+	if !valid {
+		return "", ErrEmailValid
+	}
+	if len(subEmail) < 8 {
+		return "", ErrEmailLength
+	}
+
+	return subEmail, nil
+}

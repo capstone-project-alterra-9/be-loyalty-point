@@ -26,16 +26,9 @@ func (s *Service) Register(c echo.Context, user entity.RegisterBinding) (*entity
 	}
 
 	userDomain.Username = user.Username
-	var subEmail string
-	for _, v := range user.Email {
-		if v != '@' {
-			subEmail += string(v)
-		} else {
-			break
-		}
-	}
-	if len(subEmail) < 8 {
-		return nil, helper.ErrEmailLength
+	subEmail, err := helper.ValidateEmail(user.Email)
+	if err != nil {
+		return nil, err
 	}
 	userDomain.Email = user.Email
 	if subEmail == user.Username {
