@@ -90,6 +90,7 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 		if err != nil {
 			return nil, err
 		}
+		tempCompare := userData
 		userPoint, err := s.repo.GetUserPoints(c, userData.ID)
 		if err != nil {
 			return nil, err
@@ -150,7 +151,7 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 			}
 		}
 
-		if user.Role == userData.Role && user.Username == userData.Username && user.Email == userData.Email && user.Password == userData.Password && user.Points == userPoint.Points && user.CostPoints == userPoint.CostPoints {
+		if userData == tempCompare && user.Points == userPoint.Points && user.CostPoints == userPoint.CostPoints {
 			return nil, helper.ErrSameDataRequest
 		}
 
@@ -195,16 +196,9 @@ func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBindin
 	}
 	userDomain.Username = user.Username
 
-	var subEmail string
-	for _, v := range user.Email {
-		if v != '@' {
-			subEmail += string(v)
-		} else {
-			break
-		}
-	}
-	if len(subEmail) < 8 {
-		return nil, helper.ErrEmailLength
+	subEmail, err := helper.ValidateEmail(user.Email)
+	if err != nil {
+		return nil, err
 	}
 	userDomain.Email = user.Email
 	if subEmail == user.Username {
