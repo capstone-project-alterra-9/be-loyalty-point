@@ -51,6 +51,7 @@ func New(Service service.Svc) *echo.Echo {
 	eProduct.GET("/:id", controller.GetProductByID)
 	eProduct.PUT("/:id", controller.UpdateProduct)
 	eProduct.DELETE("/:id", controller.DeleteProduct)
+	eProduct.GET("/count", controller.GetCountProducts)
 
 	// User endpoint
 	eUser := eApi.Group("/users")

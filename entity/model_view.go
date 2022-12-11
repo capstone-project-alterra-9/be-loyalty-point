@@ -51,3 +51,8 @@ type TransactionsView struct {
 	Price         int       `json:"price"`
 	Status        string    `json:"status"`
 }
+
+type GetProductsCountView struct {
+	TotalSoldProduct			int	`json:"totalSoldProduct"`
+	TotalStockProduct			int	`json:"totalStockProduct"`
+}

@@ -87,3 +87,18 @@ func (r *repository) DeleteProduct(c echo.Context, ID string) error {
 	}
 	return nil
 }
+
+func (r *repository) GetCountProducts(c echo.Context) (*entity.GetProductsCountView, error) {
+	var products []entity.Product
+
+	err := r.connection.Find(&products, "role = ?", "user" ).Error
+	err := r.connection.Find(&products, "role = ?", "user" ).Error
+
+	if err != nil {
+		return nil, err
+	}
+	return &entity.GetProductsCountView{
+		TotalSoldProduct: 	len(users),
+		TotalStockProduct:	len()
+	}, nil
+}
