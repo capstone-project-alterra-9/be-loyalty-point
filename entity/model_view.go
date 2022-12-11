@@ -64,3 +64,8 @@ type UsersView struct {
 	Points     int       `json:"points"`
 	CostPoints int       `json:"costPoints"`
 }
+
+type MidtransTransactionView struct {
+	Token       string    `json:"token"`
+	DirectUrl   string    `json:"directUrl"`
+}

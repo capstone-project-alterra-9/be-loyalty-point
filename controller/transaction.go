@@ -105,3 +105,15 @@ func GetCountTransactions(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, dto.BuildResponse("Success get total transactions", result))
 }
+
+func CreateMidtransTransaction(c echo.Context) error {
+	var midtransTransaction entity.MidtransTransactionBinding
+	if err := c.Bind(&midtransTransaction); err != nil {
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to bind request", err))
+	}
+	result, err := Service.CreateMidtransTransaction(c, midtransTransaction)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to add transaction", err))
+	}
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success add transaction", result))
+}
