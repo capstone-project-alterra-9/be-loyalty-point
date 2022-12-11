@@ -39,20 +39,23 @@ type productSvc interface {
 }
 
 type trasanctionSvc interface {
-	GetTransactions(c echo.Context) ([]entity.Transactions, error)
-	GetTransactionsByMethod(c echo.Context, method string) ([]entity.Transactions, error)
-	GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error)
-	GetHistory(c echo.Context) ([]entity.Transactions, error)
-	GetHistoryByMethod(c echo.Context, method string) ([]entity.Transactions, error)
-	CreateTransactionByUser(c echo.Context, transaction entity.TransactionsBinding) (*entity.Transactions, error)
-	CreateTransactionByAdmin(c echo.Context, transaction entity.Transactions) (*entity.Transactions, error)
-	UpdateTransactionByAdmin(c echo.Context, ID string, transaction entity.UpdateTransactionBinding) (*entity.Transactions, error)
+	GetTransactions(c echo.Context) ([]entity.TransactionsView, error)
+	GetTransactionsByMethod(c echo.Context, method string) ([]entity.TransactionsView, error)
+	GetTransactionByID(c echo.Context, ID string) (*entity.TransactionsView, error)
+	GetHistory(c echo.Context) ([]entity.TransactionsView, error)
+	GetHistoryByMethod(c echo.Context, method string) ([]entity.TransactionsView, error)
+	CreateTransactionByUser(c echo.Context, transaction entity.TransactionsBinding) (*entity.TransactionsView, error)
+	CreateTransactionByAdmin(c echo.Context, transaction entity.Transactions) (*entity.TransactionsView, error)
+	UpdateTransactionByAdmin(c echo.Context, ID string, transaction entity.UpdateTransactionBinding) (*entity.TransactionsView, error)
 	DeleteTransactionByAdmin(c echo.Context, transactionID string) error
+	GetCountTransactions(c echo.Context) (*entity.GetTransactionsCountView, error)
 }
 
-type userSvc interface{
+type userSvc interface {
 	GetUsersPagination(c echo.Context) ([]entity.Users, error)
-	GetUserById(c echo.Context, ID string) (*entity.Users, error)
-	UpdateOneById(c echo.Context, ID string, user entity.Users) (*entity.Users, error)
+	GetUserById(c echo.Context, ID string) (*entity.UsersView, error)
+	UpdateOneById(c echo.Context, ID string, user entity.UpdateUserBinding) (*entity.UsersView, error)
 	DeleteOneById(c echo.Context, userId string) error
+	CreateUserByAdmin(c echo.Context, user entity.CreateUserBinding) (*entity.CreateUserView, error)
+	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
 }

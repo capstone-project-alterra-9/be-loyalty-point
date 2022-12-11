@@ -42,6 +42,8 @@ type productRepo interface {
 	GetProductsByCategory(c echo.Context, category string) ([]entity.Products, error)
 	UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error)
 	DeleteProduct(c echo.Context, ID string) error
+	DeleteAllSerialNumberByProductID(c echo.Context, ID string) error
+	DeleteNSerialNumberByProductID(c echo.Context, ID string, N int) error
 }
 
 type transactionRepo interface {
@@ -51,8 +53,9 @@ type transactionRepo interface {
 	GetHistoryByMethod(c echo.Context, ID string, method string) ([]entity.Transactions, error)
 	CreateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
 	GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error)
-	UpdateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
+	UpdateTransaction(c echo.Context, ID string, transaction *entity.Transactions) (*entity.Transactions, error)
 	DeleteTransaction(c echo.Context, ID string) error
+	GetCountTransactions(c echo.Context) (*entity.GetTransactionsCountView, error)
 }
 
 type userRepo interface {
@@ -64,8 +67,10 @@ type userRepo interface {
 	GetUserByID(c echo.Context, ID string) (*entity.Users, error)
 	UpdateOneByUserId(c echo.Context, user *entity.Users) (*entity.Users, error)
 	DeleteUserById(c echo.Context, ID string) error
+	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
+	DeleteUserPointsByUserId(c echo.Context, ID string) error
 }
 
-type paginationRepo interface {
-	CreatePagination()
-}
+// type paginationRepo interface {
+// 	CreatePagination()
+// }

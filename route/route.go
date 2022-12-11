@@ -14,8 +14,10 @@ func New(Service service.Svc) *echo.Echo {
 	controller.NewController(Service)
 	e := echo.New()
 	e.Use(mid.CORSWithConfig(mid.CORSConfig{
+		Skipper:      mid.DefaultSkipper,
 		AllowOrigins: []string{"*"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
+		AllowMethods: []string{echo.GET, echo.PUT, echo.POST, echo.DELETE},
 	}))
 	m.LogMiddleware(e)
 
@@ -26,33 +28,39 @@ func New(Service service.Svc) *echo.Echo {
 
 	eAuth := eApi.Group("/auth")
 	eAuth.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
+
 	// Routing with JWT
-	eAuth.GET("/transactions", controller.GetTransactions)
-	eAuth.GET("/transactions/method/:paymentMethod", controller.GetTransactionsByMethod)
-	eAuth.GET("/transactions/:id", controller.GetTransactionByID)
 	eAuth.GET("/history", controller.GetHistory)
 	eAuth.GET("/history/method/:paymentMethod", controller.GetHistoryByMethod)
 	eAuth.GET("/history/:id", controller.GetTransactionByID)
-	eAuth.POST("/transactions", controller.CreateTransactionByUser)
-	eAuth.POST("/transactions/dummy", controller.CreateTransactionByAdmin)
-	eAuth.PUT("/transactions/:id", controller.UpdateTransactionByAdmin)
-	eAuth.DELETE("/transactions/:id", controller.DeleteTransactionByAdmin)
 
-	eAuth.POST("/products", controller.CreateProduct)
-	eAuth.GET("/products", controller.GetProducts)
-	eAuth.GET("/products/category/:categoryName", controller.GetProductsByCategory)
-	eAuth.GET("/products/:id", controller.GetProductByID)
-	eAuth.PUT("/products/:id", controller.UpdateProduct)
-	eAuth.DELETE("/products/:id", controller.DeleteProduct)
+	eTransaction := eAuth.Group("/transactions")
+	eTransaction.GET("", controller.GetTransactions)
+	eTransaction.GET("/method/:paymentMethod", controller.GetTransactionsByMethod)
+	eTransaction.GET("/:id", controller.GetTransactionByID)
+	eTransaction.POST("", controller.CreateTransactionByUser)
+	eTransaction.POST("/admin/create", controller.CreateTransactionByAdmin)
+	eTransaction.PUT("/:id", controller.UpdateTransactionByAdmin)
+	eTransaction.DELETE("/:id", controller.DeleteTransactionByAdmin)
+	eTransaction.GET("/count", controller.GetCountTransactions)
+
+	eProduct := eAuth.Group("/products")
+	eProduct.POST("", controller.CreateProduct)
+	eProduct.GET("", controller.GetProducts)
+	eProduct.GET("/category/:categoryName", controller.GetProductsByCategory)
+	eProduct.GET("/:id", controller.GetProductByID)
+	eProduct.PUT("/:id", controller.UpdateProduct)
+	eProduct.DELETE("/:id", controller.DeleteProduct)
 
 	// User endpoint
 	eUser := eApi.Group("/users")
 	eUser.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
 	eUser.DELETE("/:id", controller.DeleteOneById)
 	eUser.GET("/:id", controller.GetOneByUserId)
-	eUser.GET("/users", controller.GetUsersPagination)
 	eUser.PUT("/:id", controller.UpdateOneByUserId)
 	eUser.GET("", controller.GetUsersPagination)
+	eUser.POST("/create", controller.CreateUserByAdmin)
+	eUser.GET("/count", controller.GetCountUsers)
 
 	return e
 }

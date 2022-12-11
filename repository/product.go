@@ -73,7 +73,16 @@ func (r *repository) GetProductsByCategory(c echo.Context, category string) ([]e
 }
 
 func (r *repository) UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error) {
-	err := r.connection.Model(&entity.Products{}).Where("id = ?", ID).Updates(product).Error
+	err := r.connection.Model(&entity.Products{}).Where("id = ?", ID).Updates(map[string]interface{}{
+		"category":    product.Category,
+		"redeem":      product.Redeem,
+		"buy":         product.Buy,
+		"name":        product.Name,
+		"description": product.Description,
+		"price":       product.Price,
+		"stock":       product.Stock,
+		"image":       product.Image,
+	}).Error
 	if err != nil {
 		return nil, err
 	}
@@ -81,7 +90,23 @@ func (r *repository) UpdateProduct(c echo.Context, ID string, product *entity.Pr
 }
 
 func (r *repository) DeleteProduct(c echo.Context, ID string) error {
-	err := r.connection.Delete(&entity.Products{}, ID).Error
+	err := r.connection.Where("id = ?", ID).Delete(&entity.Products{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *repository) DeleteAllSerialNumberByProductID(c echo.Context, ID string) error {
+	err := r.connection.Where("product_id = ?", ID).Delete(&entity.SerialNumbers{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *repository) DeleteNSerialNumberByProductID(c echo.Context, ID string, N int) error {
+	err := r.connection.Where("product_id = ?", ID).Limit(N).Delete(&entity.SerialNumbers{}).Error
 	if err != nil {
 		return err
 	}

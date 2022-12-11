@@ -59,8 +59,8 @@ func (r *repository) GetTransactionByID(c echo.Context, ID string) (*entity.Tran
 	return transactionDomain, nil
 }
 
-func (r *repository) UpdateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error) {
-	err := r.connection.Save(transaction).Error
+func (r *repository) UpdateTransaction(c echo.Context, ID string, transaction *entity.Transactions) (*entity.Transactions, error) {
+	err := r.connection.Where("id = ?", ID).Updates(transaction).Error
 	if err != nil {
 		return nil, err
 	}
@@ -73,4 +73,36 @@ func (r *repository) DeleteTransaction(c echo.Context, ID string) error {
 		return err
 	}
 	return nil
+}
+
+func (r *repository) GetCountTransactions(c echo.Context) (*entity.GetTransactionsCountView, error) {
+	var transactions []entity.Transactions
+	var failedTransactions []entity.Transactions
+	var onProgressTransactions []entity.Transactions
+	var successTransactions []entity.Transactions
+
+	err := r.connection.Find(&transactions).Error
+	err1 := r.connection.Find(&failedTransactions, "status = ?", "failed").Error
+	err2 := r.connection.Find(&onProgressTransactions, "status = ?", "pending").Error
+	err3 := r.connection.Find(&successTransactions, "status = ?", "success").Error
+
+	if err != nil {
+		return nil, err
+	}
+	if err1 != nil {
+		return nil, err1
+	}
+	if err2 != nil {
+		return nil, err2
+	}
+	if err3 != nil {
+		return nil, err3
+	}
+
+	return &entity.GetTransactionsCountView{
+		TotalTransactions:           len(transactions),
+		TotalFailedTransactions:     len(failedTransactions),
+		TotalOnProgressTransactions: len(onProgressTransactions),
+		TotalSuccessTransactions:    len(successTransactions),
+	}, nil
 }

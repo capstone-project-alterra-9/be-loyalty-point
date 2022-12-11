@@ -32,7 +32,11 @@ func (r *repository) GetUserPoints(c echo.Context, ID string) (*entity.Points, e
 }
 
 func (r *repository) UpdateUserPoints(c echo.Context, userPoint *entity.Points) error {
-	err := r.connection.Where("user_id = ?", userPoint.UserID).Updates(userPoint).Error
+	err := r.connection.Model(&entity.Points{}).Where("user_id = ?", userPoint.UserID).Updates(map[string]interface{}{
+		"user_id":     userPoint.UserID,
+		"points":      userPoint.Points,
+		"cost_points": userPoint.CostPoints,
+	}).Error
 	if err != nil {
 		return err
 	}
@@ -60,7 +64,7 @@ func (r *repository) GetUserByID(c echo.Context, ID string) (*entity.Users, erro
 }
 
 func (r *repository) DeleteUserById(c echo.Context, ID string) error {
-	err := r.connection.Delete(&entity.Users{},"id = ?", ID).Error
+	err := r.connection.Delete(&entity.Users{}, "id = ?", ID).Error
 	if err != nil {
 		return err
 	}
@@ -73,4 +77,25 @@ func (r *repository) UpdateOneByUserId(c echo.Context, user *entity.Users) (*ent
 		return nil, err
 	}
 	return user, nil
+}
+
+func (r *repository) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error) {
+	var users []entity.Users
+
+	err := r.connection.Find(&users, "role = ?", "user").Error
+
+	if err != nil {
+		return nil, err
+	}
+	return &entity.GetUserCountView{
+		TotalCount: len(users),
+	}, nil
+}
+
+func (r *repository) DeleteUserPointsByUserId(c echo.Context, ID string) error {
+	err := r.connection.Where("user_id = ?", ID).Delete(&entity.Points{}).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -38,6 +38,7 @@ type transactionController interface {
 	CreateTransactionByAdmin(c echo.Context) error
 	UpdateTransactionByAdmin(c echo.Context) error
 	DeleteTransactionByAdmin(c echo.Context) error
+	GetCountTransactions(c echo.Context) error
 }
 
 type userController interface{
@@ -45,6 +46,7 @@ type userController interface{
 	GetOneByUserId(c echo.Context) error
 	GetUsersPagination(c echo.Context) error
 	UpdateOneByUserId(c echo.Context) error
+	GetCountUsers(c echo.Context) error
 }
 
 var Service service.Svc
