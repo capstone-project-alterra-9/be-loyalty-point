@@ -2,13 +2,19 @@ package service
 
 import (
 	"capstone-project/entity"
+	"capstone-project/helper"
 	jwtAuth "capstone-project/middleware"
 
 	"errors"
-	"github.com/labstack/echo/v4"
+
 	guuid "github.com/google/uuid"
+	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
 )
+
+// buat fitur creat by admin, kurleb sama kaya register -- uda
+// update user pake data yang sama --
+// ada bug di update point
 
 func (s *Service) DeleteOneById(c echo.Context, userId string) error {
 	user := jwtAuth.ExtractTokenUsername(c)
@@ -17,6 +23,10 @@ func (s *Service) DeleteOneById(c echo.Context, userId string) error {
 	if adminAuth != nil {
 		userData, err := s.repo.GetUserByID(c, userId)
 		if userData != nil {
+			err = s.repo.DeleteUserPointsByUserId(c, userId)
+			if err != nil {
+				return err
+			}
 			err = s.repo.DeleteUserById(c, userId)
 			if err != nil {
 				return err
@@ -28,7 +38,7 @@ func (s *Service) DeleteOneById(c echo.Context, userId string) error {
 	return err
 }
 
-func (s *Service) GetUserById(c echo.Context, ID string) (*entity.Users, error) {
+func (s *Service) GetUserById(c echo.Context, ID string) (*entity.UsersView, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	auth, err := s.repo.GetAuth(c, user)
 	if auth != nil {
@@ -37,7 +47,21 @@ func (s *Service) GetUserById(c echo.Context, ID string) (*entity.Users, error) 
 			return nil, err
 		}
 		if (auth.Role == "user" && auth.ID == userData.ID) || auth.Role == "admin" {
-			return userData, nil
+			userPoint, err := s.repo.GetUserPoints(c, userData.ID)
+			if err != nil {
+				return nil, err
+			}
+			return &entity.UsersView{
+				ID:         userData.ID,
+				CreatedAt:  userData.CreatedAt,
+				UpdatedAt:  userData.UpdatedAt,
+				Role:       userData.Role,
+				Username:   userData.Username,
+				Email:      userData.Email,
+				Password:   userData.Password,
+				Points:     userPoint.Points,
+				CostPoints: userPoint.CostPoints,
+			}, nil
 		} else {
 			return nil, errors.New("unauthorized")
 		}
@@ -58,8 +82,7 @@ func (s *Service) GetUsersPagination(c echo.Context) ([]entity.Users, error) {
 	return nil, err
 }
 
-
-func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.Users) (*entity.Users, error) {
+func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUserBinding) (*entity.UsersView, error) {
 	userAuth := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, userAuth)
 	if adminAuth != nil {
@@ -67,23 +90,97 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.Users) (*
 		if err != nil {
 			return nil, err
 		}
-
-		userData.Username = user.Username;
-		userData.Email = user.Email; 
-		userData.Password = user.Password;
-
-		result, err := s.repo.UpdateOneByUserId(c, userData)
+		userPoint, err := s.repo.GetUserPoints(c, userData.ID)
 		if err != nil {
 			return nil, err
 		}
-		return result, nil
+
+		if user.Role == userData.Role && user.Username == userData.Username && user.Email == userData.Email && user.Password == userData.Password && user.Points == userPoint.Points && user.CostPoints == userPoint.CostPoints {
+			return nil, helper.ErrSameDataRequest
+		}
+
+		if user.Role != "" {
+			if user.Role == "admin" || user.Role == "user" {
+				userData.Role = user.Role
+			} else {
+				return nil, errors.New("role must be admin or user")
+			}
+		}
+
+		var flag bool
+		if user.Username != "" {
+			flag = helper.ValidateLength(user.Username, 8, 16)
+			if !flag {
+				return nil, helper.ErrUsernameLength
+			}
+			flag = helper.ValidateAlphanumeric(user.Username)
+			if !flag {
+				return nil, helper.ErrUsernameAlphanumeric
+			}
+			userData.Username = user.Username
+		}
+
+		if user.Email != "" {
+			var subEmail string
+			for _, v := range user.Email {
+				if v != '@' {
+					subEmail += string(v)
+				} else {
+					break
+				}
+			}
+			if len(subEmail) < 8 {
+				return nil, helper.ErrEmailLength
+			}
+			userData.Email = user.Email
+			if subEmail == user.Username {
+				return nil, helper.ErrEmailUsername
+			}
+		}
+
+		if user.Password != "" {
+			if len(user.Password) < 8 {
+				return nil, helper.ErrPasswordLength
+			}
+			flag = helper.ValidateAlphanumeric(user.Password)
+			if !flag {
+				return nil, helper.ErrPasswordAlphanumeric
+			}
+			password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+			userData.Password = string(password)
+		}
+
+		if user.Points != userPoint.Points || user.CostPoints != userPoint.CostPoints {
+			userPoint.Points = user.Points
+			userPoint.CostPoints = user.CostPoints
+			_ = s.repo.UpdateUserPoints(c, userPoint)
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		updatedUser, err := s.repo.UpdateOneByUserId(c, userData)
+		if err != nil {
+			return nil, err
+		}
+		return &entity.UsersView{
+			ID:         updatedUser.ID,
+			CreatedAt:  updatedUser.CreatedAt,
+			UpdatedAt:  updatedUser.UpdatedAt,
+			Role:       updatedUser.Role,
+			Username:   updatedUser.Username,
+			Email:      updatedUser.Email,
+			Password:   updatedUser.Password,
+			Points:     userPoint.Points,
+			CostPoints: userPoint.CostPoints,
+		}, nil
 	}
 	return nil, err
 }
 
 func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBinding) (*entity.CreateUserView, error) {
 	userAuth := jwtAuth.ExtractTokenUsername(c)
-	adminAuth, err := s.repo.GetAdminAuth(c, userAuth)
+	adminAuth, _ := s.repo.GetAdminAuth(c, userAuth)
 
 	if adminAuth == nil {
 		return nil, errors.New("Unauthorized")
@@ -92,8 +189,40 @@ func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBindin
 	var userDomain entity.Users
 	userDomain.ID = (guuid.New()).String()
 	userDomain.Role = "user"
+	var flag bool
+	flag = helper.ValidateLength(user.Username, 8, 16)
+	if !flag {
+		return nil, helper.ErrUsernameLength
+	}
+	flag = helper.ValidateAlphanumeric(user.Username)
+	if !flag {
+		return nil, helper.ErrUsernameAlphanumeric
+	}
 	userDomain.Username = user.Username
+
+	var subEmail string
+	for _, v := range user.Email {
+		if v != '@' {
+			subEmail += string(v)
+		} else {
+			break
+		}
+	}
+	if len(subEmail) < 8 {
+		return nil, helper.ErrEmailLength
+	}
 	userDomain.Email = user.Email
+	if subEmail == user.Username {
+		return nil, helper.ErrEmailUsername
+	}
+
+	if len(user.Password) < 8 {
+		return nil, helper.ErrPasswordLength
+	}
+	flag = helper.ValidateAlphanumeric(user.Password)
+	if !flag {
+		return nil, helper.ErrPasswordAlphanumeric
+	}
 	password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	userDomain.Password = string(password)
 
@@ -102,39 +231,39 @@ func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBindin
 		return nil, err
 	}
 
-
-	userPoints := entity.Points{
+	userPoint := entity.Points{
 		ID:         (guuid.New()).String(),
 		UserID:     result.ID,
 		Points:     user.Point,
 		CostPoints: 0,
 	}
 
-	_, err = s.repo.CreatePoints(c, userPoints)
+	_, err = s.repo.CreatePoints(c, userPoint)
 	if err != nil {
 		return nil, err
 	}
 
 	return &entity.CreateUserView{
-		ID:       result.ID,
-		Username: result.Username,
-		Email:    result.Email,
-		Password: result.Password,
-		Point:		user.Point,
+		ID:         result.ID,
+		Username:   result.Username,
+		Email:      result.Email,
+		Password:   result.Password,
+		Point:      userPoint.Points,
+		CostPoints: userPoint.CostPoints,
 	}, nil
 }
 
 func (s *Service) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
-	adminAuth, err := s.repo.GetAdminAuth(c, user)
+	adminAuth, _ := s.repo.GetAdminAuth(c, user)
 	if adminAuth == nil {
 		return nil, errors.New("Unauthorized")
 	}
-	
+
 	userCount, err := s.repo.GetCountUsers(c)
 
 	if err != nil {
 		return nil, err
 	}
-	return userCount, nil;
+	return userCount, nil
 }

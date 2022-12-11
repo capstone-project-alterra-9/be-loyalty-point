@@ -19,22 +19,23 @@ type LoginView struct {
 }
 
 type CreateUserView struct {
-	ID       string `json: "id"`
-	Username string `json:"username"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Point	 int `json:"point"`
+	ID         string `json: "id"`
+	Username   string `json:"username"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Point      int    `json:"point"`
+	CostPoints int    `json:"costPoints"`
 }
 
 type GetUserCountView struct {
-	TotalCount	int	`json:"totalCount"`
+	TotalCount int `json:"totalCount"`
 }
 
 type GetTransactionsCountView struct {
-	TotalTransactions			int	`json:"totalTransactions"`
-	TotalFailedTransactions		int	`json:"totalFailedTransactions"`
-	TotalOnProgressTransactions	int	`json:"totalOnProgressTransactions"`
-	TotalSuccessTransactions	int	`json:"totalSuccessTransactions"`
+	TotalTransactions           int `json:"totalTransactions"`
+	TotalFailedTransactions     int `json:"totalFailedTransactions"`
+	TotalOnProgressTransactions int `json:"totalOnProgressTransactions"`
+	TotalSuccessTransactions    int `json:"totalSuccessTransactions"`
 }
 
 type TransactionsView struct {
@@ -50,6 +51,23 @@ type TransactionsView struct {
 	IdentifierNum string    `json:"identifierNum"`
 	Price         int       `json:"price"`
 	Status        string    `json:"status"`
+}
+
+type UsersView struct {
+	ID         string
+	CreatedAt  time.Time `json:"createdAt"`
+	UpdatedAt  time.Time `json:"updatedAt"`
+	Role       string    `json:"role"`
+	Username   string    `json:"username"`
+	Email      string    `json:"email"`
+	Password   string    `json:"password"`
+	Points     int       `json:"points"`
+	CostPoints int       `json:"costPoints"`
+}
+
+type MidtransTransactionView struct {
+	Token       string    `json:"token"`
+	DirectUrl   string    `json:"directUrl"`
 }
 
 type GetProductsCountView struct {

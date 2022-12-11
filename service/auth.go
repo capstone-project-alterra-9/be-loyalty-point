@@ -2,6 +2,7 @@ package service
 
 import (
 	"capstone-project/entity"
+	"capstone-project/helper"
 	jwtAuth "capstone-project/middleware"
 
 	guuid "github.com/google/uuid"
@@ -14,8 +15,41 @@ func (s *Service) Register(c echo.Context, user entity.RegisterBinding) (*entity
 	var userDomain entity.Users
 	userDomain.ID = (guuid.New()).String()
 	userDomain.Role = "user"
+	var flag bool
+	flag = helper.ValidateLength(user.Username, 8, 16)
+	if !flag {
+		return nil, helper.ErrUsernameLength
+	}
+	flag = helper.ValidateAlphanumeric(user.Username)
+	if !flag {
+		return nil, helper.ErrUsernameAlphanumeric
+	}
+
 	userDomain.Username = user.Username
+	var subEmail string
+	for _, v := range user.Email {
+		if v != '@' {
+			subEmail += string(v)
+		} else {
+			break
+		}
+	}
+	if len(subEmail) < 8 {
+		return nil, helper.ErrEmailLength
+	}
 	userDomain.Email = user.Email
+	if subEmail == user.Username {
+		return nil, helper.ErrEmailUsername
+	}
+
+	if len(user.Password) < 8 {
+		return nil, helper.ErrPasswordLength
+	}
+	flag = helper.ValidateAlphanumeric(user.Password)
+	if !flag {
+		return nil, helper.ErrPasswordAlphanumeric
+	}
+
 	password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	userDomain.Password = string(password)
 

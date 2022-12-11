@@ -49,12 +49,13 @@ type trasanctionSvc interface {
 	UpdateTransactionByAdmin(c echo.Context, ID string, transaction entity.UpdateTransactionBinding) (*entity.TransactionsView, error)
 	DeleteTransactionByAdmin(c echo.Context, transactionID string) error
 	GetCountTransactions(c echo.Context) (*entity.GetTransactionsCountView, error)
+	CreateMidtransTransaction(c echo.Context, transaction entity.MidtransTransactionBinding) (*entity.MidtransTransactionView, error)
 }
 
 type userSvc interface {
 	GetUsersPagination(c echo.Context) ([]entity.Users, error)
-	GetUserById(c echo.Context, ID string) (*entity.Users, error)
-	UpdateOneById(c echo.Context, ID string, user entity.Users) (*entity.Users, error)
+	GetUserById(c echo.Context, ID string) (*entity.UsersView, error)
+	UpdateOneById(c echo.Context, ID string, user entity.UpdateUserBinding) (*entity.UsersView, error)
 	DeleteOneById(c echo.Context, userId string) error
 	CreateUserByAdmin(c echo.Context, user entity.CreateUserBinding) (*entity.CreateUserView, error)
 	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)

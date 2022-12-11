@@ -68,7 +68,7 @@ func (r *repository) UpdateTransaction(c echo.Context, ID string, transaction *e
 }
 
 func (r *repository) DeleteTransaction(c echo.Context, ID string) error {
-	err := r.connection.Delete(&entity.Transactions{}, ID).Error
+	err := r.connection.Where("id = ?", ID).Delete(&entity.Transactions{}).Error
 	if err != nil {
 		return err
 	}
@@ -100,9 +100,9 @@ func (r *repository) GetCountTransactions(c echo.Context) (*entity.GetTransactio
 	}
 
 	return &entity.GetTransactionsCountView{
-		TotalTransactions: 	 			len(transactions),	
-		TotalFailedTransactions: 		len(failedTransactions),
-		TotalOnProgressTransactions: 	len(onProgressTransactions),
-		TotalSuccessTransactions: 		len(successTransactions),
+		TotalTransactions:           len(transactions),
+		TotalFailedTransactions:     len(failedTransactions),
+		TotalOnProgressTransactions: len(onProgressTransactions),
+		TotalSuccessTransactions:    len(successTransactions),
 	}, nil
 }
