@@ -40,3 +40,9 @@ type UpdateUserBinding struct {
 	Points     int    `json:"points"`
 	CostPoints int    `json:"costPoints"`
 }
+
+type MidtransTransactionBinding struct {
+	PaymentMethod string `json:"paymentMethod"`
+	ProductID     string `json:"productID"`
+	UserId 		  string `json:"userID"`
+}

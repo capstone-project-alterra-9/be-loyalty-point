@@ -7,6 +7,11 @@ import (
 
 	guuid "github.com/google/uuid"
 	"github.com/labstack/echo/v4"
+
+	"github.com/midtrans/midtrans-go"
+	// "github.com/midtrans/midtrans-go/coreapi"
+	"github.com/midtrans/midtrans-go/snap"
+	// "github.com/midtrans/midtrans-go/iris"
 )
 
 func (s *Service) GetTransactions(c echo.Context) ([]entity.TransactionsView, error) {
@@ -492,4 +497,67 @@ func (s *Service) GetCountTransactions(c echo.Context) (*entity.GetTransactionsC
 		return nil, err
 	}
 	return userCount, nil
+}
+
+func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.MidtransTransactionBinding) (*entity.MidtransTransactionView, error) {
+
+	userDomain, err := s.repo.GetUserByID(c, transaction.UserId)
+	productDomain, err := s.repo.GetProductByID(c, transaction.ProductID)
+
+	// 1. Initiate Snap client
+	var snapServer = snap.Client{}
+	snapServer.New("SB-Mid-server-SeSkIpdk530KkwNKBaUg50xd", midtrans.Sandbox)
+	// Use to midtrans.Production if you want Production Environment (accept real transaction).
+	 
+	// 2. Initiate Snap request param
+	// Initiate Customer address
+	custAddress := &midtrans.CustomerAddress{
+		FName:       userDomain.Username,
+		LName:       userDomain.Username,
+		Phone:       "081234567890",
+		Address:     "Baker Street 97th",
+		City:        "Jakarta",
+		Postcode:    "16000",
+		CountryCode: "IDN",
+	}
+
+	// Initiate Snap Request
+	snapReq := &snap.Request{
+		TransactionDetails: midtrans.TransactionDetails{
+			OrderID:  "12345",
+			GrossAmt: 200000,
+		},
+		CreditCard: &snap.CreditCardDetails{
+			Secure: true,
+		},
+		CustomerDetail: &midtrans.CustomerDetails{
+			FName:    userDomain.Username,
+			LName:    userDomain.Username,
+			Email:    userDomain.Email,
+			Phone:    "081234567890",
+			BillAddr: custAddress,
+			ShipAddr: custAddress,
+		},
+		EnabledPayments: snap.AllSnapPaymentType,
+		Items: &[]midtrans.ItemDetails{
+			{
+				ID:    productDomain.ID,
+				Price: int64(productDomain.Price),
+				Qty:   1,
+				Name:  productDomain.Name,
+			},
+		},
+	}
+	 
+	// 3. Execute request create Snap transaction to Midtrans Snap API
+	snapResp, err := snapServer.CreateTransaction(snapReq)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &entity.MidtransTransactionView{
+		Token: snapResp.Token,
+		DirectUrl: snapResp.RedirectURL,
+	}, nil
 }
