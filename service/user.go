@@ -90,13 +90,10 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 		if err != nil {
 			return nil, err
 		}
+		tempCompare := userData
 		userPoint, err := s.repo.GetUserPoints(c, userData.ID)
 		if err != nil {
 			return nil, err
-		}
-
-		if user.Role == userData.Role && user.Username == userData.Username && user.Email == userData.Email && user.Password == userData.Password && user.Points == userPoint.Points && user.CostPoints == userPoint.CostPoints {
-			return nil, helper.ErrSameDataRequest
 		}
 
 		if user.Role != "" {
@@ -121,16 +118,9 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 		}
 
 		if user.Email != "" {
-			var subEmail string
-			for _, v := range user.Email {
-				if v != '@' {
-					subEmail += string(v)
-				} else {
-					break
-				}
-			}
-			if len(subEmail) < 8 {
-				return nil, helper.ErrEmailLength
+			subEmail, err := helper.ValidateEmail(user.Email)
+			if err != nil {
+				return nil, err
 			}
 			userData.Email = user.Email
 			if subEmail == user.Username {
@@ -147,7 +137,9 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 				return nil, helper.ErrPasswordAlphanumeric
 			}
 			password, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-			userData.Password = string(password)
+			if string(password) != userData.Password {
+				userData.Password = string(password)
+			}
 		}
 
 		if user.Points != userPoint.Points || user.CostPoints != userPoint.CostPoints {
@@ -157,6 +149,10 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 			if err != nil {
 				return nil, err
 			}
+		}
+
+		if userData == tempCompare && user.Points == userPoint.Points && user.CostPoints == userPoint.CostPoints {
+			return nil, helper.ErrSameDataRequest
 		}
 
 		updatedUser, err := s.repo.UpdateOneByUserId(c, userData)
@@ -200,16 +196,9 @@ func (s *Service) CreateUserByAdmin(c echo.Context, user entity.CreateUserBindin
 	}
 	userDomain.Username = user.Username
 
-	var subEmail string
-	for _, v := range user.Email {
-		if v != '@' {
-			subEmail += string(v)
-		} else {
-			break
-		}
-	}
-	if len(subEmail) < 8 {
-		return nil, helper.ErrEmailLength
+	subEmail, err := helper.ValidateEmail(user.Email)
+	if err != nil {
+		return nil, err
 	}
 	userDomain.Email = user.Email
 	if subEmail == user.Username {
