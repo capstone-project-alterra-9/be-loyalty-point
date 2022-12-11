@@ -439,7 +439,13 @@ func (s *Service) UpdateTransactionByAdmin(c echo.Context, ID string, transactio
 		if transaction.IdentifierNum != "" && transactionDomain.IdentifierNum != transaction.IdentifierNum {
 			transactionDomain.IdentifierNum = transaction.IdentifierNum
 		}
-		transactionDomain.Status = transaction.Status
+		if transaction.Status != "" && transactionDomain.Status != transaction.Status {
+			if transaction.Status == "success" || transaction.Status == "failed" || transaction.Status == "pending" {
+				transactionDomain.Status = transaction.Status
+			} else {
+				return nil, errors.New("status not found")
+			}
+		}
 		result, err := s.repo.UpdateTransaction(c, ID, transactionDomain)
 		if err != nil {
 			return nil, err
