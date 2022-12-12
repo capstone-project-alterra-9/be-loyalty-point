@@ -81,6 +81,19 @@ func (s *Service) GetProducts(c echo.Context) ([]entity.Products, error) {
 	return nil, err
 }
 
+func (s *Service) GetProductsByMethod(c echo.Context, method string) ([]entity.Products, error) {
+	user := jwtAuth.ExtractTokenUsername(c)
+	auth, err := s.repo.GetAuth(c, user)
+	if auth != nil {
+		if method == "buy" || method == "redeem" {
+			return s.repo.GetProductsByMethod(c, method)
+		} else {
+			return nil, errors.New("invalid method")
+		}
+	}
+	return nil, err
+}
+
 func (s *Service) GetProductsByCategory(c echo.Context, category string) ([]entity.Products, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	auth, err := s.repo.GetAuth(c, user)

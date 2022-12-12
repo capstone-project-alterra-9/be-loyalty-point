@@ -48,6 +48,7 @@ func New(Service service.Svc) *echo.Echo {
 	eProduct := eAuth.Group("/products")
 	eProduct.POST("", controller.CreateProduct)
 	eProduct.GET("", controller.GetProducts)
+	eProduct.GET("/method/:paymentMethod", controller.GetProductsByMethod)
 	eProduct.GET("/category/:categoryName", controller.GetProductsByCategory)
 	eProduct.GET("/:id", controller.GetProductByID)
 	eProduct.PUT("/:id", controller.UpdateProduct)

@@ -63,6 +63,19 @@ func (r *repository) GetProducts(c echo.Context) ([]entity.Products, error) {
 	return products, nil
 }
 
+func (r *repository) GetProductsByMethod(c echo.Context, method string) ([]entity.Products, error) {
+	var (
+		prefixCond string = method + " = ?"
+		flag       bool   = true
+		products   []entity.Products
+	)
+	err := r.connection.Find(&products, prefixCond, flag).Error
+	if err != nil {
+		return nil, err
+	}
+	return products, nil
+}
+
 func (r *repository) GetProductsByCategory(c echo.Context, category string) ([]entity.Products, error) {
 	var products []entity.Products
 	err := r.connection.Find(&products, "category = ?", category).Error

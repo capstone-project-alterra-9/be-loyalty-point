@@ -39,6 +39,7 @@ type productRepo interface {
 	CreateProduct(c echo.Context, product *entity.Products) (*entity.Products, error)
 	CreateSerialNumber(c echo.Context, serialNumber *entity.SerialNumbers) error
 	GetProducts(c echo.Context) ([]entity.Products, error)
+	GetProductsByMethod(c echo.Context, paymentMethod string) ([]entity.Products, error)
 	GetProductsByCategory(c echo.Context, category string) ([]entity.Products, error)
 	UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error)
 	DeleteProduct(c echo.Context, ID string) error

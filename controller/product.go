@@ -29,6 +29,15 @@ func GetProducts(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.BuildResponse("Success get products", result))
 }
 
+func GetProductsByMethod(c echo.Context) error {
+	paymentMethod := c.Param("paymentMethod")
+	result, err := Service.GetProductsByMethod(c, paymentMethod)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to get products", err))
+	}
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success get products", result))
+}
+
 func GetProductsByCategory(c echo.Context) error {
 	category := c.Param("categoryName")
 	result, err := Service.GetProductsByCategory(c, category)

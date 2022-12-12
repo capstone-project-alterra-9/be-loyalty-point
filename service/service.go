@@ -32,6 +32,7 @@ type authSvc interface {
 type productSvc interface {
 	CreateProduct(c echo.Context, product *entity.Products) (*entity.Products, error)
 	GetProducts(c echo.Context) ([]entity.Products, error)
+	GetProductsByMethod(c echo.Context, paymentMethod string) ([]entity.Products, error)
 	GetProductsByCategory(c echo.Context, category string) ([]entity.Products, error)
 	GetProductByID(c echo.Context, ID string) (*entity.Products, error)
 	UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error)

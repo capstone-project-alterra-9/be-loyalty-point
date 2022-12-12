@@ -22,6 +22,7 @@ type authController interface {
 type productController interface {
 	CreateProduct(c echo.Context) error
 	GetProducts(c echo.Context) error
+	GetProductsByMethod(c echo.Context) error
 	GetProductsByCategory(c echo.Context) error
 	GetProductByID(c echo.Context) error
 	UpdateProduct(c echo.Context) error
@@ -42,7 +43,7 @@ type transactionController interface {
 	CreateMidtransTransaction(c echo.Context) error
 }
 
-type userController interface{
+type userController interface {
 	DeleteOneById(c echo.Context) error
 	GetOneByUserId(c echo.Context) error
 	GetUsersPagination(c echo.Context) error
