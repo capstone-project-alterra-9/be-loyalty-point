@@ -71,6 +71,15 @@ func (s *Service) Register(c echo.Context, user entity.RegisterBinding) (*entity
 }
 
 func (s *Service) Login(c echo.Context, user entity.LoginBinding) (*entity.LoginView, error) {
+	var flag bool
+	_, err := helper.ValidateEmail(user.Email)
+	if err != nil {
+		return nil, err
+	}
+	flag = helper.ValidateLength(user.Password, 8, 16)
+	if !flag {
+		return nil, helper.ErrPasswordLength
+	}
 	result, err := s.repo.GetUserLogin(c, user)
 	if err != nil {
 		return nil, err

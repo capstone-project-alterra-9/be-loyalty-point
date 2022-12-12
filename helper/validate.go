@@ -40,3 +40,23 @@ func ValidateEmail(value string) (string, error) {
 
 	return subEmail, nil
 }
+
+func ValidateIdentifierNumber(value string) error {
+	if len(value) < 10 || len(value) > 14 {
+		return ErrIdentifierLength
+	}
+
+	if value[0] == '+' {
+		value = value[1:]
+	}
+
+	for _, v := range value {
+		if v >= '0' && v <= '9' {
+			continue
+		} else {
+			return ErrIdentifierNumber
+		}
+	}
+
+	return nil
+}

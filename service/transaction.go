@@ -2,6 +2,7 @@ package service
 
 import (
 	"capstone-project/entity"
+	"capstone-project/helper"
 	jwtAuth "capstone-project/middleware"
 	"errors"
 
@@ -224,6 +225,13 @@ func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.Tra
 		if err != nil {
 			return nil, err
 		}
+		if transaction.IdentifierNum == "" {
+			return nil, errors.New("identifier number is required")
+		}
+		err = helper.ValidateIdentifierNumber(transaction.IdentifierNum)
+		if err != nil {
+			return nil, err
+		}
 
 		if transaction.PaymentMethod == "buy" && product.Buy || transaction.PaymentMethod == "redeem" && product.Redeem {
 			if product.Stock == 0 {
@@ -313,6 +321,11 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 			return nil, errors.New("product out of stock")
 		}
 
+		err = helper.ValidateIdentifierNumber(transaction.IdentifierNum)
+		if err != nil {
+			return nil, err
+		}
+
 		if transaction.PaymentMethod == "buy" && product.Buy || transaction.PaymentMethod == "redeem" && product.Redeem {
 			var userAuth *entity.Users
 			if transaction.UserID != "" {
@@ -397,6 +410,27 @@ func (s *Service) UpdateTransactionByAdmin(c echo.Context, ID string, transactio
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
+		var (
+			validPaymentMethod = false
+			validStatus        = false
+		)
+		if transaction.PaymentMethod == "buy" || transaction.PaymentMethod == "redeem" {
+			validPaymentMethod = true
+		}
+		if transaction.Status == "success" || transaction.Status == "failed" || transaction.Status == "pending" {
+			validStatus = true
+		}
+		err = helper.ValidateIdentifierNumber(transaction.IdentifierNum)
+		if err != nil {
+			return nil, err
+		}
+		if !validPaymentMethod {
+			return nil, errors.New("payment method not found")
+		}
+		if !validStatus {
+			return nil, errors.New("status not found")
+		}
+
 		transactionDomain, err := s.repo.GetTransactionByID(c, ID)
 		if err != nil {
 			return nil, err
@@ -508,13 +542,19 @@ func (s *Service) GetCountTransactions(c echo.Context) (*entity.GetTransactionsC
 func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.MidtransTransactionBinding) (*entity.MidtransTransactionView, error) {
 
 	userDomain, err := s.repo.GetUserByID(c, transaction.UserId)
+	if err != nil {
+		return nil, err
+	}
 	productDomain, err := s.repo.GetProductByID(c, transaction.ProductID)
+	if err != nil {
+		return nil, err
+	}
 
 	// 1. Initiate Snap client
 	var snapServer = snap.Client{}
 	snapServer.New("SB-Mid-server-SeSkIpdk530KkwNKBaUg50xd", midtrans.Sandbox)
 	// Use to midtrans.Production if you want Production Environment (accept real transaction).
-	 
+
 	// 2. Initiate Snap request param
 	// Initiate Customer address
 	custAddress := &midtrans.CustomerAddress{
@@ -554,16 +594,15 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 			},
 		},
 	}
-	 
+
 	// 3. Execute request create Snap transaction to Midtrans Snap API
 	snapResp, err := snapServer.CreateTransaction(snapReq)
-
 	if err != nil {
 		return nil, err
 	}
 
 	return &entity.MidtransTransactionView{
-		Token: snapResp.Token,
+		Token:     snapResp.Token,
 		DirectUrl: snapResp.RedirectURL,
 	}, nil
 }
