@@ -10,7 +10,7 @@ type RegisterView struct {
 }
 
 type LoginView struct {
-	ID			 string `json:"id"`	
+	ID           string `json:"id"`
 	Username     string `json:"username"`
 	Email        string `json:"email"`
 	Password     string `json:"password"`
@@ -48,6 +48,7 @@ type TransactionsView struct {
 	Username      string    `json:"username"`
 	ProductID     string    `json:"productID"`
 	ProductName   string    `json:"productName"`
+	Category      string    `json:"category"`
 	SerialNumber  int64     `json:"serialNumber"`
 	IdentifierNum string    `json:"identifierNum"`
 	Price         int       `json:"price"`
@@ -67,16 +68,16 @@ type UsersView struct {
 }
 
 type MidtransTransactionView struct {
-	Token       string    `json:"token"`
-	DirectUrl   string    `json:"directUrl"`
+	Token     string `json:"token"`
+	DirectUrl string `json:"directUrl"`
 }
 
 type GetProductsCountView struct {
-	TotalSoldProduct			int	`json:"totalSoldProduct"`
-	TotalStockProduct			int	`json:"totalStockProduct"`
+	TotalSoldProduct  int `json:"totalSoldProduct"`
+	TotalStockProduct int `json:"totalStockProduct"`
 }
 
 type RefreshTokenView struct {
-	Token        string `json:"token"`
-	Duration	string `json:"duration"`
+	Token    string `json:"token"`
+	Duration string `json:"duration"`
 }
