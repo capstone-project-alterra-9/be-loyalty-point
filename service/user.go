@@ -142,6 +142,10 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 			}
 		}
 
+		if userData == tempCompare && user.Points == userPoint.Points && user.CostPoints == userPoint.CostPoints {
+			return nil, helper.ErrSameDataRequest
+		}
+
 		if user.Points != userPoint.Points || user.CostPoints != userPoint.CostPoints {
 			userPoint.Points = user.Points
 			userPoint.CostPoints = user.CostPoints
@@ -149,10 +153,6 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 			if err != nil {
 				return nil, err
 			}
-		}
-
-		if userData == tempCompare && user.Points == userPoint.Points && user.CostPoints == userPoint.CostPoints {
-			return nil, helper.ErrSameDataRequest
 		}
 
 		updatedUser, err := s.repo.UpdateOneByUserId(c, userData)
