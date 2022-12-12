@@ -17,6 +17,7 @@ type authController interface {
 	Connected(c echo.Context) error
 	Register(c echo.Context) error
 	Login(c echo.Context) error
+	GenerateRefreshToken(c echo.Context) error
 }
 
 type productController interface {

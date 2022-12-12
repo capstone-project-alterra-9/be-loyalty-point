@@ -93,3 +93,19 @@ func (s *Service) Login(c echo.Context, user entity.LoginBinding) (*entity.Login
 		Account:      result.Role,
 	}, nil
 }
+
+func (s *Service) ReGenerateToken(c echo.Context, refreshToken entity.TokenBinding) (*entity.RefreshTokenView, error) {
+	
+	user, err := jwtAuth.ValidateToken(refreshToken)
+	
+	if err != nil {
+		return nil, err
+	}
+
+	token, _ := jwtAuth.CreateToken(user.Username, user.Email)
+
+	return &entity.RefreshTokenView{
+		Token:        token,
+		Duration: 	"ini duration",
+	}, nil
+}

@@ -125,3 +125,22 @@ func (r *repository) DeleteNSerialNumberByProductID(c echo.Context, ID string, N
 	}
 	return nil
 }
+
+// func (r *repository) GetCountProducts(c echo.Context) (*entity.GetProductsCountView, error) {
+// 	var products []entity.Products
+
+// 	err := r.connection.Find(&products, "role = ?", "user" ).Error
+// 	err1 := r.connection.Find(&products, "role = ?", "user" ).Error
+
+// 	if err != nil {
+// 		return nil, err
+// 	}
+
+// 	if err1 != nil {
+// 		return nil, err1
+// 	}
+// 	return &entity.GetProductsCountView{
+// 		TotalSoldProduct: 	20,
+// 		TotalStockProduct:	20,
+// 	}, nil
+// }
