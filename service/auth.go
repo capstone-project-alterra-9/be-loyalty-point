@@ -85,6 +85,7 @@ func (s *Service) Login(c echo.Context, user entity.LoginBinding) (*entity.Login
 	refreshToken, _ := jwtAuth.CreateRefreshToken(result.Username, result.Email)
 
 	return &entity.LoginView{
+		ID:			  result.ID,
 		Username:     result.Username,
 		Email:        result.Email,
 		Password:     result.Password,
