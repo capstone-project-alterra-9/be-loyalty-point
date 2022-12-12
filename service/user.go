@@ -86,6 +86,9 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 	userAuth := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, userAuth)
 	if adminAuth != nil {
+		if ID == adminAuth.ID {
+			return nil, errors.New("you can't update admin data")
+		}
 		userData, err := s.repo.GetUserByID(c, ID)
 		if err != nil {
 			return nil, err
