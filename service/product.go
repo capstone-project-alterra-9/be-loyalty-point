@@ -184,17 +184,17 @@ func (s *Service) DeleteProduct(c echo.Context, ID string) error {
 	return err
 }
 
-func (s *Service) GetCountProducts(c echo.Context) (*entity.GetProductsCountView, error) {
-	user := jwtAuth.ExtractTokenUsername(c)
-	adminAuth, err := s.repo.GetAdminAuth(c, user)
-	if adminAuth == nil {
-		return nil, errors.New("Unauthorized")
-	}
+// func (s *Service) GetCountProducts(c echo.Context) (*entity.GetProductsCountView, error) {
+// 	user := jwtAuth.ExtractTokenUsername(c)
+// 	adminAuth, err := s.repo.GetAdminAuth(c, user)
+// 	if adminAuth == nil {
+// 		return nil, errors.New("Unauthorized")
+// 	}
 	
-	userCount, err := s.repo.GetCountProducts(c)
+// 	userCount, err := s.repo.GetCountProducts(c)
 
-	if err != nil {
-		return nil, err
-	}
-	return userCount, nil;
-}
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	return userCount, nil;
+// }

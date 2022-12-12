@@ -25,6 +25,7 @@ func New(Service service.Svc) *echo.Echo {
 	eApi := e.Group("/api")
 	eApi.POST("/login", controller.Login)
 	eApi.POST("/register", controller.Register)
+	eApi.POST("/refresh-token", controller.GenerateRefreshToken)
 
 	eAuth := eApi.Group("/auth")
 	eAuth.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
@@ -52,7 +53,7 @@ func New(Service service.Svc) *echo.Echo {
 	eProduct.GET("/:id", controller.GetProductByID)
 	eProduct.PUT("/:id", controller.UpdateProduct)
 	eProduct.DELETE("/:id", controller.DeleteProduct)
-	eProduct.GET("/count", controller.GetCountProducts)
+	// eProduct.GET("/count", controller.GetCountProducts)
 
 	// User endpoint
 	eUser := eApi.Group("/users")

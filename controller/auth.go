@@ -39,3 +39,17 @@ func Login(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, dto.BuildResponse("succes login user", result))
 }
+
+func GenerateRefreshToken(c echo.Context) error {
+	var tokenBinding entity.TokenBinding
+	if err := c.Bind(&tokenBinding); err != nil {
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to process request", err))
+	}
+
+	result, err := Service.ReGenerateToken(c, tokenBinding)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to generate token", err))
+	}
+
+	return c.JSON(http.StatusOK, dto.BuildResponse("succes generate token", result))
+}

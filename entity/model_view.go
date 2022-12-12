@@ -74,3 +74,8 @@ type GetProductsCountView struct {
 	TotalSoldProduct			int	`json:"totalSoldProduct"`
 	TotalStockProduct			int	`json:"totalStockProduct"`
 }
+
+type RefreshTokenView struct {
+	Token        string `json:"token"`
+	Duration	string `json:"duration"`
+}

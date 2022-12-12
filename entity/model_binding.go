@@ -1,5 +1,11 @@
 package entity
 
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
 type LoginBinding struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
@@ -45,4 +51,20 @@ type MidtransTransactionBinding struct {
 	PaymentMethod string `json:"paymentMethod"`
 	ProductID     string `json:"productID"`
 	UserId 		  string `json:"userID"`
+}
+
+type TokenBinding struct {
+	RefreshToken string `json:"token"`
+}
+
+type Token struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
+}
+
+type PayloadBinding struct {
+	ID        uuid.UUID `json:"id"`
+	Username  string    `json:"username"`
+	IssuedAt  time.Time `json:"issued_at"`
+	ExpiredAt time.Time `json:"expired_at"`
 }

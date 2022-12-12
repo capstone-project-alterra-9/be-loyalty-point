@@ -27,6 +27,7 @@ type Svc interface {
 type authSvc interface {
 	Register(c echo.Context, user entity.RegisterBinding) (*entity.RegisterView, error)
 	Login(c echo.Context, user entity.LoginBinding) (*entity.LoginView, error)
+	ReGenerateToken(c echo.Context, refreshToken entity.TokenBinding) (*entity.RefreshTokenView, error)
 }
 
 type productSvc interface {
