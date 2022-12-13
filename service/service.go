@@ -61,4 +61,5 @@ type userSvc interface {
 	DeleteOneById(c echo.Context, userId string) error
 	CreateUserByAdmin(c echo.Context, user entity.CreateUserBinding) (*entity.CreateUserView, error)
 	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
+	GetForgotPassword(c echo.Context) error
 }

@@ -10,6 +10,10 @@ import (
 	guuid "github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
+
+	"crypto/tls"
+
+	"gopkg.in/gomail.v2"
 )
 
 // buat fitur creat by admin, kurleb sama kaya register -- uda
@@ -255,4 +259,23 @@ func (s *Service) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error
 		return nil, err
 	}
 	return userCount, nil
+}
+
+func (s *Service) GetForgotPassword(c echo.Context) error {
+	// user := jwtAuth.ExtractTokenUsername(c)
+	
+	m := gomail.NewMessage()
+	m.SetHeader("From", "aji.zapar00@gmail.com")
+	m.SetHeader("To", "ajizapar080500@gmail.com")
+	m.SetHeader("Subject", "Hello!")
+	m.SetBody("text/plain", "Hello!")
+
+	d := gomail.NewDialer("smtp.gmail.com", 587, "aji.zapar00@gmail.com", "brrjidfupjwvyvta")
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+
+	return nil
 }

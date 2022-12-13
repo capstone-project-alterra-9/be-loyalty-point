@@ -69,3 +69,11 @@ func GetCountUsers(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, dto.BuildResponse("Success get total users", result))
 }
+
+func GetForgotPassword(c echo.Context) error {
+	err := Service.GetForgotPassword(c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get total users", err))
+	}
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success get total users", ""))
+}

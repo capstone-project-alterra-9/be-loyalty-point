@@ -2,6 +2,7 @@ package service
 
 import (
 	"capstone-project/entity"
+	"capstone-project/constant"
 	"capstone-project/helper"
 	jwtAuth "capstone-project/middleware"
 
@@ -14,7 +15,7 @@ import (
 func (s *Service) Register(c echo.Context, user entity.RegisterBinding) (*entity.RegisterView, error) {
 	var userDomain entity.Users
 	userDomain.ID = (guuid.New()).String()
-	userDomain.Role = "user"
+	userDomain.Role = constant.USER_TYPE_USER
 	var flag bool
 	flag = helper.ValidateLength(user.Username, 8, 16)
 	if !flag {

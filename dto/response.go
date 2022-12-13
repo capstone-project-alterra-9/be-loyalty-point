@@ -1,26 +1,35 @@
 package dto
 
-type Response struct {
-	Message string `json:"message"`
-	Errors  any    `json:"errors"`
-	Data    any    `json:"data"`
+type ResponseSuccess struct {
+	Code	 	int		`json:"code"`
+	Message 	string 		`json:"message"`
+	Data    	any    		`json:"data"`
+}
+
+type ResponseError struct {
+	Code	 	int		`json:"code"`
+	Message  	string 		`json:"message"`
+	ErrorId  	string    	`json:"errors"`
+	Data     	any    		`json:"data"`
 }
 
 type EmptyObj struct{}
 
-func BuildResponse(message string, data any) Response {
-	return Response{
+func BuildResponse(message string, data any) ResponseSuccess {
+	return ResponseSuccess{
+		Code:	200,
 		Message: message,
-		Errors:  EmptyObj{},
 		Data:    data,
 	}
 }
 
-func BuildErrorResponse(message string, err error) Response {
-	return Response{
+func BuildErrorResponse(message string, err error) ResponseError {
+	// errorCode := err.Error()
+	return ResponseError{
+		Code:	200,
 		Message: message,
-		Errors:  err.Error(),
-		Data:    EmptyObj{},
+		ErrorId:  "error id",
+		Data:    err,
 	}
 }
 
