@@ -23,7 +23,7 @@ func Register(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to register user", err))
 	}
 
-	return c.JSON(http.StatusOK, dto.BuildResponse("succes register user", result))
+	return c.JSON(http.StatusCreated, dto.BuildResponse("succes register user", result))
 }
 
 func Login(c echo.Context) error {
@@ -34,7 +34,7 @@ func Login(c echo.Context) error {
 
 	result, err := Service.Login(c, userBinding)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to login user", err))
+		return c.JSON(http.StatusUnauthorized, dto.BuildErrorResponse("Failed to login user", err))
 	}
 
 	return c.JSON(http.StatusOK, dto.BuildResponse("succes login user", result))
