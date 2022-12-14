@@ -70,6 +70,7 @@ type userRepo interface {
 	DeleteUserById(c echo.Context, ID string) error
 	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
 	DeleteUserPointsByUserId(c echo.Context, ID string) error
+	GetUserByEmail(c echo.Context, email string) (*entity.Users, error)
 }
 
 // type paginationRepo interface {

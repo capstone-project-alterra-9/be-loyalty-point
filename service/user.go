@@ -14,7 +14,26 @@ import (
 	"crypto/tls"
 
 	"gopkg.in/gomail.v2"
+	"crypto/aes"
+	"encoding/hex"
+	"os"
 )
+
+func EncryptAES(key []byte, plaintext string) string {
+
+	c, err := aes.NewCipher(key)
+	if err != nil {
+		panic(err)
+	}
+
+	out := make([]byte, len(plaintext))
+
+	c.Encrypt(out, []byte(plaintext))
+
+	return hex.EncodeToString(out)
+}
+
+
 
 // buat fitur creat by admin, kurleb sama kaya register -- uda
 // update user pake data yang sama --
@@ -264,16 +283,22 @@ func (s *Service) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error
 	return userCount, nil
 }
 
-func (s *Service) GetForgotPassword(c echo.Context) error {
-	// user := jwtAuth.ExtractTokenUsername(c)
+func (s *Service) GetForgotPassword(c echo.Context, email entity.ForgotPasswordBinding) error {
+
+	userData, err := s.repo.GetUserByEmail(c, "ajizapar080500@gmail.com")
+	if err != nil {
+		return err
+	}
+
+	encryptedId := EncryptAES([]byte(os.Getenv("ENCRYPT_KEY")), userData.ID)
 	
 	m := gomail.NewMessage()
 	m.SetHeader("From", "aji.zapar00@gmail.com")
-	m.SetHeader("To", "ajizapar080500@gmail.com")
-	m.SetHeader("Subject", "Hello!")
-	m.SetBody("text/plain", "Hello!")
+	m.SetHeader("To", userData.Email)
+	m.SetHeader("Subject", "Password changes request")
+	m.SetBody("text/plain", encryptedId)
 
-	d := gomail.NewDialer("smtp.gmail.com", 587, "aji.zapar00@gmail.com", "brrjidfupjwvyvta")
+	d := gomail.NewDialer("smtp.gmail.com", 587, "aji.zapar00@gmail.com", os.Getenv("APP_PASSWORD"))
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
 
 	if err := d.DialAndSend(m); err != nil {
