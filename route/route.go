@@ -66,7 +66,7 @@ func New(Service service.Svc) *echo.Echo {
 	eUser.POST("/create", controller.CreateUserByAdmin)
 	eUser.GET("/count", controller.GetCountUsers)
 
-	eApi.PATCH("/users/:encryptedId", controller.UpdatePasswordByEncryptedID)
+	eApi.PATCH("/users", controller.UpdatePasswordByEncryptedID)
 
 	return e
 }

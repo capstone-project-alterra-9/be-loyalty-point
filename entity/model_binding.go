@@ -54,7 +54,7 @@ type MidtransTransactionBinding struct {
 }
 
 type TokenBinding struct {
-	RefreshToken string `json:"token"`
+	RefreshToken string `json:"refreshToken"`
 }
 
 type Token struct {
@@ -70,5 +70,6 @@ type PayloadBinding struct {
 }
 
 type UpdateUserByEncryptedIdPayload struct {
+	EncryptedID		   string `json:"encryptedID"`
 	NewPassword        string `json:"newPassword"`
 }

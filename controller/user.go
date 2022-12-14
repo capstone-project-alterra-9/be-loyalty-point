@@ -71,10 +71,12 @@ func GetCountUsers(c echo.Context) error {
 }
 
 func UpdatePasswordByEncryptedID(c echo.Context) error {
-	encryptedId := c.Param("encryptedId")
 	var NewPassword entity.UpdateUserByEncryptedIdPayload
-	c.Bind(&NewPassword)
-	err := Service.UpdatePasswordByEncryptedID(c, encryptedId, NewPassword)
+	if err := c.Bind(&NewPassword); err != nil {
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to process request", err))
+	}
+
+	err := Service.UpdatePasswordByEncryptedID(c, NewPassword)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get user", err))
 	}

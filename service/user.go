@@ -293,10 +293,10 @@ func (s *Service) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error
 }
 
 
-func (s *Service) UpdatePasswordByEncryptedID(c echo.Context, encryptedId string, newPassword entity.UpdateUserByEncryptedIdPayload) error {
-	key := "thisis32bitlongpassphraseimusing"
+func (s *Service) UpdatePasswordByEncryptedID(c echo.Context, newPassword entity.UpdateUserByEncryptedIdPayload) error {
+	key := "thisis32bitlongpassphraseimusingthisis32bitlongpassphraseimusing"
 
-	user, err := s.repo.GetUserByID(c, DecryptAES([]byte(key), encryptedId))
+	user, err := s.repo.GetUserByID(c, DecryptAES([]byte(key), newPassword.EncryptedID))
 	if err != nil {
 		return err
 	}
