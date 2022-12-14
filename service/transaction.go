@@ -28,17 +28,11 @@ func (s *Service) GetTransactions(c echo.Context) ([]entity.TransactionsView, er
 		for _, transaction := range transactions {
 			product, err := s.repo.GetProductByID(c, transaction.ProductID)
 			if err != nil {
-				product, err = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
-				if err != nil {
-					return nil, err
-				}
+				product, _ = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
 			}
 			user, err := s.repo.GetUserByID(c, transaction.UserID)
 			if err != nil {
-				user, err = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
-				if err != nil {
-					return nil, err
-				}
+				user, _ = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
 			}
 			transactionsView = append(transactionsView, entity.TransactionsView{
 				ID:            transaction.ID,
@@ -75,17 +69,11 @@ func (s *Service) GetTransactionsByMethod(c echo.Context, method string) ([]enti
 			for _, transaction := range transactions {
 				product, err := s.repo.GetProductByID(c, transaction.ProductID)
 				if err != nil {
-					product, err = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
-					if err != nil {
-						return nil, err
-					}
+					product, _ = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
 				}
 				user, err := s.repo.GetUserByID(c, transaction.UserID)
 				if err != nil {
-					user, err = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
-					if err != nil {
-						return nil, err
-					}
+					user, _ = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
 				}
 				transactionsView = append(transactionsView, entity.TransactionsView{
 					ID:            transaction.ID,
@@ -122,17 +110,11 @@ func (s *Service) GetTransactionByID(c echo.Context, ID string) (*entity.Transac
 		if (auth.Role == "user" && auth.ID == transaction.UserID) || auth.Role == "admin" {
 			product, err := s.repo.GetProductByID(c, transaction.ProductID)
 			if err != nil {
-				product, err = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
-				if err != nil {
-					return nil, err
-				}
+				product, _ = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
 			}
 			user, err := s.repo.GetUserByID(c, transaction.UserID)
 			if err != nil {
-				user, err = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
-				if err != nil {
-					return nil, err
-				}
+				user, _ = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
 			}
 			return &entity.TransactionsView{
 				ID:            transaction.ID,
@@ -169,17 +151,11 @@ func (s *Service) GetHistory(c echo.Context) ([]entity.TransactionsView, error) 
 		for _, transaction := range transactions {
 			product, err := s.repo.GetProductByID(c, transaction.ProductID)
 			if err != nil {
-				product, err = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
-				if err != nil {
-					return nil, err
-				}
+				product, _ = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
 			}
 			user, err := s.repo.GetUserByID(c, transaction.UserID)
 			if err != nil {
-				user, err = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
-				if err != nil {
-					return nil, err
-				}
+				user, _ = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
 			}
 			transactionsView = append(transactionsView, entity.TransactionsView{
 				ID:            transaction.ID,
@@ -216,17 +192,11 @@ func (s *Service) GetHistoryByMethod(c echo.Context, method string) ([]entity.Tr
 			for _, transaction := range transactions {
 				product, err := s.repo.GetProductByID(c, transaction.ProductID)
 				if err != nil {
-					product, err = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
-					if err != nil {
-						return nil, err
-					}
+					product, _ = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
 				}
 				user, err := s.repo.GetUserByID(c, transaction.UserID)
 				if err != nil {
-					user, err = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
-					if err != nil {
-						return nil, err
-					}
+					user, _ = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
 				}
 				transactionsView = append(transactionsView, entity.TransactionsView{
 					ID:            transaction.ID,
