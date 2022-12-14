@@ -8,7 +8,7 @@ import (
 
 func (r *repository) GetUserSoftDeleteByID(c echo.Context, ID string) (*entity.Users, error) {
 	var userDomain *entity.Users
-	err := r.connection.Unscoped().First(&userDomain, "id = ?", ID).Error
+	err := r.connection.Unscoped().Find(&userDomain, "id = ?", ID).Error
 	if userDomain.ID == "" {
 		return nil, err
 	}
@@ -17,7 +17,7 @@ func (r *repository) GetUserSoftDeleteByID(c echo.Context, ID string) (*entity.U
 
 func (r *repository) GetProductSoftDeleteByID(c echo.Context, ID string) (*entity.Products, error) {
 	var productDomain *entity.Products
-	err := r.connection.Unscoped().First(&productDomain, "id = ?", ID).Error
+	err := r.connection.Unscoped().Find(&productDomain, "id = ?", ID).Error
 	if productDomain.ID == "" {
 		return nil, err
 	}
