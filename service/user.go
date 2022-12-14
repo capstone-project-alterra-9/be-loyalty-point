@@ -15,9 +15,14 @@ import (
 
 	"gopkg.in/gomail.v2"
 	"crypto/aes"
-	"encoding/hex"
+	// "encoding/hex"
 	"os"
+	"encoding/base64"
 )
+
+const KEY_AES_128 string = "mysecret90123456"
+const KEY_AES_192 string = "mysecret9012345612345678"
+const KEY_AES_256 string = "mysecret901234561234567812345678"
 
 func EncryptAES(key []byte, plaintext string) string {
 
@@ -30,10 +35,9 @@ func EncryptAES(key []byte, plaintext string) string {
 
 	c.Encrypt(out, []byte(plaintext))
 
-	return hex.EncodeToString(out)
+	return base64.StdEncoding.EncodeToString(out)
+	
 }
-
-
 
 // buat fitur creat by admin, kurleb sama kaya register -- uda
 // update user pake data yang sama --
@@ -290,7 +294,7 @@ func (s *Service) GetForgotPassword(c echo.Context, email entity.ForgotPasswordB
 		return err
 	}
 
-	encryptedId := EncryptAES([]byte(os.Getenv("ENCRYPT_KEY")), userData.ID)
+	encryptedId := EncryptAES([]byte(KEY_AES_256), userData.ID)
 	
 	m := gomail.NewMessage()
 	m.SetHeader("From", "aji.zapar00@gmail.com")
