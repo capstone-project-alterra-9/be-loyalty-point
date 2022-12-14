@@ -90,14 +90,21 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 	userAuth := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, userAuth)
 	if adminAuth != nil {
+		if ID == adminAuth.ID {
+			return nil, errors.New("you can't update admin data")
+		}
 		userData, err := s.repo.GetUserByID(c, ID)
 		if err != nil {
 			return nil, err
 		}
-		tempCompare := userData
 		userPoint, err := s.repo.GetUserPoints(c, userData.ID)
 		if err != nil {
 			return nil, err
+		}
+
+		tempPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+		if userData.Role == user.Role && userData.Username == user.Username && userData.Email == user.Email && userData.Password == string(tempPassword) && userPoint.Points == user.Points && userPoint.CostPoints == user.CostPoints {
+			return nil, helper.ErrSameDataRequest
 		}
 
 		if user.Role != "" {
@@ -153,10 +160,6 @@ func (s *Service) UpdateOneById(c echo.Context, ID string, user entity.UpdateUse
 			if err != nil {
 				return nil, err
 			}
-		}
-
-		if userData == tempCompare && user.Points == userPoint.Points && user.CostPoints == userPoint.CostPoints {
-			return nil, helper.ErrSameDataRequest
 		}
 
 		updatedUser, err := s.repo.UpdateOneByUserId(c, userData)

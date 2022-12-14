@@ -132,6 +132,12 @@ func (s *Service) UpdateProduct(c echo.Context, ID string, product *entity.Produ
 			if product.Name == "" {
 				return nil, helper.ErrEmptyData
 			}
+			if product.Price < 0 {
+				return nil, errors.New("invalid price")
+			}
+			if product.Stock < 0 {
+				return nil, errors.New("invalid stock")
+			}
 			if product.Category != updateProduct.Category {
 				product.Redeem = true
 				if product.Category == "credits" || product.Category == "data-quota" {

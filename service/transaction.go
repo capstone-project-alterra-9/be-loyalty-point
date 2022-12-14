@@ -2,6 +2,7 @@ package service
 
 import (
 	"capstone-project/entity"
+	"capstone-project/helper"
 	jwtAuth "capstone-project/middleware"
 	"errors"
 
@@ -42,6 +43,7 @@ func (s *Service) GetTransactions(c echo.Context) ([]entity.TransactionsView, er
 				Username:      user.Username,
 				ProductID:     transaction.ProductID,
 				ProductName:   product.Name,
+				Category:      product.Category,
 				SerialNumber:  transaction.SerialNumber,
 				IdentifierNum: transaction.IdentifierNum,
 				Price:         transaction.Price,
@@ -82,6 +84,7 @@ func (s *Service) GetTransactionsByMethod(c echo.Context, method string) ([]enti
 					Username:      user.Username,
 					ProductID:     transaction.ProductID,
 					ProductName:   product.Name,
+					Category:      product.Category,
 					SerialNumber:  transaction.SerialNumber,
 					IdentifierNum: transaction.IdentifierNum,
 					Price:         transaction.Price,
@@ -122,6 +125,7 @@ func (s *Service) GetTransactionByID(c echo.Context, ID string) (*entity.Transac
 				Username:      user.Username,
 				ProductID:     transactions.ProductID,
 				ProductName:   product.Name,
+				Category:      product.Category,
 				SerialNumber:  transactions.SerialNumber,
 				IdentifierNum: transactions.IdentifierNum,
 				Price:         transactions.Price,
@@ -162,6 +166,7 @@ func (s *Service) GetHistory(c echo.Context) ([]entity.TransactionsView, error) 
 				Username:      user.Username,
 				ProductID:     transaction.ProductID,
 				ProductName:   product.Name,
+				Category:      product.Category,
 				SerialNumber:  transaction.SerialNumber,
 				IdentifierNum: transaction.IdentifierNum,
 				Price:         transaction.Price,
@@ -202,6 +207,7 @@ func (s *Service) GetHistoryByMethod(c echo.Context, method string) ([]entity.Tr
 					Username:      user.Username,
 					ProductID:     transaction.ProductID,
 					ProductName:   product.Name,
+					Category:      product.Category,
 					SerialNumber:  transaction.SerialNumber,
 					IdentifierNum: transaction.IdentifierNum,
 					Price:         transaction.Price,
@@ -221,6 +227,13 @@ func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.Tra
 	userDomain, err := s.repo.GetUserAuth(c, user)
 	if userDomain != nil {
 		product, err := s.repo.GetProductByID(c, transaction.ProductID)
+		if err != nil {
+			return nil, err
+		}
+		if transaction.IdentifierNum == "" {
+			return nil, errors.New("identifier number is required")
+		}
+		err = helper.ValidateIdentifierNumber(transaction.IdentifierNum)
 		if err != nil {
 			return nil, err
 		}
@@ -288,6 +301,7 @@ func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.Tra
 				Username:      userDomain.Username,
 				ProductID:     product.ID,
 				ProductName:   product.Name,
+				Category:      product.Category,
 				SerialNumber:  result.SerialNumber,
 				IdentifierNum: result.IdentifierNum,
 				Price:         result.Price,
@@ -311,6 +325,11 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 		}
 		if product.Stock == 0 {
 			return nil, errors.New("product out of stock")
+		}
+
+		err = helper.ValidateIdentifierNumber(transaction.IdentifierNum)
+		if err != nil {
+			return nil, err
 		}
 
 		if transaction.PaymentMethod == "buy" && product.Buy || transaction.PaymentMethod == "redeem" && product.Redeem {
@@ -381,6 +400,7 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 				Username:      userAuth.Username,
 				ProductID:     product.ID,
 				ProductName:   product.Name,
+				Category:      product.Category,
 				SerialNumber:  result.SerialNumber,
 				IdentifierNum: result.IdentifierNum,
 				Price:         result.Price,
@@ -397,6 +417,27 @@ func (s *Service) UpdateTransactionByAdmin(c echo.Context, ID string, transactio
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
+		var (
+			validPaymentMethod = false
+			validStatus        = false
+		)
+		if transaction.PaymentMethod == "buy" || transaction.PaymentMethod == "redeem" {
+			validPaymentMethod = true
+		}
+		if transaction.Status == "success" || transaction.Status == "failed" || transaction.Status == "pending" {
+			validStatus = true
+		}
+		err = helper.ValidateIdentifierNumber(transaction.IdentifierNum)
+		if err != nil {
+			return nil, err
+		}
+		if !validPaymentMethod {
+			return nil, errors.New("payment method not found")
+		}
+		if !validStatus {
+			return nil, errors.New("status not found")
+		}
+
 		transactionDomain, err := s.repo.GetTransactionByID(c, ID)
 		if err != nil {
 			return nil, err
@@ -464,6 +505,7 @@ func (s *Service) UpdateTransactionByAdmin(c echo.Context, ID string, transactio
 			Username:      userDomain.Username,
 			ProductID:     productDomain.ID,
 			ProductName:   productDomain.Name,
+			Category:      productDomain.Category,
 			SerialNumber:  result.SerialNumber,
 			IdentifierNum: result.IdentifierNum,
 			Price:         result.Price,
@@ -508,13 +550,19 @@ func (s *Service) GetCountTransactions(c echo.Context) (*entity.GetTransactionsC
 func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.MidtransTransactionBinding) (*entity.MidtransTransactionView, error) {
 
 	userDomain, err := s.repo.GetUserByID(c, transaction.UserId)
+	if err != nil {
+		return nil, err
+	}
 	productDomain, err := s.repo.GetProductByID(c, transaction.ProductID)
+	if err != nil {
+		return nil, err
+	}
 
 	// 1. Initiate Snap client
 	var snapServer = snap.Client{}
 	snapServer.New("SB-Mid-server-SeSkIpdk530KkwNKBaUg50xd", midtrans.Sandbox)
 	// Use to midtrans.Production if you want Production Environment (accept real transaction).
-	 
+
 	// 2. Initiate Snap request param
 	// Initiate Customer address
 	custAddress := &midtrans.CustomerAddress{
@@ -554,16 +602,15 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 			},
 		},
 	}
-	 
+
 	// 3. Execute request create Snap transaction to Midtrans Snap API
 	snapResp, err := snapServer.CreateTransaction(snapReq)
-
 	if err != nil {
 		return nil, err
 	}
 
 	return &entity.MidtransTransactionView{
-		Token: snapResp.Token,
+		Token:     snapResp.Token,
 		DirectUrl: snapResp.RedirectURL,
 	}, nil
 }

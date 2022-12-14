@@ -14,4 +14,6 @@ var (
 	ErrPasswordAlphanumeric = echo.NewHTTPError(400, "Password must be alphanumeric")
 	ErrSameDataRequest      = echo.NewHTTPError(400, "Data request cannot be the same")
 	ErrEmptyData            = echo.NewHTTPError(400, "Data cannot be empty")
+	ErrIdentifierLength     = echo.NewHTTPError(400, "Identifier must be between 10 and 14 characters")
+	ErrIdentifierNumber     = echo.NewHTTPError(400, "Invalid identifier number format")
 )
