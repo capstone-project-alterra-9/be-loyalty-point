@@ -49,8 +49,8 @@ type productRepo interface {
 }
 
 type transactionRepo interface {
-	GetUserSoftDeleteByID(c echo.Context, ID string) (*entity.Users, error)
-	GetProductSoftDeleteByID(c echo.Context, ID string) (*entity.Products, error)
+	GetUserByIDRaw(c echo.Context, ID string) (entity.Users, error)
+	GetProductByIDRaw(c echo.Context, ID string) (entity.Products, error)
 	GetTransactions(c echo.Context) ([]entity.Transactions, error)
 	GetTransactionsByMethod(c echo.Context, method string) ([]entity.Transactions, error)
 	GetHistory(c echo.Context, ID string) ([]entity.Transactions, error)

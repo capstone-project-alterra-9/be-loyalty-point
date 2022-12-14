@@ -8,7 +8,7 @@ import (
 
 func (r *repository) GetProductByID(c echo.Context, productID string) (*entity.Products, error) {
 	var productsDomain *entity.Products
-	err := r.connection.Find(&productsDomain, "id = ?", productID).Error
+	err := r.connection.First(&productsDomain, "id = ?", productID).Error
 	if productsDomain.ID == "" {
 		return nil, err
 	}

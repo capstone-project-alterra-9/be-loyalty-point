@@ -26,13 +26,13 @@ func (s *Service) GetTransactions(c echo.Context) ([]entity.TransactionsView, er
 
 		var transactionsView []entity.TransactionsView
 		for _, transaction := range transactions {
-			product, err := s.repo.GetProductByID(c, transaction.ProductID)
+			product, err := s.repo.GetProductByIDRaw(c, transaction.ProductID)
 			if err != nil {
-				product, _ = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
+				return nil, err
 			}
-			user, err := s.repo.GetUserByID(c, transaction.UserID)
+			user, err := s.repo.GetUserByIDRaw(c, transaction.UserID)
 			if err != nil {
-				user, _ = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
+				return nil, err
 			}
 			transactionsView = append(transactionsView, entity.TransactionsView{
 				ID:            transaction.ID,
@@ -67,13 +67,13 @@ func (s *Service) GetTransactionsByMethod(c echo.Context, method string) ([]enti
 
 			var transactionsView []entity.TransactionsView
 			for _, transaction := range transactions {
-				product, err := s.repo.GetProductByID(c, transaction.ProductID)
+				product, err := s.repo.GetProductByIDRaw(c, transaction.ProductID)
 				if err != nil {
-					product, _ = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
+					return nil, err
 				}
-				user, err := s.repo.GetUserByID(c, transaction.UserID)
+				user, err := s.repo.GetUserByIDRaw(c, transaction.UserID)
 				if err != nil {
-					user, _ = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
+					return nil, err
 				}
 				transactionsView = append(transactionsView, entity.TransactionsView{
 					ID:            transaction.ID,
@@ -108,13 +108,13 @@ func (s *Service) GetTransactionByID(c echo.Context, ID string) (*entity.Transac
 			return nil, err
 		}
 		if (auth.Role == "user" && auth.ID == transaction.UserID) || auth.Role == "admin" {
-			product, err := s.repo.GetProductByID(c, transaction.ProductID)
+			product, err := s.repo.GetProductByIDRaw(c, transaction.ProductID)
 			if err != nil {
-				product, _ = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
+				return nil, err
 			}
-			user, err := s.repo.GetUserByID(c, transaction.UserID)
+			user, err := s.repo.GetUserByIDRaw(c, transaction.UserID)
 			if err != nil {
-				user, _ = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
+				return nil, err
 			}
 			return &entity.TransactionsView{
 				ID:            transaction.ID,
@@ -149,13 +149,13 @@ func (s *Service) GetHistory(c echo.Context) ([]entity.TransactionsView, error) 
 
 		var transactionsView []entity.TransactionsView
 		for _, transaction := range transactions {
-			product, err := s.repo.GetProductByID(c, transaction.ProductID)
+			product, err := s.repo.GetProductByIDRaw(c, transaction.ProductID)
 			if err != nil {
-				product, _ = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
+				return nil, err
 			}
-			user, err := s.repo.GetUserByID(c, transaction.UserID)
+			user, err := s.repo.GetUserByIDRaw(c, transaction.UserID)
 			if err != nil {
-				user, _ = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
+				return nil, err
 			}
 			transactionsView = append(transactionsView, entity.TransactionsView{
 				ID:            transaction.ID,
@@ -190,13 +190,13 @@ func (s *Service) GetHistoryByMethod(c echo.Context, method string) ([]entity.Tr
 
 			var transactionsView []entity.TransactionsView
 			for _, transaction := range transactions {
-				product, err := s.repo.GetProductByID(c, transaction.ProductID)
+				product, err := s.repo.GetProductByIDRaw(c, transaction.ProductID)
 				if err != nil {
-					product, _ = s.repo.GetProductSoftDeleteByID(c, transaction.ProductID)
+					return nil, err
 				}
-				user, err := s.repo.GetUserByID(c, transaction.UserID)
+				user, err := s.repo.GetUserByIDRaw(c, transaction.UserID)
 				if err != nil {
-					user, _ = s.repo.GetUserSoftDeleteByID(c, transaction.UserID)
+					return nil, err
 				}
 				transactionsView = append(transactionsView, entity.TransactionsView{
 					ID:            transaction.ID,

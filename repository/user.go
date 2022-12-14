@@ -56,7 +56,7 @@ func (r *repository) GetUsersPagination(c echo.Context) ([]entity.Users, error) 
 
 func (r *repository) GetUserByID(c echo.Context, ID string) (*entity.Users, error) {
 	var userData *entity.Users
-	err := r.connection.Find(&userData, "id = ?", ID).Error
+	err := r.connection.First(&userData, "id = ?", ID).Error
 	if userData.ID == "" {
 		return nil, err
 	}

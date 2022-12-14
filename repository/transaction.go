@@ -6,22 +6,22 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (r *repository) GetUserSoftDeleteByID(c echo.Context, ID string) (*entity.Users, error) {
-	var userDomain *entity.Users
-	err := r.connection.Unscoped().Find(&userDomain, "id = ?", ID).Error
-	if userDomain.ID == "" {
-		return nil, err
+func (r *repository) GetUserByIDRaw(c echo.Context, ID string) (entity.Users, error) {
+	var userData entity.Users
+	err := r.connection.Raw("SELECT * FROM users WHERE id = ?", ID).Scan(&userData).Error
+	if err != nil {
+		return userData, err
 	}
-	return userDomain, nil
+	return userData, nil
 }
 
-func (r *repository) GetProductSoftDeleteByID(c echo.Context, ID string) (*entity.Products, error) {
-	var productDomain *entity.Products
-	err := r.connection.Unscoped().Find(&productDomain, "id = ?", ID).Error
-	if productDomain.ID == "" {
-		return nil, err
+func (r *repository) GetProductByIDRaw(c echo.Context, ID string) (entity.Products, error) {
+	var productData entity.Products
+	err := r.connection.Raw("SELECT * FROM products WHERE id = ?", ID).Scan(&productData).Error
+	if err != nil {
+		return productData, err
 	}
-	return productDomain, nil
+	return productData, nil
 }
 
 func (r *repository) GetTransactions(c echo.Context) ([]entity.Transactions, error) {
