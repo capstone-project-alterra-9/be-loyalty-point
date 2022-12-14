@@ -27,6 +27,8 @@ var (
 	getProducts                      func(c echo.Context) ([]entity.Products, error)
 	getProductsByMethod              func(c echo.Context, paymentMethod string) ([]entity.Products, error)
 	getProductsByCategory            func(c echo.Context, category string) ([]entity.Products, error)
+	updateCategoryProduct            func(c echo.Context, ID string, category string) error
+	updateMethodProduct              func(c echo.Context, ID string, changeMethodBuy bool) error
 	updateProduct                    func(c echo.Context, ID string, product *entity.Products) (*entity.Products, error)
 	deleteProduct                    func(c echo.Context, ID string) error
 	deleteAllSerialNumberByProductID func(c echo.Context, ID string) error
@@ -104,6 +106,14 @@ func (r *allRepositoryMock) GetProductsByMethod(c echo.Context, paymentMethod st
 
 func (r *allRepositoryMock) GetProductsByCategory(c echo.Context, category string) ([]entity.Products, error) {
 	return getProductsByCategory(c, category)
+}
+
+func (r *allRepositoryMock) UpdateCategoryProduct(c echo.Context, ID string, category string) error {
+	return updateCategoryProduct(c, ID, category)
+}
+
+func (r *allRepositoryMock) UpdateMethodProduct(c echo.Context, ID string, changeMethodBuy bool) error {
+	return updateMethodProduct(c, ID, changeMethodBuy)
 }
 
 func (r *allRepositoryMock) UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error) {
