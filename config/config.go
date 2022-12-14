@@ -49,8 +49,14 @@ func InitDatabaseTest() *gorm.DB {
 		panic("failed to connect database")
 	}
 
-	entity.DB.Migrator().DropTable()
-	entity.DB.AutoMigrate()
+	entity.DB.Migrator().DropTable(
+		&entity.Points{}, &entity.Users{}, &entity.Products{},
+		&entity.SerialNumbers{}, &entity.Transactions{},
+	)
+	entity.DB.AutoMigrate(
+		&entity.Points{}, &entity.Users{}, &entity.Products{},
+		&entity.SerialNumbers{}, &entity.Transactions{},
+	)
 
 	return entity.DB
 }
