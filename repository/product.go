@@ -108,7 +108,7 @@ func (r *repository) UpdateProduct(c echo.Context, ID string, product *entity.Pr
 	if err != nil {
 		return nil, err
 	}
-	return product, nil
+	return r.GetProductByID(c, ID)
 }
 
 func (r *repository) DeleteProduct(c echo.Context, ID string) error {
