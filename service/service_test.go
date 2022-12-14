@@ -33,6 +33,8 @@ var (
 	deleteProduct                    func(c echo.Context, ID string) error
 	deleteAllSerialNumberByProductID func(c echo.Context, ID string) error
 	deleteNSerialNumberByProductID   func(c echo.Context, ID string, N int) error
+	getUserSoftDeleteByID            func(c echo.Context, ID string) (*entity.Users, error)
+	getProductSoftDeleteByID         func(c echo.Context, ID string) (*entity.Products, error)
 	getTransactions                  func(c echo.Context) ([]entity.Transactions, error)
 	getTransactionsByMethod          func(c echo.Context, method string) ([]entity.Transactions, error)
 	getHistory                       func(c echo.Context, ID string) ([]entity.Transactions, error)
@@ -130,6 +132,14 @@ func (r *allRepositoryMock) DeleteAllSerialNumberByProductID(c echo.Context, ID 
 
 func (r *allRepositoryMock) DeleteNSerialNumberByProductID(c echo.Context, ID string, N int) error {
 	return deleteNSerialNumberByProductID(c, ID, N)
+}
+
+func (r *allRepositoryMock) GetUserSoftDeleteByID(c echo.Context, ID string) (*entity.Users, error) {
+	return getUserSoftDeleteByID(c, ID)
+}
+
+func (r *allRepositoryMock) GetProductSoftDeleteByID(c echo.Context, ID string) (*entity.Products, error) {
+	return getProductSoftDeleteByID(c, ID)
 }
 
 func (r *allRepositoryMock) GetTransactions(c echo.Context) ([]entity.Transactions, error) {

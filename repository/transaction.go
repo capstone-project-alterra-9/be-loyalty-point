@@ -6,6 +6,24 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func (r *repository) GetUserSoftDeleteByID(c echo.Context, ID string) (*entity.Users, error) {
+	var userDomain *entity.Users
+	err := r.connection.Unscoped().First(&userDomain, "id = ?", ID).Error
+	if userDomain.ID == "" {
+		return nil, err
+	}
+	return userDomain, nil
+}
+
+func (r *repository) GetProductSoftDeleteByID(c echo.Context, ID string) (*entity.Products, error) {
+	var productDomain *entity.Products
+	err := r.connection.Unscoped().First(&productDomain, "id = ?", ID).Error
+	if productDomain.ID == "" {
+		return nil, err
+	}
+	return productDomain, nil
+}
+
 func (r *repository) GetTransactions(c echo.Context) ([]entity.Transactions, error) {
 	var transactions []entity.Transactions
 	err := r.connection.Find(&transactions).Error
