@@ -69,3 +69,14 @@ func GetCountUsers(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, dto.BuildResponse("Success get total users", result))
 }
+
+func UpdatePasswordByEncryptedID(c echo.Context) error {
+	encryptedId := c.Param("encryptedId")
+	var NewPassword entity.UpdateUserByEncryptedIdPayload
+	c.Bind(&NewPassword)
+	err := Service.UpdatePasswordByEncryptedID(c, encryptedId, NewPassword)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get user", err))
+	}
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success to get user", ""))
+}

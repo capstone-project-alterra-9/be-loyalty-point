@@ -10,7 +10,39 @@ import (
 	guuid "github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
+
+	"crypto/aes"
+	"encoding/hex"
 )
+
+func EncryptAES(key []byte, plaintext string) string {
+
+	c, err := aes.NewCipher(key)
+	if err != nil {
+		panic(err)
+	}
+
+	out := make([]byte, len(plaintext))
+	
+	c.Encrypt(out, []byte(plaintext))
+	
+	return hex.EncodeToString(out)
+}
+
+func DecryptAES(key []byte, ct string) string {
+	ciphertext, _ := hex.DecodeString(ct)
+
+	c, err := aes.NewCipher(key)
+	if err != nil {
+		panic(err)
+	}
+
+	pt := make([]byte, len(ciphertext))
+	c.Decrypt(pt, ciphertext)
+
+	s := string(pt[:])
+	return s
+}
 
 // buat fitur creat by admin, kurleb sama kaya register -- uda
 // update user pake data yang sama --
@@ -258,4 +290,22 @@ func (s *Service) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error
 		return nil, err
 	}
 	return userCount, nil
+}
+
+
+func (s *Service) UpdatePasswordByEncryptedID(c echo.Context, encryptedId string, newPassword entity.UpdateUserByEncryptedIdPayload) error {
+	key := "thisis32bitlongpassphraseimusing"
+
+	user, err := s.repo.GetUserByID(c, DecryptAES([]byte(key), encryptedId))
+	if err != nil {
+		return err
+	}
+
+	user.Password = newPassword.NewPassword
+	_, err = s.repo.UpdateOneByUserId(c, user)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
