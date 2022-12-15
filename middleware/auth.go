@@ -11,6 +11,8 @@ import (
 	"capstone-project/entity"
 )
 
+var whitelist []string = make([]string, 5)
+
 func CreateToken(username string, email string) (string, error) {
 	claims := jwt.MapClaims{
 		"username": username,
@@ -39,37 +41,7 @@ func ExtractTokenUsername(e echo.Context) string {
 	return claims["username"].(string)
 }
 
-// func VerifyToken(refreshToken string) (*jwt.PayloadBinding, error) {
-// 	keyFunc := func(token *jwt.Token) (interface{}, error) {
-// 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
-// 		if !ok {
-// 			return nil, errors.New("Invalid token")
-// 		}
-// 		return []byte(os.Getenv("JWT_SECRET")), nil
-// 	}
-
-// 	jwtToken, err := jwt.ParseWithClaims(refreshToken, &entity.PayloadBinding{}, keyFunc)
-// 	if err != nil {
-// 		verr, ok := err.(*jwt.ValidationError)
-// 		if ok && errors.Is(verr.Inner, errors.New("Token expired")) {
-// 			return nil, errors.New("Token expired")
-// 		}
-// 		return nil, errors.New("Invalid token")
-// 	}
-
-// 	payload, ok := jwtToken.Claims.(*entity.PayloadBinding)
-// 	if !ok {
-// 		return nil, errors.New("Invalid token")
-// 	}
-
-// 	return payload, nil
-// }
-
 func ValidateToken(refreshToken entity.TokenBinding) (*entity.Users, error) {
-
-	
-	// var refToken entity.TokenBinding
-	// refToken = refreshToken;
 	fmt.Println("ini refresh token ", string(refreshToken.RefreshToken));
 	token, err := jwt.Parse(refreshToken.RefreshToken, func(token *jwt.Token) (interface{}, error) {
 		_, ok := token.Method.(*jwt.SigningMethodHMAC)
@@ -95,4 +67,24 @@ func ValidateToken(refreshToken entity.TokenBinding) (*entity.Users, error) {
 	}
 
 	return nil, errors.New("invalid token")
+}
+
+func CheckToken(token string) bool {
+	for _, tkn := range whitelist {
+		if tkn == token {
+			return true
+		}
+	}
+
+	return false
+}
+
+func Logout(token string) bool {
+	for idx, tkn := range whitelist {
+		if tkn == token {
+			whitelist = append(whitelist[:idx], whitelist[idx+1:]...)
+		}
+	}
+
+	return true
 }
