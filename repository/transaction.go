@@ -6,6 +6,24 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+func (r *repository) GetUserByIDRaw(c echo.Context, ID string) (entity.Users, error) {
+	var userData entity.Users
+	err := r.connection.Raw("SELECT * FROM users WHERE id = ?", ID).Scan(&userData).Error
+	if err != nil {
+		return userData, err
+	}
+	return userData, nil
+}
+
+func (r *repository) GetProductByIDRaw(c echo.Context, ID string) (entity.Products, error) {
+	var productData entity.Products
+	err := r.connection.Raw("SELECT * FROM products WHERE id = ?", ID).Scan(&productData).Error
+	if err != nil {
+		return productData, err
+	}
+	return productData, nil
+}
+
 func (r *repository) GetTransactions(c echo.Context) ([]entity.Transactions, error) {
 	var transactions []entity.Transactions
 	err := r.connection.Find(&transactions).Error

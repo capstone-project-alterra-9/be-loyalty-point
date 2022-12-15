@@ -124,9 +124,9 @@ func (s *Service) UpdateProduct(c echo.Context, ID string, product *entity.Produ
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
-		updateProduct, err := s.repo.GetProductByID(c, ID)
-		if updateProduct != nil {
-			if product.Name == updateProduct.Name && product.Description == updateProduct.Description && product.Price == updateProduct.Price && product.Category == updateProduct.Category && product.Stock == updateProduct.Stock && product.Image == updateProduct.Image {
+		productDomain, err := s.repo.GetProductByID(c, ID)
+		if productDomain != nil {
+			if product.Name == productDomain.Name && product.Description == productDomain.Description && product.Price == productDomain.Price && product.Category == productDomain.Category && product.Stock == productDomain.Stock && product.Image == productDomain.Image {
 				return nil, helper.ErrSameDataRequest
 			}
 			if product.Name == "" {
@@ -138,8 +138,9 @@ func (s *Service) UpdateProduct(c echo.Context, ID string, product *entity.Produ
 			if product.Stock < 0 {
 				return nil, errors.New("invalid stock")
 			}
-			if product.Category != updateProduct.Category {
-				product.Redeem = true
+			var diffBuyMethod bool
+			if product.Category != productDomain.Category {
+				// product.Redeem = true
 				if product.Category == "credits" || product.Category == "data-quota" {
 					product.Buy = true
 				} else if product.Category == "e-money" || product.Category == "cashout" {
@@ -148,10 +149,13 @@ func (s *Service) UpdateProduct(c echo.Context, ID string, product *entity.Produ
 					return nil, errors.New("invalid category")
 				}
 			}
-			if product.Stock != updateProduct.Stock {
-				if product.Stock > updateProduct.Stock {
+			if product.Buy != productDomain.Buy {
+				diffBuyMethod = true
+			}
+			if product.Stock != productDomain.Stock {
+				if product.Stock > productDomain.Stock {
 					rand.Seed(time.Now().UnixNano())
-					for i := 0; i < product.Stock-updateProduct.Stock; i++ {
+					for i := 0; i < product.Stock-productDomain.Stock; i++ {
 						randomNum := rand.Int63n(999999999999-99999999999) - 99999999999
 						if randomNum < 0 {
 							randomNum = randomNum * -1
@@ -167,12 +171,19 @@ func (s *Service) UpdateProduct(c echo.Context, ID string, product *entity.Produ
 							return nil, err
 						}
 					}
-				} else if product.Stock < updateProduct.Stock {
-					diff := updateProduct.Stock - product.Stock
+				} else if product.Stock < productDomain.Stock {
+					diff := productDomain.Stock - product.Stock
 					err := s.repo.DeleteNSerialNumberByProductID(c, ID, diff)
 					if err != nil {
 						return nil, err
 					}
+				}
+			}
+
+			if diffBuyMethod { // this function created because if true value updates with true value, it will be false value
+				err := s.repo.UpdateMethodProduct(c, ID, product.Buy)
+				if err != nil {
+					return nil, err
 				}
 			}
 			return s.repo.UpdateProduct(c, ID, product)
@@ -209,7 +220,7 @@ func (s *Service) DeleteProduct(c echo.Context, ID string) error {
 // 	if adminAuth == nil {
 // 		return nil, errors.New("Unauthorized")
 // 	}
-	
+
 // 	userCount, err := s.repo.GetCountProducts(c)
 
 // 	if err != nil {

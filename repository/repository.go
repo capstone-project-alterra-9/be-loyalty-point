@@ -41,6 +41,7 @@ type productRepo interface {
 	GetProducts(c echo.Context) ([]entity.Products, error)
 	GetProductsByMethod(c echo.Context, paymentMethod string) ([]entity.Products, error)
 	GetProductsByCategory(c echo.Context, category string) ([]entity.Products, error)
+	UpdateMethodProduct(c echo.Context, ID string, changeMethodBuy bool) error
 	UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error)
 	DeleteProduct(c echo.Context, ID string) error
 	DeleteAllSerialNumberByProductID(c echo.Context, ID string) error
@@ -48,6 +49,8 @@ type productRepo interface {
 }
 
 type transactionRepo interface {
+	GetUserByIDRaw(c echo.Context, ID string) (entity.Users, error)
+	GetProductByIDRaw(c echo.Context, ID string) (entity.Products, error)
 	GetTransactions(c echo.Context) ([]entity.Transactions, error)
 	GetTransactionsByMethod(c echo.Context, method string) ([]entity.Transactions, error)
 	GetHistory(c echo.Context, ID string) ([]entity.Transactions, error)

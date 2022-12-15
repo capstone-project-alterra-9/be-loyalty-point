@@ -85,11 +85,20 @@ func (r *repository) GetProductsByCategory(c echo.Context, category string) ([]e
 	return products, nil
 }
 
+// this function created because if true value updates with true value, it will be false value
+func (r *repository) UpdateMethodProduct(c echo.Context, ID string, changeMethodBuy bool) error {
+	err := r.connection.Model(&entity.Products{}).Where("id = ?", ID).Updates(map[string]interface{}{
+		"buy": changeMethodBuy,
+	}).Error
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func (r *repository) UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error) {
 	err := r.connection.Model(&entity.Products{}).Where("id = ?", ID).Updates(map[string]interface{}{
 		"category":    product.Category,
-		"redeem":      product.Redeem,
-		"buy":         product.Buy,
 		"name":        product.Name,
 		"description": product.Description,
 		"price":       product.Price,
@@ -99,7 +108,7 @@ func (r *repository) UpdateProduct(c echo.Context, ID string, product *entity.Pr
 	if err != nil {
 		return nil, err
 	}
-	return product, nil
+	return r.GetProductByID(c, ID)
 }
 
 func (r *repository) DeleteProduct(c echo.Context, ID string) error {
