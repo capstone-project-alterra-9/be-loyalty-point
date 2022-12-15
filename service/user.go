@@ -18,6 +18,11 @@ import (
 	// "encoding/hex"
 	"os"
 	"encoding/base64"
+
+	"bytes"
+	"html/template"
+	"log"
+	"path"
 )
 
 const KEY_AES_128 string = "mysecret90123456"
@@ -294,13 +299,30 @@ func (s *Service) GetForgotPassword(c echo.Context, email entity.ForgotPasswordB
 		return err
 	}
 
-	encryptedId := EncryptAES([]byte(KEY_AES_256), userData.ID)
+	// encryptedId := EncryptAES([]byte(KEY_AES_256), userData.ID)
+	var filepath = path.Join("template", "index.html")
+
+	t, err := template.New(filepath).ParseFiles(filepath)
+	if err != nil {
+		log.Println(err)
+	}
+
+	var data = map[string]interface{}{
+		"link": "Learning Golang Web",
+	}
+
+	var tpl bytes.Buffer
+	if err := t.Execute(&tpl, data); err != nil {
+		log.Println(err)
+	}
+
+	result := tpl.String()
 	
 	m := gomail.NewMessage()
 	m.SetHeader("From", "aji.zapar00@gmail.com")
 	m.SetHeader("To", userData.Email)
 	m.SetHeader("Subject", "Password changes request")
-	m.SetBody("text/plain", encryptedId)
+	m.SetBody("text/html", result)
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, "aji.zapar00@gmail.com", os.Getenv("APP_PASSWORD"))
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}

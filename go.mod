@@ -8,7 +8,6 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/labstack/echo/v4 v4.9.1
 	github.com/midtrans/midtrans-go v1.3.6
-	github.com/nu7hatch/gouuid v0.0.0-20131221200532-179d4d0c4d8d
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gorm.io/driver/postgres v1.4.5
