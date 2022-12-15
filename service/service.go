@@ -55,7 +55,7 @@ type trasanctionSvc interface {
 }
 
 type userSvc interface {
-	GetUsersPagination(c echo.Context) ([]entity.Users, error)
+	GetUsersPagination(c echo.Context) ([]entity.UsersView, error)
 	GetUserById(c echo.Context, ID string) (*entity.UsersView, error)
 	UpdateOneById(c echo.Context, ID string, user entity.UpdateUserBinding) (*entity.UsersView, error)
 	DeleteOneById(c echo.Context, userId string) error

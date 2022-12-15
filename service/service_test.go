@@ -47,6 +47,7 @@ var (
 	createUser                       func(c echo.Context, user entity.Users) (*entity.Users, error)
 	createPoints                     func(c echo.Context, userPoints entity.Points) (*entity.Points, error)
 	getUserPoints                    func(c echo.Context, ID string) (*entity.Points, error)
+	getUserPointIgnoreEmpty          func(c echo.Context, ID string) (*entity.Points, error)
 	updateUserPoints                 func(c echo.Context, userPoint *entity.Points) error
 	getUsersPagination               func(c echo.Context) ([]entity.Users, error)
 	getUserByID                      func(c echo.Context, ID string) (*entity.Users, error)
@@ -188,6 +189,10 @@ func (r *allRepositoryMock) CreatePoints(c echo.Context, userPoints entity.Point
 
 func (r *allRepositoryMock) GetUserPoints(c echo.Context, ID string) (*entity.Points, error) {
 	return getUserPoints(c, ID)
+}
+
+func (r *allRepositoryMock) GetUserPointIgnoreEmpty(c echo.Context, ID string) (*entity.Points, error) {
+	return getUserPointIgnoreEmpty(c, ID)
 }
 
 func (r *allRepositoryMock) UpdateUserPoints(c echo.Context, userPoint *entity.Points) error {
