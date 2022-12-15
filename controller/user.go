@@ -69,3 +69,16 @@ func GetCountUsers(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, dto.BuildResponse("Success get total users", result))
 }
+
+func UpdatePasswordByEncryptedID(c echo.Context) error {
+	var NewPassword entity.UpdateUserByEncryptedIdPayload
+	if err := c.Bind(&NewPassword); err != nil {
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to process request", err))
+	}
+
+	err := Service.UpdatePasswordByEncryptedID(c, NewPassword)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get user", err))
+	}
+	return c.JSON(http.StatusOK, dto.BuildResponse("Success to get user", ""))
+}

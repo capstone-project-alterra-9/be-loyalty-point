@@ -68,3 +68,8 @@ type PayloadBinding struct {
 	IssuedAt  time.Time `json:"issued_at"`
 	ExpiredAt time.Time `json:"expired_at"`
 }
+
+type UpdateUserByEncryptedIdPayload struct {
+	EncryptedID		   string `json:"encryptedID"`
+	NewPassword        string `json:"newPassword"`
+}
