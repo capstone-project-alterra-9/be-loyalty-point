@@ -1,26 +1,26 @@
 package dto
 
 type Response struct {
+	Code	int 	`json:"code"`
 	Message string `json:"message"`
-	Errors  any    `json:"errors"`
 	Data    any    `json:"data"`
 }
 
 type EmptyObj struct{}
 
-func BuildResponse(message string, data any) Response {
+func BuildResponse(statusCode int, message string, data any) Response {
 	return Response{
+		Code: statusCode,
 		Message: message,
-		Errors:  EmptyObj{},
 		Data:    data,
 	}
 }
 
-func BuildErrorResponse(message string, err error) Response {
+func BuildErrorResponse(statusCode int, message string, err error) Response {
 	return Response{
+		Code: statusCode,
 		Message: message,
-		Errors:  err.Error(),
-		Data:    EmptyObj{},
+		Data:    err,
 	}
 }
 
