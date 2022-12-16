@@ -55,6 +55,7 @@ type transactionRepo interface {
 	GetTransactionsByMethod(c echo.Context, method string) ([]entity.Transactions, error)
 	GetHistory(c echo.Context, ID string) ([]entity.Transactions, error)
 	GetHistoryByMethod(c echo.Context, ID string, method string) ([]entity.Transactions, error)
+	GetHistoryByMethodCategory(c echo.Context, ID string, method string, category string) ([]entity.Transactions, error)
 	CreateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
 	GetTransactionByID(c echo.Context, ID string) (*entity.Transactions, error)
 	UpdateTransaction(c echo.Context, ID string, transaction *entity.Transactions) (*entity.Transactions, error)
@@ -66,6 +67,7 @@ type userRepo interface {
 	CreateUser(c echo.Context, user entity.Users) (*entity.Users, error)
 	CreatePoints(c echo.Context, userPoints entity.Points) (*entity.Points, error)
 	GetUserPoints(c echo.Context, ID string) (*entity.Points, error)
+	GetUserPointIgnoreEmpty(c echo.Context, ID string) (*entity.Points, error)
 	UpdateUserPoints(c echo.Context, userPoint *entity.Points) error
 	GetUsersPagination(c echo.Context) ([]entity.Users, error)
 	GetUserByID(c echo.Context, ID string) (*entity.Users, error)

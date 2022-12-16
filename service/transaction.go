@@ -222,6 +222,50 @@ func (s *Service) GetHistoryByMethod(c echo.Context, method string) ([]entity.Tr
 	return nil, err
 }
 
+func (s *Service) GetHistoryByMethodCategory(c echo.Context, method string, category string) ([]entity.TransactionsView, error) {
+	user := jwtAuth.ExtractTokenUsername(c)
+	userDomain, err := s.repo.GetUserAuth(c, user)
+	if userDomain != nil {
+		if (method == "buy" || method == "redeem") && (category == "credits" || category == "data-quota" || category == "e-money" || category == "cashout") {
+			transactions, err := s.repo.GetHistoryByMethodCategory(c, userDomain.ID, method, category)
+			if err != nil {
+				return nil, err
+			}
+
+			var transactionsView []entity.TransactionsView
+			for _, transaction := range transactions {
+				product, err := s.repo.GetProductByIDRaw(c, transaction.ProductID)
+				if err != nil {
+					return nil, err
+				}
+				user, err := s.repo.GetUserByIDRaw(c, transaction.UserID)
+				if err != nil {
+					return nil, err
+				}
+				transactionsView = append(transactionsView, entity.TransactionsView{
+					ID:            transaction.ID,
+					CreatedAt:     transaction.CreatedAt,
+					UpdatedAt:     transaction.UpdatedAt,
+					PaymentMethod: transaction.PaymentMethod,
+					UserID:        transaction.UserID,
+					Username:      user.Username,
+					ProductID:     transaction.ProductID,
+					ProductName:   product.Name,
+					Category:      product.Category,
+					SerialNumber:  transaction.SerialNumber,
+					IdentifierNum: transaction.IdentifierNum,
+					Price:         transaction.Price,
+					Status:        transaction.Status,
+				})
+			}
+			return transactionsView, nil
+		} else {
+			return nil, errors.New("method not found")
+		}
+	}
+	return nil, err
+}
+
 func (s *Service) CreateTransactionByUser(c echo.Context, transaction entity.TransactionsBinding) (*entity.TransactionsView, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	userDomain, err := s.repo.GetUserAuth(c, user)

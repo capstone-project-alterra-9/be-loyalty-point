@@ -39,6 +39,7 @@ var (
 	getTransactionsByMethod          func(c echo.Context, method string) ([]entity.Transactions, error)
 	getHistory                       func(c echo.Context, ID string) ([]entity.Transactions, error)
 	getHistoryByMethod               func(c echo.Context, ID string, method string) ([]entity.Transactions, error)
+	getHistoryByMethodCategory       func(c echo.Context, ID string, method string, category string) ([]entity.Transactions, error)
 	createTransaction                func(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
 	getTransactionByID               func(c echo.Context, ID string) (*entity.Transactions, error)
 	updateTransaction                func(c echo.Context, ID string, transaction *entity.Transactions) (*entity.Transactions, error)
@@ -47,6 +48,7 @@ var (
 	createUser                       func(c echo.Context, user entity.Users) (*entity.Users, error)
 	createPoints                     func(c echo.Context, userPoints entity.Points) (*entity.Points, error)
 	getUserPoints                    func(c echo.Context, ID string) (*entity.Points, error)
+	getUserPointIgnoreEmpty          func(c echo.Context, ID string) (*entity.Points, error)
 	updateUserPoints                 func(c echo.Context, userPoint *entity.Points) error
 	getUsersPagination               func(c echo.Context) ([]entity.Users, error)
 	getUserByID                      func(c echo.Context, ID string) (*entity.Users, error)
@@ -158,6 +160,10 @@ func (r *allRepositoryMock) GetHistoryByMethod(c echo.Context, ID string, method
 	return getHistoryByMethod(c, ID, method)
 }
 
+func (r *allRepositoryMock) GetHistoryByMethodCategory(c echo.Context, ID string, method string, category string) ([]entity.Transactions, error) {
+	return getHistoryByMethodCategory(c, ID, method, category)
+}
+
 func (r *allRepositoryMock) CreateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error) {
 	return createTransaction(c, transaction)
 }
@@ -188,6 +194,10 @@ func (r *allRepositoryMock) CreatePoints(c echo.Context, userPoints entity.Point
 
 func (r *allRepositoryMock) GetUserPoints(c echo.Context, ID string) (*entity.Points, error) {
 	return getUserPoints(c, ID)
+}
+
+func (r *allRepositoryMock) GetUserPointIgnoreEmpty(c echo.Context, ID string) (*entity.Points, error) {
+	return getUserPointIgnoreEmpty(c, ID)
 }
 
 func (r *allRepositoryMock) UpdateUserPoints(c echo.Context, userPoint *entity.Points) error {

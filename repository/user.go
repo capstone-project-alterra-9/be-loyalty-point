@@ -31,6 +31,15 @@ func (r *repository) GetUserPoints(c echo.Context, ID string) (*entity.Points, e
 	return userPoints, nil
 }
 
+func (r *repository) GetUserPointIgnoreEmpty(c echo.Context, ID string) (*entity.Points, error) {
+	var userPoints *entity.Points
+	err := r.connection.Find(&userPoints, "user_id = ?", ID).Error
+	if err != nil {
+		return nil, err
+	}
+	return userPoints, nil
+}
+
 func (r *repository) UpdateUserPoints(c echo.Context, userPoint *entity.Points) error {
 	err := r.connection.Model(&entity.Points{}).Where("user_id = ?", userPoint.UserID).Updates(map[string]interface{}{
 		"user_id":     userPoint.UserID,

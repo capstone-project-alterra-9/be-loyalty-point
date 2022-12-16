@@ -101,15 +101,33 @@ func (s *Service) GetUserById(c echo.Context, ID string) (*entity.UsersView, err
 	return nil, err
 }
 
-func (s *Service) GetUsersPagination(c echo.Context) ([]entity.Users, error) {
+func (s *Service) GetUsersPagination(c echo.Context) ([]entity.UsersView, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
+		var result []entity.UsersView
 		users, err := s.repo.GetUsersPagination(c)
 		if err != nil {
 			return nil, err
 		}
-		return users, nil
+		for _, user := range users {
+			userPoint, err := s.repo.GetUserPointIgnoreEmpty(c, user.ID)
+			if err != nil {
+				return nil, err
+			}
+			result = append(result, entity.UsersView{
+				ID:         user.ID,
+				CreatedAt:  user.CreatedAt,
+				UpdatedAt:  user.UpdatedAt,
+				Role:       user.Role,
+				Username:   user.Username,
+				Email:      user.Email,
+				Password:   user.Password,
+				Points:     userPoint.Points,
+				CostPoints: userPoint.CostPoints,
+			})
+		}
+		return result, nil
 	}
 	return nil, err
 }
