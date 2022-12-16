@@ -73,12 +73,12 @@ func GetCountUsers(c echo.Context) error {
 func GetForgotPassword(c echo.Context) error {
 	var forgotPassword entity.ForgotPasswordBinding
 	if err := c.Bind(&forgotPassword); err != nil {
-		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse("Failed to process request", err))
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), err))
 	}
 
 	err := Service.GetForgotPassword(c, forgotPassword)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse("Failed to get total users", err))
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), err))
 	}
-	return c.JSON(http.StatusOK, dto.BuildResponse("Success get total users", ""))
+	return c.JSON(http.StatusOK, dto.BuildResponse(http.StatusOK, http.StatusText(http.StatusOK), nil))
 }
