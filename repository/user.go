@@ -108,3 +108,12 @@ func (r *repository) DeleteUserPointsByUserId(c echo.Context, ID string) error {
 	}
 	return nil
 }
+
+func (r *repository) GetUserByEmail(c echo.Context, email string) (*entity.Users, error) {
+	var userDomain *entity.Users
+	err := r.connection.First(&userDomain, "email = ?", email).Error
+	if userDomain.ID == "" {
+		return nil, err
+	}
+	return userDomain, nil
+}

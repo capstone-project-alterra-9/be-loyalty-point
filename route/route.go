@@ -66,6 +66,7 @@ func New(Service service.Svc) *echo.Echo {
 	eUser.GET("", controller.GetUsersPagination)
 	eUser.POST("/create", controller.CreateUserByAdmin)
 	eUser.GET("/count", controller.GetCountUsers)
+	eApi.GET("/forgot-password", controller.GetForgotPassword)
 
 	return e
 }

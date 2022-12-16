@@ -9,6 +9,7 @@ require (
 	github.com/labstack/echo/v4 v4.9.1
 	github.com/midtrans/midtrans-go v1.3.6
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa
+	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df
 	gorm.io/driver/postgres v1.4.5
 	gorm.io/gorm v1.24.2
 )
@@ -41,5 +42,6 @@ require (
 	golang.org/x/sys v0.0.0-20220908164124-27713097b956 // indirect
 	golang.org/x/text v0.4.0 // indirect
 	golang.org/x/time v0.0.0-20220609170525-579cf78fd858 // indirect
+	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
