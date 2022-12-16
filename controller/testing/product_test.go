@@ -124,3 +124,66 @@ func TestGetProducts(t *testing.T) {
 		}
 	})
 }
+
+func TestGetProductByID(t *testing.T) {
+	e := InitProductsTestAPI()
+	InsertDataProduct()
+	InsertDataAdmin()
+	e.GET("/api/auth/products/:id",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
+
+	// Test Case 1
+	t.Run("Get Product By ID", func(t *testing.T) {
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWlud2ViQGdtYWlsLmNvbSIsImV4cCI6MTc3MDc3MDk2NSwidXNlcm5hbWUiOiJhZG1pbndlYiJ9.qg4vb8IBXbIuL9hK_aNEky59UWet5fF4DzPWVIDwdvQ"
+		request := httptest.NewRequest(http.MethodGet, "/api/auth/products/1", nil)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
+
+		if assert.NoError(t, controller.GetProductByID(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+
+	// // Test Case 2
+	// t.Run("Get Product By Unknown ID", func(t *testing.T) {
+	// 	auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWlud2ViQGdtYWlsLmNvbSIsImV4cCI6MTc3MDc3MDk2NSwidXNlcm5hbWUiOiJhZG1pbndlYiJ9.qg4vb8IBXbIuL9hK_aNEky59UWet5fF4DzPWVIDwdvQ"
+	// 	request := httptest.NewRequest(http.MethodGet, "/api/auth/products/wrong-id", nil)
+	// 	request.Header.Set(echo.HeaderAuthorization, auth)
+	// 	recorder := httptest.NewRecorder()
+	// 	e.ServeHTTP(recorder, request)
+
+	// 	if assert.NoError(t, controller.GetProductByID(e.AcquireContext())) {
+	// 		assert.Equal(t, http.StatusBadRequest, recorder.Code)
+	// 	}
+	// })
+}
+
+func TestGetProductsByMethod(t *testing.T) {
+	e := InitProductsTestAPI()
+	InsertDataProduct()
+	InsertDataAdmin()
+	e.GET("/api/auth/products/redeem",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
+
+	// Test Case 1
+	t.Run("Get Product By Method", func(t *testing.T) {
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWlud2ViQGdtYWlsLmNvbSIsImV4cCI6MTc3MDc3MDk2NSwidXNlcm5hbWUiOiJhZG1pbndlYiJ9.qg4vb8IBXbIuL9hK_aNEky59UWet5fF4DzPWVIDwdvQ"
+		request := httptest.NewRequest(http.MethodGet, "/api/auth/products/redeem", nil)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
+
+		if assert.NoError(t, controller.GetProductsByMethod(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+}
