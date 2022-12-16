@@ -60,15 +60,6 @@ func (r *repository) GetHistoryByMethod(c echo.Context, ID string, method string
 	return transactions, nil
 }
 
-func (r *repository) GetHistoryByMethodCategory(c echo.Context, ID string, method string, category string) ([]entity.Transactions, error) {
-	var transactions []entity.Transactions
-	err := r.connection.Find(&transactions, "user_id = ? AND payment_method = ? AND category = ?", ID, method, category).Error
-	if err != nil {
-		return nil, err
-	}
-	return transactions, nil
-}
-
 func (r *repository) CreateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error) {
 	err := r.connection.Create(transaction).Error
 	if err != nil {
