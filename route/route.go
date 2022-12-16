@@ -33,6 +33,7 @@ func New(Service service.Svc) *echo.Echo {
 	// Routing with JWT
 	eAuth.GET("/history", controller.GetHistory)
 	eAuth.GET("/history/method/:paymentMethod", controller.GetHistoryByMethod)
+	eAuth.GET("/history/method/:paymentMethod/:category", controller.GetHistoryByMethodCategory)
 	eAuth.GET("/history/:id", controller.GetTransactionByID)
 
 	eTransaction := eAuth.Group("/transactions")

@@ -35,6 +35,7 @@ type transactionController interface {
 	GetTransactionsByMethod(c echo.Context) error
 	GetHistory(c echo.Context) error
 	GetHistoryByMethod(c echo.Context) error
+	GetHistoryByMethodCategory(c echo.Context) error
 	GetTransactionByID(c echo.Context) error
 	CreateTransactionByUser(c echo.Context) error
 	CreateTransactionByAdmin(c echo.Context) error

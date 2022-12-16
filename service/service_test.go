@@ -39,6 +39,7 @@ var (
 	getTransactionsByMethod          func(c echo.Context, method string) ([]entity.Transactions, error)
 	getHistory                       func(c echo.Context, ID string) ([]entity.Transactions, error)
 	getHistoryByMethod               func(c echo.Context, ID string, method string) ([]entity.Transactions, error)
+	getHistoryByMethodCategory       func(c echo.Context, ID string, method string, category string) ([]entity.Transactions, error)
 	createTransaction                func(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error)
 	getTransactionByID               func(c echo.Context, ID string) (*entity.Transactions, error)
 	updateTransaction                func(c echo.Context, ID string, transaction *entity.Transactions) (*entity.Transactions, error)
@@ -157,6 +158,10 @@ func (r *allRepositoryMock) GetHistory(c echo.Context, ID string) ([]entity.Tran
 
 func (r *allRepositoryMock) GetHistoryByMethod(c echo.Context, ID string, method string) ([]entity.Transactions, error) {
 	return getHistoryByMethod(c, ID, method)
+}
+
+func (r *allRepositoryMock) GetHistoryByMethodCategory(c echo.Context, ID string, method string, category string) ([]entity.Transactions, error) {
+	return getHistoryByMethodCategory(c, ID, method, category)
 }
 
 func (r *allRepositoryMock) CreateTransaction(c echo.Context, transaction *entity.Transactions) (*entity.Transactions, error) {

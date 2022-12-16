@@ -46,6 +46,7 @@ type trasanctionSvc interface {
 	GetTransactionByID(c echo.Context, ID string) (*entity.TransactionsView, error)
 	GetHistory(c echo.Context) ([]entity.TransactionsView, error)
 	GetHistoryByMethod(c echo.Context, method string) ([]entity.TransactionsView, error)
+	GetHistoryByMethodCategory(c echo.Context, method string, category string) ([]entity.TransactionsView, error)
 	CreateTransactionByUser(c echo.Context, transaction entity.TransactionsBinding) (*entity.TransactionsView, error)
 	CreateTransactionByAdmin(c echo.Context, transaction entity.Transactions) (*entity.TransactionsView, error)
 	UpdateTransactionByAdmin(c echo.Context, ID string, transaction entity.UpdateTransactionBinding) (*entity.TransactionsView, error)

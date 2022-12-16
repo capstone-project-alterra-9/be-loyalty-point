@@ -51,6 +51,16 @@ func GetHistoryByMethod(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.BuildResponse(http.StatusOK, http.StatusText(http.StatusOK), result))
 }
 
+func GetHistoryByMethodCategory(c echo.Context) error {
+	method := c.Param("paymentMethod")
+	category := c.Param("category")
+	result, err := Service.GetHistoryByMethodCategory(c, method, category)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), err))
+	}
+	return c.JSON(http.StatusOK, dto.BuildResponse(http.StatusOK, http.StatusText(http.StatusOK), result))
+}
+
 func CreateTransactionByUser(c echo.Context) error {
 	var transaction entity.TransactionsBinding
 	if err := c.Bind(&transaction); err != nil {
