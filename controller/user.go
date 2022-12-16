@@ -70,13 +70,13 @@ func GetCountUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.BuildResponse(http.StatusOK, http.StatusText(http.StatusOK), result))
 }
 
-func GetForgotPassword(c echo.Context) error {
+func SendEmailForgotPassword(c echo.Context) error {
 	var forgotPassword entity.ForgotPasswordBinding
 	if err := c.Bind(&forgotPassword); err != nil {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), err))
 	}
 
-	err := Service.GetForgotPassword(c, forgotPassword)
+	err := Service.SendEmailForgotPassword(c, forgotPassword)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), err))
 	}

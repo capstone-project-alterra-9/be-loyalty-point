@@ -310,9 +310,9 @@ func (s *Service) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error
 	return userCount, nil
 }
 
-func (s *Service) GetForgotPassword(c echo.Context, email entity.ForgotPasswordBinding) error {
+func (s *Service) SendEmailForgotPassword(c echo.Context, email entity.ForgotPasswordBinding) error {
 
-	userData, err := s.repo.GetUserByEmail(c, "ajizapar080500@gmail.com")
+	userData, err := s.repo.GetUserByEmail(c, email.Email)
 	if err != nil {
 		return err
 	}
