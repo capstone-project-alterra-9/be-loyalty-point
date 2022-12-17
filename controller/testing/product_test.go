@@ -6,6 +6,7 @@ import (
 	"capstone-project/entity"
 	"capstone-project/repository"
 	"capstone-project/service"
+	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -184,6 +185,90 @@ func TestGetProductsByMethod(t *testing.T) {
 
 		if assert.NoError(t, controller.GetProductsByMethod(e.AcquireContext())) {
 			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+}
+
+func TestGetProductsByCategory(t *testing.T) {
+	e := InitProductsTestAPI()
+	InsertDataProduct()
+	InsertDataAdmin()
+	e.GET("/api/auth/products/category/:category",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
+
+	// Test Case 1
+	t.Run("Get Product By Category", func(t *testing.T) {
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWlud2ViQGdtYWlsLmNvbSIsImV4cCI6MTc3MDc3MDk2NSwidXNlcm5hbWUiOiJhZG1pbndlYiJ9.qg4vb8IBXbIuL9hK_aNEky59UWet5fF4DzPWVIDwdvQ"
+		request := httptest.NewRequest(http.MethodGet, "/api/auth/products/category/credits", nil)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
+
+		if assert.NoError(t, controller.GetProductsByCategory(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+}
+
+func TestUpdateProduct(t *testing.T) {
+	e := InitProductsTestAPI()
+	InsertDataProduct()
+	InsertDataAdmin()
+	e.PUT("/api/auth/products/:id",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
+
+	// Test Case 1
+	t.Run("Update Product", func(t *testing.T) {
+		requestBody := strings.NewReader(`{
+			"category": "credits",
+			"name": "test-updated",
+			"description": "test-description-updated",
+			"price": 10000,
+			"stock": 4,
+			"image": "10rb"
+		}`)
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWlud2ViQGdtYWlsLmNvbSIsImV4cCI6MTc3MDc3MDk2NSwidXNlcm5hbWUiOiJhZG1pbndlYiJ9.qg4vb8IBXbIuL9hK_aNEky59UWet5fF4DzPWVIDwdvQ"
+		request := httptest.NewRequest(http.MethodPut, "/api/auth/products/1", requestBody)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
+
+		if assert.NoError(t, controller.UpdateProduct(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+}
+
+func TestDeleteProduct(t *testing.T) {
+	e := InitProductsTestAPI()
+	InsertDataProduct()
+	InsertDataAdmin()
+	e.DELETE("/api/auth/products/:id",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
+
+	// Test Case 1
+	t.Run("Delete Product", func(t *testing.T) {
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWlud2ViQGdtYWlsLmNvbSIsImV4cCI6MTc3MDc3MDk2NSwidXNlcm5hbWUiOiJhZG1pbndlYiJ9.qg4vb8IBXbIuL9hK_aNEky59UWet5fF4DzPWVIDwdvQ"
+		request := httptest.NewRequest(http.MethodDelete, "/api/auth/products/1", nil)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
+
+		if assert.NoError(t, controller.DeleteProduct(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+			log.Println(recorder.Body)
 		}
 	})
 }
