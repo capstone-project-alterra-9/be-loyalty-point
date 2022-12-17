@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	"fmt"
 )
 
 func GetTransactions(c echo.Context) error {
@@ -122,6 +123,7 @@ func CreateMidtransTransaction(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), err))
 	}
 	result, err := Service.CreateMidtransTransaction(c, midtransTransaction)
+	fmt.Println("nilai error ", result)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), err))
 	}
