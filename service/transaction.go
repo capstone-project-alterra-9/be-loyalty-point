@@ -12,7 +12,6 @@ import (
 	"github.com/midtrans/midtrans-go"
 	// "github.com/midtrans/midtrans-go/coreapi"
 	"github.com/midtrans/midtrans-go/snap"
-	"os"
 	// "github.com/midtrans/midtrans-go/iris"
 )
 
@@ -586,7 +585,7 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 
 	// 1. Initiate Snap client
 	var snapServer = snap.Client{}
-	snapServer.New(os.Getenv("SERVER_KEY"), midtrans.Sandbox)
+	snapServer.New("SB-Mid-server-SeSkIpdk530KkwNKBaUg50xd", midtrans.Sandbox)
 	// Use to midtrans.Production if you want Production Environment (accept real transaction).
 
 	// 2. Initiate Snap request param
