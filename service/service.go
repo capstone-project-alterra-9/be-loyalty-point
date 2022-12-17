@@ -38,6 +38,7 @@ type productSvc interface {
 	GetProductByID(c echo.Context, ID string) (*entity.Products, error)
 	UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error)
 	DeleteProduct(c echo.Context, ID string) error
+	GetCountProducts(c echo.Context) (*entity.GetProductsCountView, error)
 }
 
 type trasanctionSvc interface {
