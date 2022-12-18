@@ -6,7 +6,6 @@ import (
 	"capstone-project/entity"
 	"capstone-project/repository"
 	"capstone-project/service"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"os"
@@ -267,7 +266,7 @@ func TestDeleteProduct(t *testing.T) {
 		e.ServeHTTP(recorder, request)
 
 		if assert.NoError(t, controller.DeleteProduct(e.AcquireContext())) {
-			log.Println(recorder.Body)
+			// log.Println(recorder.Body)
 			assert.Equal(t, http.StatusOK, recorder.Code)
 			var products []entity.Products
 			err := entity.DB.Find(&products).Error
