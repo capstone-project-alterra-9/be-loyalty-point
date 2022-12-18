@@ -38,6 +38,7 @@ type productSvc interface {
 	GetProductByID(c echo.Context, ID string) (*entity.Products, error)
 	UpdateProduct(c echo.Context, ID string, product *entity.Products) (*entity.Products, error)
 	DeleteProduct(c echo.Context, ID string) error
+	GetCountProducts(c echo.Context) (*entity.GetProductsCountView, error)
 }
 
 type trasanctionSvc interface {
@@ -62,4 +63,5 @@ type userSvc interface {
 	DeleteOneById(c echo.Context, userId string) error
 	CreateUserByAdmin(c echo.Context, user entity.CreateUserBinding) (*entity.CreateUserView, error)
 	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
+	SendEmailForgotPassword(c echo.Context, email entity.ForgotPasswordBinding) error
 }

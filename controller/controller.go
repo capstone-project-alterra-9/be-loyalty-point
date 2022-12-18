@@ -28,6 +28,7 @@ type productController interface {
 	GetProductByID(c echo.Context) error
 	UpdateProduct(c echo.Context) error
 	DeleteProduct(c echo.Context) error
+	GetCountProducts(c echo.Context) error
 }
 
 type transactionController interface {
@@ -51,6 +52,7 @@ type userController interface {
 	GetUsersPagination(c echo.Context) error
 	UpdateOneByUserId(c echo.Context) error
 	GetCountUsers(c echo.Context) error
+	SendEmailForgotPassword(c echo.Context) error
 }
 
 var Service service.Svc

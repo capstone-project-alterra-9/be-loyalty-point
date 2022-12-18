@@ -135,21 +135,22 @@ func (r *repository) DeleteNSerialNumberByProductID(c echo.Context, ID string, N
 	return nil
 }
 
-// func (r *repository) GetCountProducts(c echo.Context) (*entity.GetProductsCountView, error) {
-// 	var products []entity.Products
+func (r *repository) GetCountProducts(c echo.Context) (*entity.GetProductsCountView, error) {
+	var transactions []entity.Transactions
 
-// 	err := r.connection.Find(&products, "role = ?", "user" ).Error
-// 	err1 := r.connection.Find(&products, "role = ?", "user" ).Error
+	var stockSum int
 
-// 	if err != nil {
-// 		return nil, err
-// 	}
+	err := r.connection.Find(&transactions, "status = ?", "success" ).Error
+	if err != nil {
+		return nil, err
+	}
 
-// 	if err1 != nil {
-// 		return nil, err1
-// 	}
-// 	return &entity.GetProductsCountView{
-// 		TotalSoldProduct: 	20,
-// 		TotalStockProduct:	20,
-// 	}, nil
-// }
+	err1 := r.connection.Raw("SELECT SUM(stock) from products").Scan(&stockSum).Error
+	if err1 != nil {
+		return nil, err1
+	}
+	return &entity.GetProductsCountView{
+		TotalSoldProduct: 	len(transactions),
+		TotalStockProduct:	stockSum,
+	}, nil
+}

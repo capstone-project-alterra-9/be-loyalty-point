@@ -68,3 +68,7 @@ type PayloadBinding struct {
 	IssuedAt  time.Time `json:"issued_at"`
 	ExpiredAt time.Time `json:"expired_at"`
 }
+
+type ForgotPasswordBinding struct {
+	Email string `json:"email"`
+}

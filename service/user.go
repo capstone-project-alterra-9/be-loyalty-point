@@ -10,7 +10,39 @@ import (
 	guuid "github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"golang.org/x/crypto/bcrypt"
+
+	"crypto/tls"
+
+	"gopkg.in/gomail.v2"
+	"crypto/aes"
+	// "encoding/hex"
+	"os"
+	"encoding/base64"
+
+	"bytes"
+	"html/template"
+	"log"
+	"path"
 )
+
+const KEY_AES_128 string = "mysecret90123456"
+const KEY_AES_192 string = "mysecret9012345612345678"
+const KEY_AES_256 string = "mysecret901234561234567812345678"
+
+func EncryptAES(key []byte, plaintext string) string {
+
+	c, err := aes.NewCipher(key)
+	if err != nil {
+		panic(err)
+	}
+
+	out := make([]byte, len(plaintext))
+
+	c.Encrypt(out, []byte(plaintext))
+
+	return base64.StdEncoding.EncodeToString(out)
+	
+}
 
 // buat fitur creat by admin, kurleb sama kaya register -- uda
 // update user pake data yang sama --
@@ -276,4 +308,46 @@ func (s *Service) GetCountUsers(c echo.Context) (*entity.GetUserCountView, error
 		return nil, err
 	}
 	return userCount, nil
+}
+
+func (s *Service) SendEmailForgotPassword(c echo.Context, email entity.ForgotPasswordBinding) error {
+
+	userData, err := s.repo.GetUserByEmail(c, email.Email)
+	if err != nil {
+		return err
+	}
+
+	// encryptedId := EncryptAES([]byte(KEY_AES_256), userData.ID)
+	var filepath = path.Join("template", "index.html")
+
+	t, err := template.New(filepath).ParseFiles(filepath)
+	if err != nil {
+		log.Println(err)
+	}
+
+	var data = map[string]interface{}{
+		"link": "Learning Golang Web",
+	}
+
+	var tpl bytes.Buffer
+	if err := t.Execute(&tpl, data); err != nil {
+		log.Println(err)
+	}
+
+	result := tpl.String()
+	
+	m := gomail.NewMessage()
+	m.SetHeader("From", "aji.zapar00@gmail.com")
+	m.SetHeader("To", userData.Email)
+	m.SetHeader("Subject", "Password changes request")
+	m.SetBody("text/html", result)
+
+	d := gomail.NewDialer("smtp.gmail.com", 587, "aji.zapar00@gmail.com", os.Getenv("APP_PASSWORD"))
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	if err := d.DialAndSend(m); err != nil {
+		return err
+	}
+
+	return nil
 }
