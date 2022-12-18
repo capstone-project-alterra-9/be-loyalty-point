@@ -267,8 +267,12 @@ func TestDeleteProduct(t *testing.T) {
 		e.ServeHTTP(recorder, request)
 
 		if assert.NoError(t, controller.DeleteProduct(e.AcquireContext())) {
-			assert.Equal(t, http.StatusOK, recorder.Code)
 			log.Println(recorder.Body)
+			assert.Equal(t, http.StatusOK, recorder.Code)
+			var products []entity.Products
+			err := entity.DB.Find(&products).Error
+			assert.NoError(t, err)
+			assert.Equal(t, 0, len(products))
 		}
 	})
 }
