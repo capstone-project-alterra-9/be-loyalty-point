@@ -14,7 +14,6 @@ import (
 	"github.com/midtrans/midtrans-go/snap"
 	"os"
 	// "github.com/midtrans/midtrans-go/iris"
-	"os"
 )
 
 func (s *Service) GetTransactions(c echo.Context) ([]entity.TransactionsView, error) {
