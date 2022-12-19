@@ -46,6 +46,7 @@ type productRepo interface {
 	DeleteProduct(c echo.Context, ID string) error
 	DeleteAllSerialNumberByProductID(c echo.Context, ID string) error
 	DeleteNSerialNumberByProductID(c echo.Context, ID string, N int) error
+	GetCountProducts(c echo.Context) (*entity.GetProductsCountView, error)
 }
 
 type transactionRepo interface {

@@ -28,6 +28,7 @@ type productController interface {
 	GetProductByID(c echo.Context) error
 	UpdateProduct(c echo.Context) error
 	DeleteProduct(c echo.Context) error
+	GetCountProducts(c echo.Context) error
 }
 
 type transactionController interface {

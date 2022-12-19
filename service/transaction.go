@@ -12,6 +12,7 @@ import (
 	"github.com/midtrans/midtrans-go"
 	// "github.com/midtrans/midtrans-go/coreapi"
 	"github.com/midtrans/midtrans-go/snap"
+	"os"
 	// "github.com/midtrans/midtrans-go/iris"
 	"os"
 )
@@ -578,6 +579,7 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 	if err != nil {
 		return nil, err
 	}
+
 	productDomain, err := s.repo.GetProductByID(c, transaction.ProductID)
 	if err != nil {
 		return nil, err
@@ -585,7 +587,7 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 
 	// 1. Initiate Snap client
 	var snapServer = snap.Client{}
-	snapServer.New(os.Getenv("SECRET_KEY"), midtrans.Sandbox)
+	snapServer.New(os.Getenv("SERVER_KEY"), midtrans.Sandbox)
 	// Use to midtrans.Production if you want Production Environment (accept real transaction).
 
 	// 2. Initiate Snap request param
@@ -603,8 +605,8 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 	// Initiate Snap Request
 	snapReq := &snap.Request{
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID:  "12345",
-			GrossAmt: 200000,
+			OrderID:  (guuid.New()).String(),
+			GrossAmt: int64(productDomain.Price),
 		},
 		CreditCard: &snap.CreditCardDetails{
 			Secure: true,
@@ -629,10 +631,7 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 	}
 
 	// 3. Execute request create Snap transaction to Midtrans Snap API
-	snapResp, err := snapServer.CreateTransaction(snapReq)
-	if err != nil {
-		return nil, err
-	}
+	snapResp, _ := snapServer.CreateTransaction(snapReq)
 
 	return &entity.MidtransTransactionView{
 		Token:     snapResp.Token,

@@ -122,6 +122,7 @@ func CreateMidtransTransaction(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), err))
 	}
 	result, err := Service.CreateMidtransTransaction(c, midtransTransaction)
+
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), err))
 	}
