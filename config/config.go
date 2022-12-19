@@ -22,6 +22,7 @@ func InitDatabase() *gorm.DB {
 		dbPort,
 		dbName,
 	)
+
 	var err error
 	entity.DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
@@ -44,7 +45,7 @@ func InitDatabaseTest() *gorm.DB {
 		dbPortTest,
 	)
 	var err error
-	entity.DB, err = gorm.Open(postgres.Open(dsnTest), &gorm.Config{})
+	entity.DB, err = gorm.Open(mysql.Open(dsnTest), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
