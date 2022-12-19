@@ -1,4 +1,4 @@
-package user_test
+package controller
 
 import (
 	"capstone-project/middlewares"
