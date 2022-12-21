@@ -11,6 +11,7 @@ type Controller interface {
 	productController
 	transactionController
 	userController
+	faqController
 }
 
 type authController interface {
@@ -53,6 +54,11 @@ type userController interface {
 	UpdateOneByUserId(c echo.Context) error
 	GetCountUsers(c echo.Context) error
 	SendEmailForgotPassword(c echo.Context) error
+}
+
+type faqController interface {
+	GetFaqs(c echo.Context) error
+	CreateFaq(c echo.Context) error
 }
 
 var Service service.Svc

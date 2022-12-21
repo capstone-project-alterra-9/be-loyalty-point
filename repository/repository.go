@@ -22,6 +22,7 @@ type Repo interface {
 	productRepo
 	transactionRepo
 	userRepo
+	faqRepo
 }
 
 type authRepo interface {
@@ -76,6 +77,11 @@ type userRepo interface {
 	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
 	DeleteUserPointsByUserId(c echo.Context, ID string) error
 	GetUserByEmail(c echo.Context, email string) (*entity.Users, error)
+}
+
+type faqRepo interface {
+	GetFaqs(c echo.Context) ([]entity.FAQ, error)
+	CreateFaq(c echo.Context, user entity.FAQ) (*entity.FAQ, error)
 }
 
 // type paginationRepo interface {

@@ -68,5 +68,11 @@ func New(Service service.Svc) *echo.Echo {
 	eUser.GET("/count", controller.GetCountUsers)
 	eApi.POST("/forgot-password", controller.SendEmailForgotPassword)
 
+	//faq endpoint 
+	eFaq := eApi.Group("/faqs")
+	eFaq.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
+	eFaq.GET("", controller.GetFaqs)
+	eFaq.POST("/create", controller.CreateFaq)
+
 	return e
 }

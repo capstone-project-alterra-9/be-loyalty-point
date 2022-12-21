@@ -72,3 +72,9 @@ type PayloadBinding struct {
 type ForgotPasswordBinding struct {
 	Email string `json:"email"`
 }
+
+type FAQPayloadBinding struct {
+	Category  	string    `json:"category"`
+	Title  		string `json:"title"`
+	Body 		string `json:"body"`
+}

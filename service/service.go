@@ -22,6 +22,7 @@ type Svc interface {
 	productSvc
 	trasanctionSvc
 	userSvc
+	faqSvc
 }
 
 type authSvc interface {
@@ -65,3 +66,9 @@ type userSvc interface {
 	GetCountUsers(c echo.Context) (*entity.GetUserCountView, error)
 	SendEmailForgotPassword(c echo.Context, email entity.ForgotPasswordBinding) error
 }
+
+type faqSvc interface {
+	GetFaqs(c echo.Context) ([]entity.FAQ, error)
+	CreateFaq(c echo.Context, faq entity.FAQPayloadBinding) (*entity.FAQ, error)
+}
+

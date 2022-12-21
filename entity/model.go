@@ -65,6 +65,16 @@ type Transactions struct {
 	Status        string         `gorm:"type:varchar(20);not null" json:"status"`
 }
 
+type FAQ struct {
+	ID            	string         	`gorm:"primaryKey"`
+	CreatedAt     	time.Time      	`gorm:"type:timestamp;not null" json:"createdAt"`
+	UpdatedAt     	time.Time      	`gorm:"type:timestamp;not null" json:"updatedAt"`
+	DeletedAt     	gorm.DeletedAt 	`gorm:"index" json:"deletedAt"`
+	Category		string         	`gorm:"type:varchar(100);not null" json:"category"`
+	Title        	string         	`gorm:"type:varchar(100);not null" json:"title"`
+	Body     		string         	`gorm:"type:varchar(500);not null" json:"body"`
+}
+
 // type Pagination struct {
 // 	Limit      int         `json:"limit,omitempty;query:limit"`
 // 	Page       int         `json:"page,omitempty;query:page"`
