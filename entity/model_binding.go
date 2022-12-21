@@ -78,3 +78,8 @@ type FAQPayloadBinding struct {
 	Title  		string `json:"title"`
 	Body 		string `json:"body"`
 }
+
+type Paginate struct {
+	Limit int
+	Page  int
+ }
