@@ -4,7 +4,7 @@ import (
 	"capstone-project/dto"
 	"capstone-project/entity"
 	"net/http"
-
+	"strconv"
 	"github.com/labstack/echo/v4"
 )
 
@@ -18,7 +18,19 @@ func DeleteOneById(c echo.Context) error {
 }
 
 func GetUsersPagination(c echo.Context) error {
-	users, err := Service.GetUsersPagination(c)
+	limit,_ := strconv.Atoi(c.QueryParam("limit"))
+	page,_ := strconv.Atoi(c.QueryParam("page"))
+	var query entity.Paginate
+
+	err := c.Bind(&query)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, dto.BuildErrorResponse(http.StatusBadRequest, http.StatusText(http.StatusBadRequest), err))
+	} else {
+		query.Limit = limit;
+		query.Page = page;
+	}
+
+	users, err := Service.GetUsersPagination(c, query)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), err))
 	}
