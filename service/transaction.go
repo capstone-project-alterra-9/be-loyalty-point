@@ -586,7 +586,7 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 
 	// 1. Initiate Snap client
 	var snapServer = snap.Client{}
-	snapServer.New(os.Getenv("SERVER_KEY"), midtrans.Sandbox)
+	snapServer.New(os.Getenv("SECRET_KEY"), midtrans.Sandbox)
 	// Use to midtrans.Production if you want Production Environment (accept real transaction).
 
 	// 2. Initiate Snap request param
