@@ -408,10 +408,6 @@ func (s *Service) CreateTransactionByAdmin(c echo.Context, transaction entity.Tr
 				if err != nil {
 					return nil, err
 				}
-			} else if transaction.PaymentMethod == "buy" {
-				// payment method buy integration with midtrans
-				// if midtrans payment gateway succes then update user points ( increase points ), update stock ( decrease stock ), update serial status ( unavailable )
-				return nil, errors.New("midtrans payment gateway not implemented yet")
 			} else {
 				return nil, errors.New("payment method not found")
 			}
@@ -573,6 +569,7 @@ func (s *Service) GetCountTransactions(c echo.Context) (*entity.GetTransactionsC
 }
 
 func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.MidtransTransactionBinding) (*entity.MidtransTransactionView, error) {
+	var transactionDomain entity.Transactions;
 
 	userDomain, err := s.repo.GetUserByID(c, transaction.UserId)
 	if err != nil {
@@ -583,14 +580,8 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 	if err != nil {
 		return nil, err
 	}
-
-	// 1. Initiate Snap client
 	var snapServer = snap.Client{}
 	snapServer.New(os.Getenv("SECRET_KEY"), midtrans.Sandbox)
-	// Use to midtrans.Production if you want Production Environment (accept real transaction).
-
-	// 2. Initiate Snap request param
-	// Initiate Customer address
 	custAddress := &midtrans.CustomerAddress{
 		FName:       userDomain.Username,
 		LName:       userDomain.Username,
@@ -635,10 +626,46 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 	}
 
 	// 3. Execute request create Snap transaction to Midtrans Snap API
-	snapResp, _ := snapServer.CreateTransaction(snapReq)
+	snapResp, err := snapServer.CreateTransaction(snapReq)
+
+	transactionDomain.ID = snapResp.Token
+	transactionDomain.Status = "pending"
+	transactionDomain.UserID = transaction.UserId
+	transactionDomain.ProductID = transaction.ProductID
+	transactionDomain.SerialNumber = 817238172382
+	transactionDomain.IdentifierNum = "085159794050"
+	transactionDomain.Price = productDomain.Price
+	transactionDomain.PaymentMethod = "buy"
+
+	_, err = s.repo.CreateTransaction(c, &transactionDomain)
+	if err != nil {
+		return nil, err
+	}
 
 	return &entity.MidtransTransactionView{
 		Token:     snapResp.Token,
 		DirectUrl: snapResp.RedirectURL,
 	}, nil
+}
+
+func (s *Service) HandlingPaymentStatus(c echo.Context, token string, status int) (string, error) {
+	user := jwtAuth.ExtractTokenUsername(c)
+	_, err := s.repo.GetAuth(c, user)
+	if err != nil {
+		return "", err
+	}
+
+	transactionDomain, err := s.repo.GetTransactionByID(c, token)
+
+	if status == 409 {
+		transactionDomain.Status = "sukses"
+	} else if status == 406 {
+		transactionDomain.Status = "pending"
+	}
+
+	_, err = s.repo.UpdateTransaction(c, token, transactionDomain)
+	if err != nil {
+		return "", err
+	}
+	return "Transaksi Berhasil", nil
 }

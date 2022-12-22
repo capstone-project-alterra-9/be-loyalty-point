@@ -45,6 +45,7 @@ type transactionController interface {
 	DeleteTransactionByAdmin(c echo.Context) error
 	GetCountTransactions(c echo.Context) error
 	CreateMidtransTransaction(c echo.Context) error
+	HandlingPaymentStatus(c echo.Context) error
 }
 
 type userController interface {

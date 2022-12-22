@@ -4,8 +4,9 @@ import (
 	"capstone-project/dto"
 	"capstone-project/entity"
 	"net/http"
-	"fmt"
+	// "fmt"
 	"github.com/labstack/echo/v4"
+	"strconv"
 )
 
 func GetTransactions(c echo.Context) error {
@@ -129,8 +130,13 @@ func CreateMidtransTransaction(c echo.Context) error {
 	return c.JSON(http.StatusOK, dto.BuildResponse(http.StatusOK, http.StatusText(http.StatusOK), result))
 }
 
-func HandlingPaymentSuccess(c echo.Context) error {
-	orderId := c.QueryParam("order_id")
-	fmt.Println(`this is order id `, orderId);
-	return c.JSON(http.StatusOK, dto.BuildResponse(http.StatusOK, http.StatusText(http.StatusOK), "Selamat pembayaran anda berhasil"))
+func HandlingPaymentStatus(c echo.Context) error {
+	token := c.QueryParam("token")
+	status,_ := strconv.Atoi(c.Param("status"))
+
+	result, err := Service.HandlingPaymentStatus(c, token, status)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, dto.BuildErrorResponse(http.StatusInternalServerError, http.StatusText(http.StatusInternalServerError), err))
+	}
+	return c.JSON(http.StatusOK, dto.BuildResponse(http.StatusOK, http.StatusText(http.StatusOK), result))
 }

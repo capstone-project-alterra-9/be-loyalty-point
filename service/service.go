@@ -55,6 +55,7 @@ type trasanctionSvc interface {
 	DeleteTransactionByAdmin(c echo.Context, transactionID string) error
 	GetCountTransactions(c echo.Context) (*entity.GetTransactionsCountView, error)
 	CreateMidtransTransaction(c echo.Context, transaction entity.MidtransTransactionBinding) (*entity.MidtransTransactionView, error)
+	HandlingPaymentStatus(c echo.Context, token string, status int) (string, error)
 }
 
 type userSvc interface {

@@ -46,7 +46,7 @@ func New(Service service.Svc) *echo.Echo {
 	eTransaction.DELETE("/:id", controller.DeleteTransactionByAdmin)
 	eTransaction.GET("/count", controller.GetCountTransactions)
 	eTransaction.POST("/midtrans", controller.CreateMidtransTransaction)
-	eApi.GET("/transactions/payment-success", controller.HandlingPaymentSuccess)
+	eTransaction.POST("/payment-status/:status", controller.HandlingPaymentStatus)
 
 	eProduct := eAuth.Group("/products")
 	eProduct.POST("", controller.CreateProduct)
