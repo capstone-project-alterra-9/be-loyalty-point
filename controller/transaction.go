@@ -128,3 +128,7 @@ func CreateMidtransTransaction(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, dto.BuildResponse(http.StatusOK, http.StatusText(http.StatusOK), result))
 }
+
+func HandlingPaymentSuccess(c echo.Context) error {
+	return c.JSON(http.StatusOK, dto.BuildResponse(http.StatusOK, http.StatusText(http.StatusOK), "Selamat pembayaran anda berhasil"))
+}
