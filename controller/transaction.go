@@ -130,5 +130,7 @@ func CreateMidtransTransaction(c echo.Context) error {
 }
 
 func HandlingPaymentSuccess(c echo.Context) error {
+	token := c.Param("token")
+	fmt.Println(`this is token `, token);
 	return c.JSON(http.StatusOK, dto.BuildResponse(http.StatusOK, http.StatusText(http.StatusOK), "Selamat pembayaran anda berhasil"))
 }
