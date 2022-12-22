@@ -134,20 +134,21 @@ func TestRegister(t *testing.T) {
 	})
 }
 
-func TestGenerateRefreshToken(t *testing.T) {
-	e := InitAuthTestAPI()
-	// Test Case 1
-	t.Run("Generate Refresh Token", func(t *testing.T) {
-		requestBody := strings.NewReader(`{
-			"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWlud2ViQGdtYWlsLmNvbSIsImV4cCI6MTY3MDc3MDk2NSwidXNlcm5hbWUiOiJhZG1pbndlYiJ9.vvVtcnUObaAQwgkCIo2i-jQtoGLWog41hhRuYxefN8o"
-		}`)
-		request := httptest.NewRequest(http.MethodPost, "/api/refresh-token", requestBody)
-		request.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
-		recorder := httptest.NewRecorder()
-		c := e.NewContext(request, recorder)
+// func TestGenerateRefreshToken(t *testing.T) {
+// 	e := InitAuthTestAPI()
+// 	// Test Case 1
+// 	t.Run("Generate Refresh Token", func(t *testing.T) {
+// 		requestBody := strings.NewReader(`{
+// 			"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWlud2ViQGdtYWlsLmNvbSIsImV4cCI6MTY3MDc3MDk2NSwidXNlcm5hbWUiOiJhZG1pbndlYiJ9.EEvWHcfObNQnDEwXQPFJKsG2sNm1l_SiqxmYPNJdnfk"
+// 		}`)
+// 		request := httptest.NewRequest(http.MethodPost, "/api/refresh-token", requestBody)
+// 		request.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
+// 		recorder := httptest.NewRecorder()
+// 		c := e.NewContext(request, recorder)
 
-		if assert.NoError(t, controller.GenerateRefreshToken(c)) {
-			assert.Equal(t, http.StatusOK, recorder.Code)
-		}
-	})
-}
+// 		if assert.NoError(t, controller.GenerateRefreshToken(c)) {
+// 			assert.Equal(t, http.StatusOK, recorder.Code)
+// 			log.Println(recorder.Body.String())
+// 		}
+// 	})
+// }
