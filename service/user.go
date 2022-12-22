@@ -101,12 +101,12 @@ func (s *Service) GetUserById(c echo.Context, ID string) (*entity.UsersView, err
 	return nil, err
 }
 
-func (s *Service) GetUsersPagination(c echo.Context, query entity.Paginate) (*entity.PaginationView, error) {
+func (s *Service) GetUsersPagination(c echo.Context) ([]entity.UsersView, error) {
 	user := jwtAuth.ExtractTokenUsername(c)
 	adminAuth, err := s.repo.GetAdminAuth(c, user)
 	if adminAuth != nil {
 		var result []entity.UsersView
-		users, err := s.repo.GetUsersPagination(c, query)
+		users, err := s.repo.GetUsersPagination(c)
 		if err != nil {
 			return nil, err
 		}
@@ -128,12 +128,7 @@ func (s *Service) GetUsersPagination(c echo.Context, query entity.Paginate) (*en
 			})
 		}
 
-		return &entity.PaginationView{
-			Docs: result,
-			Limit: query.Limit,
-			Page: query.Page,
-			TotalDocs: len(result),	
-		}, nil
+		return result, nil
 	}
 	return nil, err
 }

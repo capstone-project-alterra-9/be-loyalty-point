@@ -81,10 +81,3 @@ type RefreshTokenView struct {
 	Token    string `json:"token"`
 	Duration string `json:"duration"`
 }
-
-type PaginationView struct {
-	Docs 		any	`json:"docs"`
-	Limit		int	`json:"limit"`
-	Page		int `json:"page"`
-	TotalDocs	int `json:"totalDocs"`
-}

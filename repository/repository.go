@@ -70,7 +70,7 @@ type userRepo interface {
 	GetUserPoints(c echo.Context, ID string) (*entity.Points, error)
 	GetUserPointIgnoreEmpty(c echo.Context, ID string) (*entity.Points, error)
 	UpdateUserPoints(c echo.Context, userPoint *entity.Points) error
-	GetUsersPagination(c echo.Context, query entity.Paginate) ([]entity.Users, error)
+	GetUsersPagination(c echo.Context) ([]entity.Users, error)
 	GetUserByID(c echo.Context, ID string) (*entity.Users, error)
 	UpdateOneByUserId(c echo.Context, user *entity.Users) (*entity.Users, error)
 	DeleteUserById(c echo.Context, ID string) error
