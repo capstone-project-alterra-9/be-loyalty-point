@@ -600,11 +600,13 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 		Postcode:    "16000",
 		CountryCode: "IDN",
 	}
-
+	
+	orderId := (guuid.New()).String();
+	callbackUrl := "https://staging-be-loyalty-point-agent.herokuapp.com/api/transactions/payment-success?order_id" + orderId
 	// Initiate Snap Request
 	snapReq := &snap.Request{
 		TransactionDetails: midtrans.TransactionDetails{
-			OrderID:  (guuid.New()).String(),
+			OrderID:  orderId,
 			GrossAmt: int64(productDomain.Price),
 		},
 		CreditCard: &snap.CreditCardDetails{
@@ -626,6 +628,9 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 				Qty:   1,
 				Name:  productDomain.Name,
 			},
+		},
+		Callbacks: &snap.Callbacks {
+			Finish: callbackUrl,
 		},
 	}
 
