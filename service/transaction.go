@@ -658,7 +658,7 @@ func (s *Service) HandlingPaymentStatus(c echo.Context, token string, status int
 	transactionDomain, err := s.repo.GetTransactionByID(c, token)
 
 	if status == 409 {
-		transactionDomain.Status = "sukses"
+		transactionDomain.Status = "success"
 	} else if status == 406 {
 		transactionDomain.Status = "pending"
 	}
