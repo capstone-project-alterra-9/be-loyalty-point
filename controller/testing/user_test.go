@@ -159,10 +159,60 @@ func TestDeleteUserById(t *testing.T) {
 		if assert.NoError(t, controller.DeleteOneById(e.AcquireContext())) {
 			// log.Println(recorder.Body)
 			assert.Equal(t, http.StatusOK, recorder.Code)
-			var products []entity.Products
-			err := entity.DB.Find(&products).Error
+			var users []entity.Users
+			err := entity.DB.Find(&users, "role = ?", "user").Error
 			assert.NoError(t, err)
-			assert.Equal(t, 0, len(products))
+			assert.Equal(t, 0, len(users))
+		}
+	})
+}
+
+func TestCountGetUsers(t *testing.T) {
+	e := InitUsersTestAPI()
+	e.GET("/api/users/count",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
+
+	// Test Case 1
+	t.Run("Get Count Users", func(t *testing.T) {
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFnaS50ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY3MTc5ODQ3NCwidXNlcm5hbWUiOiJhZ2lwcm9kdWN0aW9uIn0.BSl2OssGIE0PAlf3z4Z8RDTeEzaVzJvlVcDpUZij_DQ"
+		request := httptest.NewRequest(http.MethodGet, "/api/users/count", nil)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
+
+		if assert.NoError(t, controller.GetCountUsers(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+}
+
+func TestSendEmailForgotPassword(t *testing.T) {
+	e := InitUsersTestAPI()
+	e.POST("/api/forgot-password",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
+
+	// Test Case 1
+	t.Run("Create User by admin", func(t *testing.T) {
+		requestBody := strings.NewReader(`{
+			"email": "ajizapar080500@gmail.com"
+		}`)
+
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFnaS50ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY3MTc5ODQ3NCwidXNlcm5hbWUiOiJhZ2lwcm9kdWN0aW9uIn0.BSl2OssGIE0PAlf3z4Z8RDTeEzaVzJvlVcDpUZij_DQ"
+		request := httptest.NewRequest(http.MethodPost, "/api/forgot-password", requestBody)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
+
+		if assert.NoError(t, controller.SendEmailForgotPassword(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
 		}
 	})
 }
