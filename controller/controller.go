@@ -55,6 +55,7 @@ type userController interface {
 	UpdateOneByUserId(c echo.Context) error
 	GetCountUsers(c echo.Context) error
 	SendEmailForgotPassword(c echo.Context) error
+	CreateUserByAdmin(c echo.Context) error
 }
 
 type faqController interface {
