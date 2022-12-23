@@ -9,11 +9,10 @@ import (
 	guuid "github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 
-	"github.com/midtrans/midtrans-go"
-	// "github.com/midtrans/midtrans-go/coreapi"
-	"github.com/midtrans/midtrans-go/snap"
 	"os"
-	// "github.com/midtrans/midtrans-go/iris"
+
+	"github.com/midtrans/midtrans-go"
+	"github.com/midtrans/midtrans-go/snap"
 )
 
 func (s *Service) GetTransactions(c echo.Context) ([]entity.TransactionsView, error) {
@@ -569,7 +568,7 @@ func (s *Service) GetCountTransactions(c echo.Context) (*entity.GetTransactionsC
 }
 
 func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.MidtransTransactionBinding) (*entity.MidtransTransactionView, error) {
-	var transactionDomain entity.Transactions;
+	var transactionDomain entity.Transactions
 
 	userDomain, err := s.repo.GetUserByID(c, transaction.UserId)
 	if err != nil {
@@ -591,8 +590,8 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 		Postcode:    "16000",
 		CountryCode: "IDN",
 	}
-	
-	orderId := (guuid.New()).String();
+
+	orderId := (guuid.New()).String()
 	callbackUrl := "https://staging-be-loyalty-point-agent.herokuapp.com/api/transactions/payment-success?order_id" + orderId
 	// Initiate Snap Request
 	snapReq := &snap.Request{
@@ -620,7 +619,7 @@ func (s *Service) CreateMidtransTransaction(c echo.Context, transaction entity.M
 				Name:  productDomain.Name,
 			},
 		},
-		Callbacks: &snap.Callbacks {
+		Callbacks: &snap.Callbacks{
 			Finish: callbackUrl,
 		},
 	}

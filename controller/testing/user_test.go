@@ -1,119 +1,218 @@
 package controller
 
 import (
-	"capstone-project/middlewares"
-	_assignmentMock "capstone-project/controller/mocks"
+	"capstone-project/config"
+	"capstone-project/controller"
+	"capstone-project/entity"
+	"capstone-project/repository"
+	"capstone-project/service"
+	"net/http"
+	"net/http/httptest"
+	"os"
+	"strings"
 	"testing"
 
+	"github.com/golang-jwt/jwt"
+	"github.com/joho/godotenv"
+	"github.com/labstack/echo/v4"
+	mid "github.com/labstack/echo/v4/middleware"
 	"github.com/stretchr/testify/assert"
 )
 
-var (
-	assignmentRepository _assignmentMock.Repository
-	assignmentService    assignments.Usecase
-
-	assignmentDomain assignments.Domain
-)
-
-func TestMain(m *testing.M) {
-	assignmentService = assignments.NewAssignmentUsecase(&assignmentRepository, &middlewares.ConfigJWT{})
-
-	assignmentDomain = assignments.Domain{
-		IdAssignment        : "",  
-		Name     			: "Tugas 1",         	
-		Deadline			: "2022-11-05 13:45:20.930",     	
-		Class				: "10",
+func InitUsersTestAPI() *echo.Echo {
+	err := godotenv.Load("../../.env")
+	if err != nil {
+		panic(err)
 	}
-
-	m.Run()
+	db := config.InitDatabase()
+	repository := repository.NewRepository(db)
+	Service := service.NewService(repository)
+	controller.NewController(Service)
+	e := echo.New()
+	return e
 }
 
-func TestGetAll(t *testing.T) {
-	t.Run("Get All Assignment | Valid", func(t *testing.T) {
-		assignmentRepository.On("GetAssignments").Return([]assignments.Domain{assignmentDomain}).Once()
+func TestGetUsers(t *testing.T) {
+	e := InitUsersTestAPI()
+	e.GET("/api/users",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
 
-		result := assignmentService.GetAssignments()
+	// Test Case 1
+	t.Run("Get Users", func(t *testing.T) {
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFnaS50ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY3MTc5ODQ3NCwidXNlcm5hbWUiOiJhZ2lwcm9kdWN0aW9uIn0.BSl2OssGIE0PAlf3z4Z8RDTeEzaVzJvlVcDpUZij_DQ"
+		request := httptest.NewRequest(http.MethodGet, "/api/users", nil)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
 
-		assert.Equal(t, 1, len(result))
-	})
-
-	t.Run("Get All Assignment | InValid", func(t *testing.T) {
-		assignmentRepository.On("GetAssignments").Return([]assignments.Domain{}).Once()
-
-		result := assignmentService.GetAssignments()
-
-		assert.Equal(t, 0, len(result))
+		if assert.NoError(t, controller.GetUsersPagination(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
 	})
 }
 
-// func TestGetByID(t *testing.T) {
-// 	t.Run("Get By ID | Valid", func(t *testing.T) {
-// 		assignmentRepository.On("GetByID", "7111a840-3099-4c62-85b6-00d665d42cba").Return(assignmentDomain).Once()
+func TestCreateUserByAdmin(t *testing.T) {
+	e := InitUsersTestAPI()
+	e.POST("/api/users/create",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
 
-// 		result := assignmentService.GetByID("7111a840-3099-4c62-85b6-00d665d42cba")
+	// Test Case 1
+	t.Run("Create User by admin", func(t *testing.T) {
+		requestBody := strings.NewReader(`{
+			"username" : "test12345",
+			"email" : "test356@gmail.com",
+			"password" : "testpassword01",
+			"point": 1000
+		}`)
 
-// 		assert.NotNil(t, result)
-// 	})
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFnaS50ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY3MTc5ODQ3NCwidXNlcm5hbWUiOiJhZ2lwcm9kdWN0aW9uIn0.BSl2OssGIE0PAlf3z4Z8RDTeEzaVzJvlVcDpUZij_DQ"
+		request := httptest.NewRequest(http.MethodPost, "/api/users/create", requestBody)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
 
-// 	t.Run("Get By ID | InValid", func(t *testing.T) {
-// 		assignmentRepository.On("GetByID", "-7111a840-3099-4c62-85b6-00d665d42cba").Return(assignments.Domain{}).Once()
+		if assert.NoError(t, controller.CreateUserByAdmin(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+}
 
-// 		result := assignmentService.GetByID("-7111a840-3099-4c62-85b6-00d665d42cba")
+func TestGetUserByID(t *testing.T) {
+	e := InitUsersTestAPI()
+	e.GET("/api/users/:id",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
 
-// 		assert.NotNil(t, result)
-// 	})
-// }
+	// Test Case 1
+	t.Run("Get User By ID", func(t *testing.T) {
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFnaS50ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY3MTc5ODQ3NCwidXNlcm5hbWUiOiJhZ2lwcm9kdWN0aW9uIn0.BSl2OssGIE0PAlf3z4Z8RDTeEzaVzJvlVcDpUZij_DQ"
+		request := httptest.NewRequest(http.MethodGet, "/api/users/aaecd930-e491-4010-965e-f715abdf7144", nil)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
 
-// func TestCreate(t *testing.T) {
-// 	t.Run("Create | Valid", func(t *testing.T) {
-// 		assignmentRepository.On("Create", &assignmentDomain).Return(assignmentDomain).Once()
+		if assert.NoError(t, controller.GetOneByUserId(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+}
 
-// 		result := assignmentService.Create(&assignmentDomain)
+func TestUpdateUserById(t *testing.T) {
+	e := InitUsersTestAPI()
+	e.PUT("/api/users/:id",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
 
-// 		assert.NotNil(t, result)
-// 	})
+	// Test Case 1
+	t.Run("Update Product", func(t *testing.T) {
+		requestBody := strings.NewReader(`{
+			"role" : "user",
+			"username" : "saka",
+			"email" : "testmail01@gmail.com",
+			"password" : "testpassword01",
+			"points" : 30000,
+			"costPoints" : 0
+		}`)
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFnaS50ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY3MTc5ODQ3NCwidXNlcm5hbWUiOiJhZ2lwcm9kdWN0aW9uIn0.BSl2OssGIE0PAlf3z4Z8RDTeEzaVzJvlVcDpUZij_DQ"
+		request := httptest.NewRequest(http.MethodPut, "/api/users/aaecd930-e491-4010-965e-f715abdf7144", requestBody)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
 
-// 	t.Run("Create | InValid", func(t *testing.T) {
-// 		assignmentRepository.On("Create", &assignments.Domain{}).Return(assignments.Domain{}).Once()
+		if assert.NoError(t, controller.UpdateOneByUserId(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+}
 
-// 		result := assignmentService.Create(&assignments.Domain{})
+func TestDeleteUserById(t *testing.T) {
+	e := InitUsersTestAPI()
+	e.DELETE("/api/users/:id",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
 
-// 		assert.NotNil(t, result)
-// 	})
-// }
+	// Test Case 1
+	t.Run("Delete User By Id", func(t *testing.T) {
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFnaS50ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY3MTc5ODQ3NCwidXNlcm5hbWUiOiJhZ2lwcm9kdWN0aW9uIn0.BSl2OssGIE0PAlf3z4Z8RDTeEzaVzJvlVcDpUZij_DQ"
+		request := httptest.NewRequest(http.MethodDelete, "/api/users/aaecd930-e491-4010-965e-f715abdf7144", nil)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
 
-// func TestUpdate(t *testing.T) {
-// 	t.Run("Update | Valid", func(t *testing.T) {
-// 		assignmentRepository.On("Update", "7111a840-3099-4c62-85b6-00d665d42cba", &assignmentDomain).Return(assignmentDomain).Once()
+		if assert.NoError(t, controller.DeleteOneById(e.AcquireContext())) {
+			// log.Println(recorder.Body)
+			assert.Equal(t, http.StatusOK, recorder.Code)
+			var users []entity.Users
+			err := entity.DB.Find(&users, "role = ?", "user").Error
+			assert.NoError(t, err)
+			assert.Equal(t, 0, len(users))
+		}
+	})
+}
 
-// 		result := assignmentService.Update("7111a840-3099-4c62-85b6-00d665d42cba", &assignmentDomain)
+func TestCountGetUsers(t *testing.T) {
+	e := InitUsersTestAPI()
+	e.GET("/api/users/count",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
 
-// 		assert.NotNil(t, result)
-// 	})
+	// Test Case 1
+	t.Run("Get Count Users", func(t *testing.T) {
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFnaS50ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY3MTc5ODQ3NCwidXNlcm5hbWUiOiJhZ2lwcm9kdWN0aW9uIn0.BSl2OssGIE0PAlf3z4Z8RDTeEzaVzJvlVcDpUZij_DQ"
+		request := httptest.NewRequest(http.MethodGet, "/api/users/count", nil)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
 
-// 	t.Run("Update | InValid", func(t *testing.T) {
-// 		assignmentRepository.On("Update", "7111a840-3099-4c62-85b6-00d665d42cba", &assignments.Domain{}).Return(assignments.Domain{}).Once()
+		if assert.NoError(t, controller.GetCountUsers(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+}
 
-// 		result := assignmentService.Update("7111a840-3099-4c62-85b6-00d665d42cba", &assignments.Domain{})
+func TestSendEmailForgotPassword(t *testing.T) {
+	e := InitUsersTestAPI()
+	e.POST("/api/forgot-password",
+		func(c echo.Context) error {
+			token := c.Get("user").(*jwt.Token)
+			return c.JSON(http.StatusOK, token.Claims)
+		})
+	e.Use(mid.JWT([]byte(os.Getenv("JWT_SECRET"))))
 
-// 		assert.NotNil(t, result)
-// 	})
-// }
+	// Test Case 1
+	t.Run("Create User by admin", func(t *testing.T) {
+		requestBody := strings.NewReader(`{
+			"email": "ajizapar080500@gmail.com"
+		}`)
 
-// func TestDelete(t *testing.T) {
-// 	t.Run("Delete | Valid", func(t *testing.T) {
-// 		assignmentRepository.On("Delete", "7111a840-3099-4c62-85b6-00d665d42cba").Return(true).Once()
+		auth := "bearer " + "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFnaS50ZXN0QGdtYWlsLmNvbSIsImV4cCI6MTY3MTc5ODQ3NCwidXNlcm5hbWUiOiJhZ2lwcm9kdWN0aW9uIn0.BSl2OssGIE0PAlf3z4Z8RDTeEzaVzJvlVcDpUZij_DQ"
+		request := httptest.NewRequest(http.MethodPost, "/api/forgot-password", requestBody)
+		request.Header.Set(echo.HeaderAuthorization, auth)
+		recorder := httptest.NewRecorder()
+		e.ServeHTTP(recorder, request)
 
-// 		result := assignmentService.Delete("7111a840-3099-4c62-85b6-00d665d42cba")
-
-// 		assert.True(t, result)
-// 	})
-
-// 	t.Run("Delete | InValid", func(t *testing.T) {
-// 		assignmentRepository.On("Delete", "-7111a840-3099-4c62-85b6-00d665d42cba").Return(false).Once()
-
-// 		result := assignmentService.Delete("-7111a840-3099-4c62-85b6-00d665d42cba")
-
-// 		assert.False(t, result)
-// 	})
-// }
+		if assert.NoError(t, controller.SendEmailForgotPassword(e.AcquireContext())) {
+			assert.Equal(t, http.StatusOK, recorder.Code)
+		}
+	})
+}
