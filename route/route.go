@@ -5,7 +5,7 @@ import (
 	m "capstone-project/middleware"
 	"capstone-project/service"
 	"os"
-	
+
 	"github.com/labstack/echo/v4"
 	mid "github.com/labstack/echo/v4/middleware"
 )
@@ -21,7 +21,7 @@ func New(Service service.Svc) *echo.Echo {
 	}))
 	m.LogMiddleware(e)
 
-	// Routing withouth JWT
+	e.GET("/", controller.Connected)
 	eApi := e.Group("/api")
 	eApi.POST("/login", controller.Login)
 	eApi.POST("/register", controller.Register)
@@ -30,11 +30,11 @@ func New(Service service.Svc) *echo.Echo {
 	eAuth := eApi.Group("/auth")
 	eAuth.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
 
-	// Routing with JWT
-	eAuth.GET("/history", controller.GetHistory)
-	eAuth.GET("/history/method/:paymentMethod", controller.GetHistoryByMethod)
-	eAuth.GET("/history/method/:paymentMethod/:category", controller.GetHistoryByMethodCategory)
-	eAuth.GET("/history/:id", controller.GetTransactionByID)
+	eHistory := eAuth.Group("/history")
+	eHistory.GET("", controller.GetHistory)
+	eHistory.GET("/method/:paymentMethod", controller.GetHistoryByMethod)
+	eHistory.GET("/method/:paymentMethod/:category", controller.GetHistoryByMethodCategory)
+	eHistory.GET("/:id", controller.GetTransactionByID)
 
 	eTransaction := eAuth.Group("/transactions")
 	eTransaction.GET("", controller.GetTransactions)
@@ -58,7 +58,6 @@ func New(Service service.Svc) *echo.Echo {
 	eProduct.DELETE("/:id", controller.DeleteProduct)
 	eProduct.GET("/count", controller.GetCountProducts)
 
-	// User endpoint
 	eUser := eApi.Group("/users")
 	eUser.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
 	eUser.DELETE("/:id", controller.DeleteOneById)
@@ -69,7 +68,6 @@ func New(Service service.Svc) *echo.Echo {
 	eUser.GET("/count", controller.GetCountUsers)
 	eApi.POST("/forgot-password", controller.SendEmailForgotPassword)
 
-	//faq endpoint 
 	eFaq := eApi.Group("/faqs")
 	eFaq.Use(mid.JWT([]byte(os.Getenv("SECRET_JWT"))))
 	eFaq.GET("", controller.GetFaqs)
